@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "844374598181",
+    "project_id": "rioko-28366",
+    "storage_bucket": "rioko-28366.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:844374598181:android:945dc75b455290f57455cc",
+        "android_client_info": {
+          "package_name": "com.jocs.rioko"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "844374598181-glaih7n3li60e18rimkr4vd23svh4bpd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATpufDfRcoHC4GQVvPAXz9WnEJG66Qzs0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "844374598181-glaih7n3li60e18rimkr4vd23svh4bpd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "844374598181-mlau9s83jdaavg1kkahlpcmcbr76dp1p.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.rioko"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
