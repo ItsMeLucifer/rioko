@@ -1,13 +1,19 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rioko/common/route_names.dart';
 import 'package:rioko/view/authentication_page.dart';
 import 'package:rioko/view/map_display.dart';
+import 'package:rioko/viewmodel/firebase/authentication_view_model.dart';
 import 'package:rioko/viewmodel/map/map_service.dart';
 
 final ChangeNotifierProvider<MapServiceViewModel> mapServiceProvider =
     ChangeNotifierProvider((_) => MapServiceViewModel());
-void main() {
+final ChangeNotifierProvider<AuthenticationViewModel> authenticationProvider =
+    ChangeNotifierProvider((_) => AuthenticationViewModel());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -35,7 +41,7 @@ class MyApp extends StatelessWidget {
           case RouteNames.map:
             return customPageRoute(settings, const MapDisplay());
           default:
-            return customPageRoute(settings, const AuthenticationPage());
+            return customPageRoute(settings, AuthenticationPage());
         }
       },
     );
