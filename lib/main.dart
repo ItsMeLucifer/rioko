@@ -2,8 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rioko/common/route_names.dart';
-import 'package:rioko/view/authentication_page.dart';
-import 'package:rioko/view/map_display.dart';
+import 'package:rioko/view/AuthenticationPage/authentication_page.dart';
+import 'package:rioko/view/Map/map_display.dart';
 import 'package:rioko/viewmodel/firebase/authentication_view_model.dart';
 import 'package:rioko/viewmodel/map/map_service.dart';
 
@@ -18,6 +18,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   PageRouteBuilder customPageRoute(dynamic settings, Widget page) =>
       PageRouteBuilder(
         settings: settings,
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
       home: const MapDisplay(),
       debugShowCheckedModeBanner: false,
       initialRoute: RouteNames.authentication,
+      navigatorKey: MyApp.navigatorKey,
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case RouteNames.map:

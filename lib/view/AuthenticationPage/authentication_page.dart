@@ -15,11 +15,23 @@ class AuthenticationPage extends ConsumerWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Text(
+            authVM.exceptionMessage,
+            style: const TextStyle(
+              color: Colors.red,
+            ),
+          ),
           TextFormField(
             controller: emailController,
+            onChanged: (value) {
+              authVM.exceptionMessage = '';
+            },
           ),
           TextFormField(
             controller: passwordController,
+            onChanged: (value) {
+              authVM.exceptionMessage = '';
+            },
           ),
           IconButton(
             onPressed: () {
