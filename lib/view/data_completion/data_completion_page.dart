@@ -13,6 +13,14 @@ class DataCompletionPage extends ConsumerWidget {
     final geolocationVM = ref.watch(geolocationProvider);
     final firestoreDBVM = ref.watch(firestoreDatabaseProvider);
     final authVM = ref.watch(authenticationProvider);
+    final placemark = geolocationVM.currentPositionPlacemark;
+    final cityName = placemark.locality == null || placemark.locality == ''
+        ? ''
+        : '${placemark.locality}, ';
+    final administrativeArea = placemark.administrativeArea == null ||
+            placemark.administrativeArea == ''
+        ? ''
+        : '${placemark.administrativeArea}, ';
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -31,7 +39,7 @@ class DataCompletionPage extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text((authVM.currentUser?.home ?? '').toString()),
+              Text("$cityName$administrativeArea${placemark.country ?? '?'}"),
               IconButton(
                 onPressed: () async {
                   geolocationVM.getCurrentPosition().then((_) {
@@ -40,6 +48,7 @@ class DataCompletionPage extends ConsumerWidget {
                         home: geolocationVM.currentPosition,
                       );
                     }
+                    geolocationVM.getPlacemaerkFromCoordinates();
                   });
                 },
                 icon: const Icon(Icons.location_city),
