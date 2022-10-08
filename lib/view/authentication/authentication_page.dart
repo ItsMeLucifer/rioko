@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rioko/common/route_names.dart';
 import 'package:rioko/main.dart';
 import 'package:rioko/view/components/text_field.dart';
 
@@ -37,21 +38,32 @@ class AuthenticationPage extends ConsumerWidget {
           ),
           IconButton(
             onPressed: () {
-              authVM.login(
-                context,
-                email: emailController.text,
-                password: passwordController.text,
+              authVM
+                  .login(
+                      email: emailController.text,
+                      password: passwordController.text)
+                  .then(
+                (authenticated) {
+                  if (authenticated) {
+                    Navigator.of(context).pushReplacementNamed(RouteNames.map);
+                  }
+                },
               );
             },
             icon: const Icon(Icons.login),
           ),
           IconButton(
             onPressed: () {
-              authVM.signUp(
-                context,
-                email: emailController.text,
-                password: passwordController.text,
-              );
+              authVM
+                  .signUp(
+                      email: emailController.text,
+                      password: passwordController.text)
+                  .then((authenticated) {
+                if (authenticated) {
+                  Navigator.of(context)
+                      .pushReplacementNamed(RouteNames.dataCompletion);
+                }
+              });
             },
             icon: const Icon(Icons.create),
           ),

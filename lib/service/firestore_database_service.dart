@@ -7,7 +7,7 @@ class FirestoreDatabaseService {
     users.doc(user.id).set({
       'id': user.id,
       'email': user.email,
-      'home': user.home,
+      'home': GeoPoint(user.home?.latitude ?? 0, user.home?.longitude ?? 0),
       'name': user.name,
     });
   }

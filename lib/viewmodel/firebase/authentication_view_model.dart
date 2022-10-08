@@ -22,8 +22,7 @@ class AuthenticationViewModel extends ChangeNotifier {
   }
 
   final AuthenticationService _authenticationService = AuthenticationService();
-  Future<void> login(
-    BuildContext context, {
+  Future<bool> login({
     required String email,
     required String password,
   }) async {
@@ -33,8 +32,7 @@ class AuthenticationViewModel extends ChangeNotifier {
         password: password,
       );
       currentUser = User.fromFirebase(user);
-      Navigator.of(context).pushReplacementNamed(RouteNames.map);
-      return;
+      return true;
     } on auth.FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         exceptionMessage = 'User not found.';
@@ -48,10 +46,10 @@ class AuthenticationViewModel extends ChangeNotifier {
     } catch (e) {
       exceptionMessage = 'Unknown error';
     }
+    return false;
   }
 
-  Future<void> signUp(
-    BuildContext context, {
+  Future<bool> signUp({
     required String email,
     required String password,
   }) async {
@@ -61,8 +59,7 @@ class AuthenticationViewModel extends ChangeNotifier {
         password: password,
       );
       currentUser = User.fromFirebase(user);
-      Navigator.of(context).pushReplacementNamed(RouteNames.map);
-      return;
+      return true;
     } on auth.FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         exceptionMessage = 'The password provided is too weak.';
@@ -72,5 +69,6 @@ class AuthenticationViewModel extends ChangeNotifier {
     } catch (e) {
       exceptionMessage = 'Unknown error';
     }
+    return false;
   }
 }

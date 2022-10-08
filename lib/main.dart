@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rioko/common/route_names.dart';
 import 'package:rioko/view/authentication/authentication_page.dart';
+import 'package:rioko/view/data_completion/data_completion_page.dart';
 import 'package:rioko/view/map/map_display.dart';
 import 'package:rioko/viewmodel/firebase/authentication_view_model.dart';
 import 'package:rioko/viewmodel/firebase/firestore_database_view_model.dart';
@@ -49,6 +50,8 @@ class MyApp extends StatelessWidget {
         switch (settings.name) {
           case RouteNames.map:
             return customPageRoute(settings, const MapDisplay());
+          case RouteNames.dataCompletion:
+            return customPageRoute(settings, DataCompletionPage());
           default:
             return customPageRoute(settings, AuthenticationPage());
         }

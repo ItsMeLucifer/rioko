@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rioko/common/route_names.dart';
 import 'package:rioko/main.dart';
 import 'package:rioko/view/components/text_field.dart';
 import 'package:geolocator/geolocator.dart';
@@ -27,17 +28,23 @@ class DataCompletionPage extends ConsumerWidget {
               }
             },
           ),
-          IconButton(
-            onPressed: () async {
-              geolocationVM.getCurrentPosition().then((_) {
-                if (authVM.currentUser != null) {
-                  authVM.currentUser = authVM.currentUser!.copyWith(
-                    home: geolocationVM.currentPosition,
-                  );
-                }
-              });
-            },
-            icon: const Icon(Icons.location_city),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text((authVM.currentUser?.home ?? '').toString()),
+              IconButton(
+                onPressed: () async {
+                  geolocationVM.getCurrentPosition().then((_) {
+                    if (authVM.currentUser != null) {
+                      authVM.currentUser = authVM.currentUser!.copyWith(
+                        home: geolocationVM.currentPosition,
+                      );
+                    }
+                  });
+                },
+                icon: const Icon(Icons.location_city),
+              ),
+            ],
           ),
           IconButton(
             onPressed: () {
@@ -45,6 +52,10 @@ class DataCompletionPage extends ConsumerWidget {
                 firestoreDBVM.setCurrentUserBasicInfo(
                   authVM.currentUser!,
                 );
+                Navigator.of(context).pushReplacementNamed(RouteNames.map);
+              } else {
+                Navigator.of(context)
+                    .pushReplacementNamed(RouteNames.authentication);
               }
             },
             icon: const Icon(Icons.save),

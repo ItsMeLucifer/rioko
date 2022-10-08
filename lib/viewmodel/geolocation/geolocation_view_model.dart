@@ -12,7 +12,11 @@ class GeolocationViewModel extends ChangeNotifier {
   }
 
   Future<void> getCurrentPosition() async {
-    Position position = await GeolocationService().getCurrentLocation();
-    currentPosition = LatLng(position.latitude, position.longitude);
+    try {
+      Position position = await GeolocationService().getCurrentLocation();
+      currentPosition = LatLng(position.latitude, position.longitude);
+    } catch (e) {
+      debugPrint("Couldn't get current position: $e");
+    }
   }
 }
