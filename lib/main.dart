@@ -2,15 +2,22 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rioko/common/route_names.dart';
-import 'package:rioko/view/AuthenticationPage/authentication_page.dart';
-import 'package:rioko/view/Map/map_display.dart';
+import 'package:rioko/view/authentication/authentication_page.dart';
+import 'package:rioko/view/map/map_display.dart';
 import 'package:rioko/viewmodel/firebase/authentication_view_model.dart';
+import 'package:rioko/viewmodel/firebase/firestore_database_view_model.dart';
+import 'package:rioko/viewmodel/geolocation/geolocation_view_model.dart';
 import 'package:rioko/viewmodel/map/map_service.dart';
 
 final ChangeNotifierProvider<MapServiceViewModel> mapServiceProvider =
     ChangeNotifierProvider((_) => MapServiceViewModel());
 final ChangeNotifierProvider<AuthenticationViewModel> authenticationProvider =
     ChangeNotifierProvider((_) => AuthenticationViewModel());
+final ChangeNotifierProvider<FirestoreDatabaseViewModel>
+    firestoreDatabaseProvider =
+    ChangeNotifierProvider((_) => FirestoreDatabaseViewModel());
+final ChangeNotifierProvider<GeolocationViewModel> geolocationProvider =
+    ChangeNotifierProvider((_) => GeolocationViewModel());
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();

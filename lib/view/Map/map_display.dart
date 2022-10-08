@@ -24,10 +24,7 @@ class MapDisplay extends ConsumerWidget {
           LatLng(-65, -180.0),
           LatLng(75.0, 180.0),
         ),
-        // interactiveFlags: InteractiveFlag.pinchZoom &
-        //     InteractiveFlag.drag &
-        //     InteractiveFlag.flingAnimation &
-        //     InteractiveFlag.pinchMove,
+        interactiveFlags: InteractiveFlag.all & ~InteractiveFlag.rotate,
         plugins: [
           MarkerClusterPlugin(),
         ],

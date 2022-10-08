@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rioko/main.dart';
+import 'package:rioko/view/components/text_field.dart';
 
 class AuthenticationPage extends ConsumerWidget {
   AuthenticationPage({Key? key}) : super(key: key);
@@ -21,17 +22,18 @@ class AuthenticationPage extends ConsumerWidget {
               color: Colors.red,
             ),
           ),
-          TextFormField(
+          CustomTextField(
             controller: emailController,
             onChanged: (value) {
               authVM.exceptionMessage = '';
             },
           ),
-          TextFormField(
+          CustomTextField(
             controller: passwordController,
             onChanged: (value) {
               authVM.exceptionMessage = '';
             },
+            obscureText: true,
           ),
           IconButton(
             onPressed: () {

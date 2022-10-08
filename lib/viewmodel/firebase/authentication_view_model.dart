@@ -1,7 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:rioko/model/user.dart';
 import 'package:flutter/material.dart';
 import 'package:rioko/common/route_names.dart';
 import 'package:rioko/service/authentication_service.dart';
+import 'package:rioko/service/firestore_database_service.dart';
 import 'package:rioko/view/components/dialogs.dart';
 
 class AuthenticationViewModel extends ChangeNotifier {
@@ -12,6 +14,13 @@ class AuthenticationViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  User? _currentUser;
+  User? get currentUser => _currentUser;
+  set currentUser(User? user) {
+    _currentUser = user;
+    notifyListeners();
+  }
+
   final AuthenticationService _authenticationService = AuthenticationService();
   Future<void> login(
     BuildContext context, {
@@ -19,16 +28,14 @@ class AuthenticationViewModel extends ChangeNotifier {
     required String password,
   }) async {
     try {
-      var result = await _authenticationService.loginWithEmail(
+      var user = await _authenticationService.loginWithEmail(
         email: email,
         password: password,
       );
-      if (result) {
-        Navigator.of(context).pushReplacementNamed(RouteNames.map);
-      }
+      currentUser = User.fromFirebase(user);
+      Navigator.of(context).pushReplacementNamed(RouteNames.map);
       return;
-    } on FirebaseAuthException catch (e) {
-      String content = 'Unknown error';
+    } on auth.FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         exceptionMessage = 'User not found.';
       } else if (e.code == 'wrong-password') {
@@ -49,15 +56,14 @@ class AuthenticationViewModel extends ChangeNotifier {
     required String password,
   }) async {
     try {
-      var result = await _authenticationService.signUpWithEmail(
+      var user = await _authenticationService.signUpWithEmail(
         email: email,
         password: password,
       );
-      if (result) {
-        Navigator.of(context).pushReplacementNamed(RouteNames.map);
-      }
+      currentUser = User.fromFirebase(user);
+      Navigator.of(context).pushReplacementNamed(RouteNames.map);
       return;
-    } on FirebaseAuthException catch (e) {
+    } on auth.FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         exceptionMessage = 'The password provided is too weak.';
       } else if (e.code == 'email-already-in-use') {
