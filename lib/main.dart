@@ -8,10 +8,10 @@ import 'package:rioko/view/map/map_display.dart';
 import 'package:rioko/viewmodel/firebase/authentication_view_model.dart';
 import 'package:rioko/viewmodel/firebase/firestore_database_view_model.dart';
 import 'package:rioko/viewmodel/geolocation/geolocation_view_model.dart';
-import 'package:rioko/viewmodel/map/map_service.dart';
+import 'package:rioko/viewmodel/map/map_view_model.dart';
 
-final ChangeNotifierProvider<MapServiceViewModel> mapServiceProvider =
-    ChangeNotifierProvider((_) => MapServiceViewModel());
+final ChangeNotifierProvider<MapViewModel> mapProvider =
+    ChangeNotifierProvider((_) => MapViewModel());
 final ChangeNotifierProvider<AuthenticationViewModel> authenticationProvider =
     ChangeNotifierProvider((_) => AuthenticationViewModel());
 final ChangeNotifierProvider<FirestoreDatabaseViewModel>

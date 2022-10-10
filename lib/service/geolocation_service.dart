@@ -28,4 +28,9 @@ class GeolocationService {
         coordinates.latitude, coordinates.longitude);
     return placemarks.first;
   }
+
+  Future<List<Location>> getLocationsFromAddress(String address) async {
+    List<Location> locations = await locationFromAddress(address);
+    return locations;
+  }
 }

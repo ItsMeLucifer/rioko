@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
@@ -12,12 +11,12 @@ class MapDisplay extends ConsumerWidget {
   const MapDisplay({Key? key}) : super(key: key);
 
   void _displayAddNewPlaceBottomSheet(BuildContext context) {
-    showModalBottomSheet(context: context, builder: (_) => const AddNewPlace());
+    showModalBottomSheet(context: context, builder: (_) => AddNewPlace());
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final mapService = ref.watch(mapServiceProvider);
+    final mapVM = ref.watch(mapProvider);
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
         shape: BeveledRectangleBorder(
@@ -38,6 +37,7 @@ class MapDisplay extends ConsumerWidget {
       body: Stack(
         children: [
           FlutterMap(
+            mapController: mapVM.mapController,
             options: MapOptions(
               center: LatLng(35.68518815714286, 139.75280093812933),
               zoom: 6,
@@ -66,7 +66,7 @@ class MapDisplay extends ConsumerWidget {
               PolylineLayerWidget(
                 options: PolylineLayerOptions(
                   polylineCulling: false,
-                  polylines: mapService.travelPlaces
+                  polylines: mapVM.travelPlaces
                       .map(
                         (travelPlace) => Polyline(
                           points: [
@@ -83,7 +83,7 @@ class MapDisplay extends ConsumerWidget {
                 options: MarkerClusterLayerOptions(
                   maxClusterRadius: 80,
                   size: const Size(40, 40),
-                  markers: mapService.travelPlaces
+                  markers: mapVM.travelPlaces
                       .map(
                         (travelPlace) => Marker(
                           height: 40,
@@ -118,7 +118,6 @@ class MapDisplay extends ConsumerWidget {
                 ),
               )
             ],
-            mapController: mapService.mapController,
           ),
           const SafeArea(
             child: Align(

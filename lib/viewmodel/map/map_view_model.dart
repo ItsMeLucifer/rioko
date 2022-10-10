@@ -3,7 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:rioko/model/travel_place.dart';
 
-class MapServiceViewModel extends ChangeNotifier {
+class MapViewModel extends ChangeNotifier {
   List<TravelPlace> _travelPlaces = [
     TravelPlace(
       comrades: [],
@@ -36,5 +36,9 @@ class MapServiceViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  MapController get mapController => MapController();
+  final MapController mapController = MapController();
+
+  void mapMoveTo({required LatLng position, double zoom = 10}) {
+    mapController.move(position, zoom);
+  }
 }

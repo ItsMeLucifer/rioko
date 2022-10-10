@@ -11,7 +11,7 @@ class AuthenticationPage extends ConsumerWidget {
   final TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final mapVM = ref.watch(mapServiceProvider);
+    final mapVM = ref.watch(mapProvider);
     final authVM = ref.watch(authenticationProvider);
     return Scaffold(
       body: Column(

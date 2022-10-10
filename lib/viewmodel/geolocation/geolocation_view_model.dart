@@ -21,6 +21,13 @@ class GeolocationViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  LatLng _newPlacePosition = LatLng(0, 0);
+  LatLng get newPlacePosition => _newPlacePosition;
+  set newPlacePosition(LatLng position) {
+    _newPlacePosition = position;
+    notifyListeners();
+  }
+
   Future<void> getCurrentPosition() async {
     try {
       Position position = await GeolocationService().getCurrentLocation();
@@ -52,6 +59,17 @@ class GeolocationViewModel extends ChangeNotifier {
       currentPositionPlacemark = placemark;
     } catch (e) {
       debugPrint("Couldn't get adress from coordinates");
+    }
+  }
+
+  Future<void> getLocationsFromAddress(String address) async {
+    try {
+      List<Location> locations =
+          await GeolocationService().getLocationsFromAddress(address);
+      newPlacePosition =
+          LatLng(locations.first.latitude, locations.first.longitude);
+    } catch (e) {
+      debugPrint("Couldn't get locations from address");
     }
   }
 }
