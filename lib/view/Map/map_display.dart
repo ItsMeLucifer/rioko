@@ -19,6 +19,7 @@ class MapDisplay extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mapVM = ref.watch(mapProvider);
+    final authVM = ref.watch(authenticationProvider);
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
         shape: BeveledRectangleBorder(
@@ -65,45 +66,38 @@ class MapDisplay extends ConsumerWidget {
                   retinaMode: MediaQuery.of(context).devicePixelRatio > 1.0,
                 ),
               ),
-              PolylineLayerWidget(
-                options: PolylineLayerOptions(
-                  polylineCulling: false,
-                  polylines: mapVM.travelPlaces
-                      .map(
-                        (travelPlace) => Polyline(
-                          points: [
-                            travelPlace.originCoordinates,
-                            travelPlace.destinationCoordinates,
-                          ],
-                          color: Colors.black,
-                        ),
-                      )
-                      .toList(),
-                ),
-              ),
               MarkerClusterLayerWidget(
                 options: MarkerClusterLayerOptions(
                   maxClusterRadius: 80,
                   size: const Size(40, 40),
-                  markers: mapVM.travelPlaces
-                      .map(
-                        (travelPlace) => Marker(
-                          height: 40,
-                          width: 40,
-                          point: travelPlace.destinationCoordinates,
-                          builder: (_) => IconButton(
-                            icon: const FittedBox(
-                              child: FaIcon(
-                                FontAwesomeIcons.locationDot,
+                  markers: [
+                    ...mapVM.travelPlaces
+                        .map(
+                          (travelPlace) => Marker(
+                            height: 40,
+                            width: 40,
+                            point: travelPlace.destinationCoordinates,
+                            builder: (_) => IconButton(
+                              icon: const FittedBox(
+                                child: FaIcon(
+                                  FontAwesomeIcons.locationDot,
+                                ),
                               ),
+                              onPressed: () {},
                             ),
-                            onPressed: () {
-                              print('clicked');
-                            },
                           ),
+                        )
+                        .toList(),
+                    if (authVM.currentUser != null &&
+                        authVM.currentUser!.home != null)
+                      Marker(
+                        point: authVM.currentUser!.home!,
+                        builder: (_) => IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.home),
                         ),
-                      )
-                      .toList(),
+                      ),
+                  ],
                   polygonOptions: const PolygonOptions(
                     borderColor: Colors.redAccent,
                     borderStrokeWidth: 3,
@@ -118,7 +112,7 @@ class MapDisplay extends ConsumerWidget {
                     );
                   },
                 ),
-              )
+              ),
             ],
           ),
           const SafeArea(

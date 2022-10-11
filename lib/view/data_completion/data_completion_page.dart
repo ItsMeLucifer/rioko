@@ -13,14 +13,6 @@ class DataCompletionPage extends ConsumerWidget {
     final geolocationVM = ref.watch(geolocationProvider);
     final firestoreDBVM = ref.watch(firestoreDatabaseProvider);
     final authVM = ref.watch(authenticationProvider);
-    final placemark = geolocationVM.currentPositionPlacemark;
-    final cityName = placemark.locality == null || placemark.locality == ''
-        ? ''
-        : '${placemark.locality}, ';
-    final administrativeArea = placemark.administrativeArea == null ||
-            placemark.administrativeArea == ''
-        ? ''
-        : '${placemark.administrativeArea}, ';
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -39,16 +31,29 @@ class DataCompletionPage extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("$cityName$administrativeArea${placemark.country ?? '?'}"),
+              Text(geolocationVM
+                  .getAddressFromPlacemark(geolocationVM.positionPlacemark)),
               IconButton(
                 onPressed: () async {
-                  geolocationVM.getCurrentPosition().then((_) {
+                  geolocationVM
+                      .getCurrentPosition()
+                      .then((currentPosition) async {
+                    if (currentPosition == null) return;
+                    geolocationVM.position = currentPosition;
                     if (authVM.currentUser != null) {
                       authVM.currentUser = authVM.currentUser!.copyWith(
-                        home: geolocationVM.currentPosition,
+                        home: currentPosition,
+                        homeAddress: geolocationVM.getAddressFromPlacemark(
+                            geolocationVM.positionPlacemark),
                       );
                     }
-                    geolocationVM.getPlacemaerkFromCoordinates();
+                    await geolocationVM
+                        .getPlacemarkFromCoordinates(currentPosition)
+                        .then((placemark) {
+                      if (placemark != null) {
+                        geolocationVM.positionPlacemark = placemark;
+                      }
+                    });
                   });
                 },
                 icon: const Icon(Icons.location_city),

@@ -11,4 +11,10 @@ class FirestoreDatabaseService {
       'name': user.name,
     });
   }
+
+  Future<DocumentSnapshot> getUserInfo(String userId) async {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    DocumentSnapshot user = await users.doc(userId).get();
+    return user;
+  }
 }
