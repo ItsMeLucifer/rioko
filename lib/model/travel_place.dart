@@ -1,6 +1,7 @@
 import 'package:latlong2/latlong.dart';
 
 class TravelPlace {
+  final String id;
   final LatLng originCoordinates;
   final LatLng destinationCoordinates;
   final List<String> imagesURLs;
@@ -15,15 +16,43 @@ class TravelPlace {
   final String countryIso3Code;
 
   TravelPlace({
-    required this.comrades,
+    required this.id,
+    this.comrades = const <String>[],
     required this.countryIso3Code,
     required this.date,
-    required this.description,
+    this.description = '',
     required this.destinationCoordinates,
-    required this.imagesURLs,
+    this.imagesURLs = const <String>[],
     required this.kilometers,
-    required this.likes,
+    this.likes = const <String>[],
     required this.originCoordinates,
-    required this.title,
+    this.title = '',
   });
+
+  TravelPlace copyWith({
+    LatLng? originCoordinates,
+    LatLng? destinationCoordinates,
+    List<String>? imagesURLs,
+    String? title,
+    String? description,
+    DateTime? date,
+    double? kilometers,
+    List<String>? comrades,
+    List<String>? likes,
+    String? countryIso3Code,
+  }) =>
+      TravelPlace(
+        comrades: comrades ?? this.comrades,
+        countryIso3Code: countryIso3Code ?? this.countryIso3Code,
+        date: date ?? this.date,
+        description: description ?? this.description,
+        destinationCoordinates:
+            destinationCoordinates ?? this.destinationCoordinates,
+        imagesURLs: imagesURLs ?? this.imagesURLs,
+        kilometers: kilometers ?? this.kilometers,
+        likes: likes ?? this.likes,
+        originCoordinates: originCoordinates ?? this.originCoordinates,
+        title: title ?? this.title,
+        id: this.id,
+      );
 }

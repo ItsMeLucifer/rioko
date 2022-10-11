@@ -10,6 +10,7 @@ class AddNewPlace extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final authenticationVM = ref.watch(authenticationProvider);
     final geolocationVM = ref.watch(geolocationProvider);
     final mapVM = ref.watch(mapProvider);
     return Column(
@@ -17,12 +18,16 @@ class AddNewPlace extends ConsumerWidget {
         CustomTextField(
           onSubmitted: (value) async {
             if (value.length > 3) {
-              await geolocationVM.getLocationsFromAddress(value).then((_) {
-                debugPrint(
-                    '(${geolocationVM.newPlacePosition.latitude},${geolocationVM.newPlacePosition.longitude})');
-                mapVM.mapMoveTo(
-                  position: geolocationVM.newPlacePosition,
-                );
+              await geolocationVM.getLocationsFromAddress(value).then((latLng) {
+                if (latLng != null) {
+                  mapVM.mapMoveTo(
+                    position: latLng,
+                  );
+                  mapVM.travelPlace!.copyWith(
+                    originCoordinates: authenticationVM.currentUser?.home,
+                    destinationCoordinates: latLng,
+                  );
+                }
               });
             }
           },

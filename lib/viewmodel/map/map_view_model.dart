@@ -2,10 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:rioko/model/travel_place.dart';
+import 'package:uuid/uuid.dart';
 
 class MapViewModel extends ChangeNotifier {
   List<TravelPlace> _travelPlaces = [
     TravelPlace(
+      id: const Uuid().v1(),
       comrades: [],
       countryIso3Code: 'JPN',
       date: DateTime.now(),
@@ -18,6 +20,7 @@ class MapViewModel extends ChangeNotifier {
       title: 'JAPAN 2022',
     ),
     TravelPlace(
+      id: const Uuid().v1(),
       comrades: [],
       countryIso3Code: 'JPN',
       date: DateTime.now(),
@@ -41,4 +44,20 @@ class MapViewModel extends ChangeNotifier {
   void mapMoveTo({required LatLng position, double zoom = 10}) {
     mapController.move(position, zoom);
   }
+
+  TravelPlace? _travelPlace;
+  TravelPlace? get travelPlace => _travelPlace;
+  set travelPlace(TravelPlace? travelPlace) {
+    _travelPlace = travelPlace;
+    notifyListeners();
+  }
+
+  TravelPlace get newPlace => TravelPlace(
+        id: const Uuid().v1(),
+        countryIso3Code: '',
+        date: DateTime.now(),
+        destinationCoordinates: LatLng(0, 0),
+        kilometers: 0,
+        originCoordinates: LatLng(0, 0),
+      );
 }

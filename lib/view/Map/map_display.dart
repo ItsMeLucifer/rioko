@@ -10,7 +10,9 @@ import 'package:rioko/view/map/widgets/add_new_place.dart';
 class MapDisplay extends ConsumerWidget {
   const MapDisplay({Key? key}) : super(key: key);
 
-  void _displayAddNewPlaceBottomSheet(BuildContext context) {
+  void _displayAddNewPlaceBottomSheet(BuildContext context, WidgetRef ref) {
+    final mapVM = ref.watch(mapProvider);
+    mapVM.travelPlace = mapVM.newPlace;
     showModalBottomSheet(context: context, builder: (_) => AddNewPlace());
   }
 
@@ -24,7 +26,7 @@ class MapDisplay extends ConsumerWidget {
         ),
         backgroundColor: Colors.grey[100],
         elevation: 5,
-        onPressed: () => _displayAddNewPlaceBottomSheet(context),
+        onPressed: () => _displayAddNewPlaceBottomSheet(context, ref),
         label: const SizedBox(
           width: 50,
           child: Icon(
