@@ -8,9 +8,9 @@ import 'package:rioko/common/utilities.dart';
 import 'package:rioko/service/geolocation_service.dart';
 
 class GeolocationViewModel extends ChangeNotifier {
-  LatLng _position = LatLng(0, 0);
-  LatLng get position => _position;
-  set position(LatLng position) {
+  LatLng? _position;
+  LatLng? get position => _position;
+  set position(LatLng? position) {
     _position = position;
     notifyListeners();
   }

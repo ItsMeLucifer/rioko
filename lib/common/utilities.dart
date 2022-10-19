@@ -6,4 +6,6 @@ class Utilities {
       string == null || string == '';
   static LatLng geoPointToLatLng(GeoPoint geoPoint) =>
       LatLng(geoPoint.latitude, geoPoint.longitude);
+  static GeoPoint latLngToGeoPoint(LatLng latLng) =>
+      GeoPoint(latLng.latitude, latLng.longitude);
 }

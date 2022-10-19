@@ -1,5 +1,20 @@
 import 'package:latlong2/latlong.dart';
 
+///```dart
+///class TravelPlace {
+///   final String id;
+///   final LatLng originCoordinates;
+///   final LatLng destinationCoordinates;
+///   final List<String> imagesURLs;
+///   final String title;
+///   final String description;
+///   final DateTime date;
+///   final double kilometers;
+///   final List<String> comrades;
+///   final List<String> likes;
+///   final String countryIso3Code;
+/// }
+///```
 class TravelPlace {
   final String id;
   final LatLng originCoordinates;
