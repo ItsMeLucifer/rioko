@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:rioko/common/utilities.dart';
 import 'package:rioko/model/travel_place.dart';
 import 'package:rioko/model/user.dart';
@@ -21,8 +22,9 @@ class FirestoreDatabaseService {
   }
 
   Future<void> addNewPlace(TravelPlace place, String userId) async {
+    debugPrint('got: $place, $userId');
     CollectionReference users = FirebaseFirestore.instance.collection('users');
-    users.doc(userId).collection('places').doc(place.id).set({
+    await users.doc(userId).collection('places').doc(place.id).set({
       'id': place.id,
       'origin': Utilities.latLngToGeoPoint(place.originCoordinates),
       'destination': Utilities.latLngToGeoPoint(place.destinationCoordinates),

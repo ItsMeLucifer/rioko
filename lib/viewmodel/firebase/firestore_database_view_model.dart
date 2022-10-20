@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:rioko/main.dart';
+import 'package:rioko/model/travel_place.dart';
 import 'package:rioko/model/user.dart';
 import 'package:rioko/service/firestore_database_service.dart';
 
@@ -14,5 +15,14 @@ class FirestoreDatabaseViewModel extends ChangeNotifier {
     DocumentSnapshot user =
         await FirestoreDatabaseService().getUserInfo(userId);
     return user;
+  }
+
+  Future<String?> addNewPlace(TravelPlace place, String userId) async {
+    try {
+      await FirestoreDatabaseService().addNewPlace(place, userId);
+    } catch (e) {
+      return e.toString();
+    }
+    return null;
   }
 }

@@ -78,4 +78,11 @@ class GeolocationViewModel extends ChangeNotifier {
       return null;
     }
   }
+
+  static const Distance _distance = Distance();
+
+  double getDistanceInKilometers(LatLng? origin, LatLng? destination) {
+    if (origin == null || destination == null) return 0;
+    return _distance.as(LengthUnit.Kilometer, origin, destination);
+  }
 }

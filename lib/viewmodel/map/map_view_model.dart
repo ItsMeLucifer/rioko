@@ -39,6 +39,11 @@ class MapViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void addTravelPlace(TravelPlace travelPlace) {
+    _travelPlaces.add(travelPlace);
+    notifyListeners();
+  }
+
   final MapController mapController = MapController();
 
   void mapMoveTo({required LatLng position, double zoom = 10}) {

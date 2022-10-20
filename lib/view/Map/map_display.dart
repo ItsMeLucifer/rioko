@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:rioko/main.dart';
-import 'package:rioko/view/map/widgets/add_new_place.dart';
+import 'package:rioko/view/map/widgets/add_new_place/add_new_place.dart';
 
 class MapDisplay extends ConsumerWidget {
   const MapDisplay({Key? key}) : super(key: key);
@@ -23,6 +23,10 @@ class MapDisplay extends ConsumerWidget {
       addNewPlaceVM.originPlacemark = await geolocationVM
           .getPlacemarkFromCoordinates(authVM.currentUser!.home!);
     }
+    addNewPlaceVM.destination = null;
+    addNewPlaceVM.description = '';
+    addNewPlaceVM.title = '';
+    addNewPlaceVM.destinationPlacemark = null;
     showModalBottomSheet(context: context, builder: (_) => AddNewPlace());
   }
 

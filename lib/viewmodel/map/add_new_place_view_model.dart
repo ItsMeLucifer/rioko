@@ -38,4 +38,18 @@ class AddNewPlaceViewModel extends ChangeNotifier {
     _travelPlace = travelPlace;
     notifyListeners();
   }
+
+  String _title = '';
+  String get title => _title;
+  set title(String title) {
+    _title = title;
+    notifyListeners();
+  }
+
+  String _description = '';
+  String get description => _description;
+  set description(String description) {
+    _description = description;
+    notifyListeners();
+  }
 }
