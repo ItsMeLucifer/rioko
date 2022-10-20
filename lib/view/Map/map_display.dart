@@ -10,9 +10,19 @@ import 'package:rioko/view/map/widgets/add_new_place.dart';
 class MapDisplay extends ConsumerWidget {
   const MapDisplay({Key? key}) : super(key: key);
 
-  void _displayAddNewPlaceBottomSheet(BuildContext context, WidgetRef ref) {
-    final mapVM = ref.watch(mapProvider);
-    mapVM.travelPlace = mapVM.newPlace;
+  void _displayAddNewPlaceBottomSheet(
+      BuildContext context, WidgetRef ref) async {
+    final mapVM = ref.read(mapProvider);
+    final authVM = ref.read(authenticationProvider);
+    final addNewPlaceVM = ref.read(addNewPlaceProvider);
+    addNewPlaceVM.travelPlace = mapVM.newPlace;
+    if (authVM.currentUser?.home != null) {
+      final addNewPlaceVM = ref.read(addNewPlaceProvider);
+      final geolocationVM = ref.read(geolocationProvider);
+      addNewPlaceVM.origin = authVM.currentUser!.home;
+      addNewPlaceVM.originPlacemark = await geolocationVM
+          .getPlacemarkFromCoordinates(authVM.currentUser!.home!);
+    }
     showModalBottomSheet(context: context, builder: (_) => AddNewPlace());
   }
 
@@ -20,8 +30,10 @@ class MapDisplay extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final mapVM = ref.watch(mapProvider);
     final authVM = ref.watch(authenticationProvider);
+
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'addNewPlace',
         shape: BeveledRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -74,6 +86,7 @@ class MapDisplay extends ConsumerWidget {
                     ...mapVM.travelPlaces
                         .map(
                           (travelPlace) => Marker(
+                            key: UniqueKey(),
                             height: 40,
                             width: 40,
                             point: travelPlace.destinationCoordinates,
@@ -91,6 +104,7 @@ class MapDisplay extends ConsumerWidget {
                     if (authVM.currentUser != null &&
                         authVM.currentUser!.home != null)
                       Marker(
+                        key: UniqueKey(),
                         point: authVM.currentUser!.home!,
                         builder: (_) => IconButton(
                           onPressed: () {},

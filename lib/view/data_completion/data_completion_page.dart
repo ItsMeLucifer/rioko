@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rioko/common/route_names.dart';
 import 'package:rioko/main.dart';
 import 'package:rioko/view/components/text_field.dart';
-import 'package:geolocator/geolocator.dart';
 
 class DataCompletionPage extends ConsumerWidget {
   DataCompletionPage({Key? key}) : super(key: key);
@@ -31,27 +30,27 @@ class DataCompletionPage extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(geolocationVM
-                  .getAddressFromPlacemark(geolocationVM.positionPlacemark)),
+              Text(geolocationVM.getAddressFromPlacemark(
+                  geolocationVM.tempPositionPlacemark)),
               IconButton(
                 onPressed: () async {
                   geolocationVM
                       .getCurrentPosition()
                       .then((currentPosition) async {
                     if (currentPosition == null) return;
-                    geolocationVM.position = currentPosition;
+                    geolocationVM.tempPosition = currentPosition;
                     if (authVM.currentUser != null) {
                       authVM.currentUser = authVM.currentUser!.copyWith(
                         home: currentPosition,
                         homeAddress: geolocationVM.getAddressFromPlacemark(
-                            geolocationVM.positionPlacemark),
+                            geolocationVM.tempPositionPlacemark),
                       );
                     }
                     await geolocationVM
                         .getPlacemarkFromCoordinates(currentPosition)
                         .then((placemark) {
                       if (placemark != null) {
-                        geolocationVM.positionPlacemark = placemark;
+                        geolocationVM.tempPositionPlacemark = placemark;
                       }
                     });
                   });

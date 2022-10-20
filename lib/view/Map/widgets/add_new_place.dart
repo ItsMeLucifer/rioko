@@ -3,37 +3,37 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:rioko/main.dart';
+import 'package:rioko/model/travel_place.dart';
 import 'package:rioko/view/components/text_field.dart';
 
 class AddNewPlace extends ConsumerWidget {
   AddNewPlace({Key? key}) : super(key: key);
 
-  final TextEditingController addressController = TextEditingController();
+  final TextEditingController destinationTextController =
+      TextEditingController();
+  final TextEditingController originTextController = TextEditingController();
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authVM = ref.watch(authenticationProvider);
     final geolocationVM = ref.watch(geolocationProvider);
     final mapVM = ref.watch(mapProvider);
+    final addNewPlaceVM = ref.watch(addNewPlaceProvider);
     return Column(
       children: [
-        RichText(
-          text: TextSpan(
-            text: 'From: ',
-            style: const TextStyle(color: Colors.black),
-            children: [
-              authVM.currentUser?.home == null
-                  ? const TextSpan(text: '-')
-                  : TextSpan(text: authVM.currentUser?.homeAddress),
-            ],
-          ),
-        ),
         Row(
           children: [
+            const Expanded(
+                child: Padding(
+              padding: EdgeInsets.only(left: 5.0),
+              child: Text('From: '),
+            )),
             Expanded(
               flex: 5,
               child: CustomTextField(
-                enabled: geolocationVM.position == null,
+                enabled: addNewPlaceVM.origin == null,
                 onSubmitted: (value) async {
                   if (value.length > 3) {
                     await geolocationVM
@@ -44,37 +44,88 @@ class AddNewPlace extends ConsumerWidget {
                             .getPlacemarkFromCoordinates(latLng)
                             .then((placemark) {
                           if (placemark != null) {
-                            geolocationVM.positionPlacemark = placemark;
+                            addNewPlaceVM.originPlacemark = placemark;
+                          }
+                        });
+                        addNewPlaceVM.origin = latLng;
+                      }
+                    });
+                  }
+                },
+                hintText: addNewPlaceVM.originPlacemark == null
+                    ? 'Where did you start?'
+                    : geolocationVM.getAddressFromPlacemark(
+                        addNewPlaceVM.originPlacemark!),
+                controller: originTextController,
+              ),
+            ),
+            IconButton(
+              enableFeedback: addNewPlaceVM.origin != null,
+              onPressed: () {
+                addNewPlaceVM.origin = null;
+                addNewPlaceVM.originPlacemark = null;
+              },
+              icon: const Icon(Icons.edit),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            const Expanded(
+                child: Padding(
+              padding: EdgeInsets.only(left: 5.0),
+              child: Text('To: '),
+            )),
+            Expanded(
+              flex: 5,
+              child: CustomTextField(
+                enabled: addNewPlaceVM.destination == null,
+                onSubmitted: (value) async {
+                  if (value.length > 3) {
+                    await geolocationVM
+                        .getLocationsFromAddress(value)
+                        .then((latLng) {
+                      if (latLng != null) {
+                        geolocationVM
+                            .getPlacemarkFromCoordinates(latLng)
+                            .then((placemark) {
+                          if (placemark != null) {
+                            addNewPlaceVM.destinationPlacemark = placemark;
                           }
                         });
                         mapVM.mapMoveTo(
                           position: latLng,
                         );
-                        mapVM.travelPlace!.copyWith(
-                          originCoordinates: authVM.currentUser?.home,
-                          destinationCoordinates: latLng,
-                        );
-                        geolocationVM.position = latLng;
+                        addNewPlaceVM.destination = latLng;
                       }
                     });
                   }
                 },
-                hintText: geolocationVM.positionPlacemark.country == null
+                hintText: addNewPlaceVM.destinationPlacemark == null
                     ? 'Where did you travel?'
                     : geolocationVM.getAddressFromPlacemark(
-                        geolocationVM.positionPlacemark),
-                controller: addressController,
+                        addNewPlaceVM.destinationPlacemark!),
+                controller: destinationTextController,
               ),
             ),
-            Expanded(
-              child: IconButton(
-                enableFeedback: geolocationVM.position != null,
-                onPressed: () {
-                  geolocationVM.position = null;
-                  geolocationVM.positionPlacemark = Placemark();
-                },
-                icon: const Icon(Icons.edit),
-              ),
+            IconButton(
+              enableFeedback: addNewPlaceVM.destination != null,
+              onPressed: () {
+                addNewPlaceVM.destination = null;
+                addNewPlaceVM.destinationPlacemark = null;
+              },
+              icon: const Icon(Icons.edit),
+            ),
+            TextButton(
+              onPressed: () {
+                addNewPlaceVM.travelPlace = addNewPlaceVM.travelPlace!.copyWith(
+                  originCoordinates: addNewPlaceVM.origin,
+                  destinationCoordinates: addNewPlaceVM.destination,
+                  title: titleController.text,
+                  description: descriptionController.text,
+                );
+              },
+              child: const Text('Add'),
             ),
           ],
         ),

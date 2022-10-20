@@ -8,17 +8,17 @@ import 'package:rioko/common/utilities.dart';
 import 'package:rioko/service/geolocation_service.dart';
 
 class GeolocationViewModel extends ChangeNotifier {
-  LatLng? _position;
-  LatLng? get position => _position;
-  set position(LatLng? position) {
-    _position = position;
+  LatLng? _tempPosition;
+  LatLng? get tempPosition => _tempPosition;
+  set tempPosition(LatLng? position) {
+    _tempPosition = position;
     notifyListeners();
   }
 
-  Placemark _positionPlacemark = Placemark();
-  Placemark get positionPlacemark => _positionPlacemark;
-  set positionPlacemark(Placemark placemark) {
-    _positionPlacemark = placemark;
+  Placemark _tempPositionPlacemark = Placemark();
+  Placemark get tempPositionPlacemark => _tempPositionPlacemark;
+  set tempPositionPlacemark(Placemark placemark) {
+    _tempPositionPlacemark = placemark;
     notifyListeners();
   }
 

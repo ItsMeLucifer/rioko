@@ -45,13 +45,6 @@ class MapViewModel extends ChangeNotifier {
     mapController.move(position, zoom);
   }
 
-  TravelPlace? _travelPlace;
-  TravelPlace? get travelPlace => _travelPlace;
-  set travelPlace(TravelPlace? travelPlace) {
-    _travelPlace = travelPlace;
-    notifyListeners();
-  }
-
   TravelPlace get newPlace => TravelPlace(
         id: const Uuid().v1(),
         countryIso3Code: '',
