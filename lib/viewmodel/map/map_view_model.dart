@@ -46,6 +46,14 @@ class MapViewModel extends ChangeNotifier {
 
   final MapController mapController = MapController();
 
+  LatLng _startCenter = LatLng(0, 0);
+  LatLng get startCenter => _startCenter;
+
+  void setStartCenter(LatLng point) {
+    _startCenter = point;
+    notifyListeners();
+  }
+
   void mapMoveTo({required LatLng position, double zoom = 10}) {
     mapController.move(position, zoom);
   }

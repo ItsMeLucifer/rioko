@@ -38,4 +38,21 @@ class FirestoreDatabaseService {
       'country': place.countryIso3Code,
     });
   }
+
+  Future<List<TravelPlace>> fetchCurrentUserPlaces(String userId) async {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    List<QueryDocumentSnapshot> placeSnapshots = await users
+        .doc(userId)
+        .collection('places')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      if (querySnapshot.size > 0) {
+        return querySnapshot.docs;
+      }
+      return [];
+    });
+    return placeSnapshots
+        .map((snapshot) => TravelPlace.fromDocumentSnapshot(snapshot))
+        .toList();
+  }
 }

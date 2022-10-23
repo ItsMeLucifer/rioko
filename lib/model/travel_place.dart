@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:rioko/common/utilities.dart';
 
 ///```dart
 ///class TravelPlace {
@@ -68,6 +70,29 @@ class TravelPlace {
         likes: likes ?? this.likes,
         originCoordinates: originCoordinates ?? this.originCoordinates,
         title: title ?? this.title,
-        id: this.id,
+        id: id,
+      );
+
+  static TravelPlace fromDocumentSnapshot(DocumentSnapshot snapshot) =>
+      TravelPlace(
+        id: snapshot.get('id') as String,
+        countryIso3Code: snapshot.get('country') as String,
+        date: DateTime.fromMicrosecondsSinceEpoch(snapshot.get('date') as int),
+        destinationCoordinates:
+            Utilities.geoPointToLatLng(snapshot.get('destination') as GeoPoint),
+        kilometers: snapshot.get('kilometers') as double,
+        originCoordinates:
+            Utilities.geoPointToLatLng(snapshot.get('origin') as GeoPoint),
+        description: snapshot.get('description') as String,
+        title: snapshot.get('title') as String,
+        imagesURLs: snapshot.get('images').isNotEmpty
+            ? snapshot.get('images') as List<String>
+            : [],
+        likes: snapshot.get('likes').isNotEmpty
+            ? snapshot.get('likes') as List<String>
+            : [],
+        comrades: snapshot.get('comrades').isNotEmpty
+            ? snapshot.get('comrades') as List<String>
+            : [],
       );
 }

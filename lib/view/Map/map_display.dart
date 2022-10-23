@@ -58,7 +58,7 @@ class MapDisplay extends ConsumerWidget {
           FlutterMap(
             mapController: mapVM.mapController,
             options: MapOptions(
-              center: LatLng(35.68518815714286, 139.75280093812933),
+              center: mapVM.startCenter,
               zoom: 6,
               minZoom: 1,
               maxZoom: 15,

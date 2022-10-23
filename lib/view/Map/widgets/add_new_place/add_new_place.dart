@@ -103,11 +103,7 @@ class AddNewPlace extends ConsumerWidget {
     final authVM = ref.read(authenticationProvider);
     final response = await firestoreDBVM.addNewPlace(
         addNewPlaceVM.travelPlace!, authVM.currentUser!.id);
-    if (response == null) {
-      Navigator.of(context).pop();
-    } else {
-      debugPrint('EROR OCCURED');
-    }
+    if (response) Navigator.of(context).pop();
   }
 
   void _onSubmittedOrigin(String value, WidgetRef ref) async {

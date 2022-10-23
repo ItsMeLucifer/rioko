@@ -1,0 +1,67 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:rioko/common/route_names.dart';
+import 'package:rioko/common/utilities.dart';
+import 'package:rioko/viewmodel/firebase/authentication_view_model.dart';
+import 'package:rioko/viewmodel/firebase/firestore_database_view_model.dart';
+import 'package:rioko/viewmodel/geolocation/geolocation_view_model.dart';
+import 'package:rioko/viewmodel/map/add_new_place_view_model.dart';
+import 'package:rioko/viewmodel/map/map_view_model.dart';
+
+class BaseViewModel extends ChangeNotifier {
+  final FirestoreDatabaseViewModel firestoreDBVM;
+  final MapViewModel mapVM;
+  final AddNewPlaceViewModel addNewPlaceVM;
+  final GeolocationViewModel geolocationVM;
+  final AuthenticationViewModel authVM;
+  BaseViewModel({
+    required this.firestoreDBVM,
+    required this.mapVM,
+    required this.addNewPlaceVM,
+    required this.geolocationVM,
+    required this.authVM,
+  });
+
+  Future<void> login(
+    BuildContext context, {
+    required String email,
+    required String password,
+  }) async {
+    authVM.login(email: email, password: password).then(
+      (authenticated) async {
+        if (authenticated) {
+          final userSnapshot = await firestoreDBVM
+              .getCurrentUserBasicInfo(authVM.currentUser!.id);
+          final home =
+              Utilities.geoPointToLatLng(userSnapshot.get('home') as GeoPoint);
+          mapVM.setStartCenter(home);
+          final placemark =
+              await geolocationVM.getPlacemarkFromCoordinates(home);
+          authVM.currentUser = authVM.currentUser!.copyWith(
+            home: home,
+            homeAddress: placemark != null
+                ? geolocationVM.getAddressFromPlacemark(placemark)
+                : null,
+          );
+          final places =
+              await firestoreDBVM.fetchUserPlaces(authVM.currentUser!.id);
+          debugPrint('======Got ${places.length} places');
+          mapVM.travelPlaces = places;
+          Navigator.of(context).pushReplacementNamed(RouteNames.map);
+        }
+      },
+    );
+  }
+
+  Future<void> register(
+    BuildContext context, {
+    required String email,
+    required String password,
+  }) async {
+    await authVM.signUp(email: email, password: password).then((authenticated) {
+      if (authenticated) {
+        Navigator.of(context).pushReplacementNamed(RouteNames.dataCompletion);
+      }
+    });
+  }
+}

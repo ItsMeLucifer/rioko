@@ -17,12 +17,22 @@ class FirestoreDatabaseViewModel extends ChangeNotifier {
     return user;
   }
 
-  Future<String?> addNewPlace(TravelPlace place, String userId) async {
+  Future<bool> addNewPlace(TravelPlace place, String userId) async {
     try {
       await FirestoreDatabaseService().addNewPlace(place, userId);
+      return true;
     } catch (e) {
-      return e.toString();
+      debugPrint('>>>>>ADD NEW PLACE: ' + e.toString());
     }
-    return null;
+    return false;
+  }
+
+  Future<List<TravelPlace>> fetchUserPlaces(String userId) async {
+    try {
+      return await FirestoreDatabaseService().fetchCurrentUserPlaces(userId);
+    } catch (e) {
+      debugPrint('>>>>>FETCH USER PLACES: ' + e.toString());
+    }
+    return [];
   }
 }
