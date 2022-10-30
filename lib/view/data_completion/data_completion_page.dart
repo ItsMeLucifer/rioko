@@ -17,7 +17,7 @@ class DataCompletionPage extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CustomTextField(
-            hintText: 'Name',
+            labelText: 'Name',
             controller: nameController,
             onChanged: (value) {
               if (authVM.currentUser != null) {

@@ -30,7 +30,7 @@ class AddNewPlace extends ConsumerWidget {
         AddNewPlaceTextField(
           prefix: 'Title: ',
           textField: CustomTextField(
-            hintText:
+            labelText:
                 addNewPlaceVM.title == '' ? ' Title' : addNewPlaceVM.title,
             controller: titleTextController,
             onChanged: (title) {
@@ -42,7 +42,7 @@ class AddNewPlace extends ConsumerWidget {
           textField: CustomTextField(
             enabled: addNewPlaceVM.origin == null,
             onSubmitted: (value) => baseVM.addNewPlaceOnSubmittedOrigin(value),
-            hintText: addNewPlaceVM.originPlacemark == null
+            labelText: addNewPlaceVM.originPlacemark == null
                 ? 'Where did you start?'
                 : geolocationVM
                     .getAddressFromPlacemark(addNewPlaceVM.originPlacemark!),
@@ -59,7 +59,7 @@ class AddNewPlace extends ConsumerWidget {
             enabled: addNewPlaceVM.destination == null,
             onSubmitted: (value) =>
                 baseVM.addNewPlaceOnSubmittedDestination(value),
-            hintText: addNewPlaceVM.destinationPlacemark == null
+            labelText: addNewPlaceVM.destinationPlacemark == null
                 ? 'Where did you travel?'
                 : geolocationVM.getAddressFromPlacemark(
                     addNewPlaceVM.destinationPlacemark!),

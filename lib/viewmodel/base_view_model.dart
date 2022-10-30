@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:motion_toast/motion_toast.dart';
+import 'package:motion_toast/resources/arrays.dart';
 import 'package:rioko/common/route_names.dart';
 import 'package:rioko/common/utilities.dart';
 import 'package:rioko/viewmodel/firebase/authentication_view_model.dart';
@@ -47,6 +49,18 @@ class BaseViewModel extends ChangeNotifier {
               await firestoreDBVM.fetchUserPlaces(authVM.currentUser!.id);
           mapVM.travelPlaces = places;
           Navigator.of(context).pushReplacementNamed(RouteNames.map);
+        } else {
+          MotionToast.error(
+            title: const Text("Error"),
+            description: Text(
+              authVM.exceptionMessage,
+            ),
+            position: MotionToastPosition.top,
+            animationType: AnimationType.fromTop,
+            enableAnimation: false,
+          ).show(
+            context,
+          );
         }
       },
     );
@@ -60,6 +74,17 @@ class BaseViewModel extends ChangeNotifier {
     await authVM.signUp(email: email, password: password).then((authenticated) {
       if (authenticated) {
         Navigator.of(context).pushReplacementNamed(RouteNames.dataCompletion);
+      } else {
+        MotionToast.error(
+          title: const Text("Error"),
+          description: Text(
+            authVM.exceptionMessage,
+          ),
+          position: MotionToastPosition.top,
+          animationType: AnimationType.fromTop,
+        ).show(
+          context,
+        );
       }
     });
   }

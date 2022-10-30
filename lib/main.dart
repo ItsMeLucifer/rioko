@@ -60,6 +60,13 @@ class MyApp extends StatelessWidget {
       title: 'Rioko',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        textTheme: ThemeData.light().textTheme.copyWith(
+              headline1: const TextStyle(
+                fontFamily: 'CeasarDressing',
+                fontSize: 80,
+                color: Colors.black,
+              ),
+            ),
       ),
       home: const MapDisplay(),
       debugShowCheckedModeBanner: false,
