@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:rioko/main.dart';
 import 'package:rioko/view/map/widgets/add_new_place/add_new_place.dart';
+import 'package:rioko/view/map/widgets/map_marker.dart';
 
 class MapDisplay extends ConsumerWidget {
   const MapDisplay({Key? key}) : super(key: key);
@@ -89,19 +90,14 @@ class MapDisplay extends ConsumerWidget {
                   markers: [
                     ...mapVM.travelPlaces
                         .map(
-                          (travelPlace) => Marker(
-                            key: UniqueKey(),
-                            height: 40,
-                            width: 40,
+                          (travelPlace) => MapUtils.getMarker(
                             point: travelPlace.destinationCoordinates,
-                            builder: (_) => IconButton(
-                              icon: const FittedBox(
-                                child: FaIcon(
-                                  FontAwesomeIcons.locationDot,
-                                ),
-                              ),
-                              onPressed: () {},
-                            ),
+                            onPressed: () {
+                              mapVM.mapMoveTo(
+                                position: travelPlace.destinationCoordinates,
+                                zoom: 7,
+                              );
+                            },
                           ),
                         )
                         .toList(),

@@ -45,7 +45,6 @@ class BaseViewModel extends ChangeNotifier {
           );
           final places =
               await firestoreDBVM.fetchUserPlaces(authVM.currentUser!.id);
-          debugPrint('======Got ${places.length} places');
           mapVM.travelPlaces = places;
           Navigator.of(context).pushReplacementNamed(RouteNames.map);
         }
@@ -63,5 +62,44 @@ class BaseViewModel extends ChangeNotifier {
         Navigator.of(context).pushReplacementNamed(RouteNames.dataCompletion);
       }
     });
+  }
+
+  void addNewTravelPlaceToFirebase(BuildContext context) async {
+    final response = await firestoreDBVM.addNewPlace(
+        addNewPlaceVM.travelPlace!, authVM.currentUser!.id);
+    if (response) Navigator.of(context).pop();
+  }
+
+  void addNewPlaceOnSubmittedOrigin(String value) async {
+    if (value.length > 3) {
+      await geolocationVM.getLocationsFromAddress(value).then((latLng) {
+        if (latLng != null) {
+          geolocationVM.getPlacemarkFromCoordinates(latLng).then((placemark) {
+            if (placemark != null) {
+              addNewPlaceVM.originPlacemark = placemark;
+            }
+          });
+          addNewPlaceVM.origin = latLng;
+        }
+      });
+    }
+  }
+
+  void addNewPlaceOnSubmittedDestination(String value) async {
+    if (value.length > 3) {
+      await geolocationVM.getLocationsFromAddress(value).then((latLng) {
+        if (latLng != null) {
+          geolocationVM.getPlacemarkFromCoordinates(latLng).then((placemark) {
+            if (placemark != null) {
+              addNewPlaceVM.destinationPlacemark = placemark;
+            }
+          });
+          mapVM.mapMoveTo(
+            position: latLng,
+          );
+          addNewPlaceVM.destination = latLng;
+        }
+      });
+    }
   }
 }

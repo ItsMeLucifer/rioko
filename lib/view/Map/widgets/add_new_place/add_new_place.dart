@@ -21,8 +21,10 @@ class AddNewPlace extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final geolocationVM = ref.watch(geolocationProvider);
     final addNewPlaceVM = ref.watch(addNewPlaceProvider);
+    final baseVM = ref.watch(baseProvider);
     final kilometers = geolocationVM.getDistanceInKilometers(
         addNewPlaceVM.origin, addNewPlaceVM.destination);
+
     return Column(
       children: [
         AddNewPlaceTextField(
@@ -39,7 +41,7 @@ class AddNewPlace extends ConsumerWidget {
         AddNewPlaceTextField(
           textField: CustomTextField(
             enabled: addNewPlaceVM.origin == null,
-            onSubmitted: (value) => _onSubmittedOrigin(value, ref),
+            onSubmitted: (value) => baseVM.addNewPlaceOnSubmittedOrigin(value),
             hintText: addNewPlaceVM.originPlacemark == null
                 ? 'Where did you start?'
                 : geolocationVM
@@ -55,7 +57,8 @@ class AddNewPlace extends ConsumerWidget {
         AddNewPlaceTextField(
           textField: CustomTextField(
             enabled: addNewPlaceVM.destination == null,
-            onSubmitted: (value) => _onSubmittedDestination(value, ref),
+            onSubmitted: (value) =>
+                baseVM.addNewPlaceOnSubmittedDestination(value),
             hintText: addNewPlaceVM.destinationPlacemark == null
                 ? 'Where did you travel?'
                 : geolocationVM.getAddressFromPlacemark(
@@ -75,8 +78,9 @@ class AddNewPlace extends ConsumerWidget {
           onPressed: () {
             final authVM = ref.read(authenticationProvider);
             final mapVM = ref.read(mapProvider);
-            _onSubmittedOrigin(originTextController.text, ref);
-            _onSubmittedOrigin(destinationTextController.text, ref);
+            baseVM.addNewPlaceOnSubmittedOrigin(originTextController.text);
+            baseVM.addNewPlaceOnSubmittedDestination(
+                destinationTextController.text);
             if (authVM.currentUser?.id == null ||
                 addNewPlaceVM.travelPlace == null ||
                 addNewPlaceVM.origin == null ||
@@ -88,59 +92,12 @@ class AddNewPlace extends ConsumerWidget {
               description: addNewPlaceVM.description,
               kilometers: kilometers,
             );
-            _addNewTravelPlaceToFirebase(context, ref);
+            baseVM.addNewTravelPlaceToFirebase(context);
             mapVM.addTravelPlace(addNewPlaceVM.travelPlace!);
           },
           child: const Text('Add'),
         ),
       ],
     );
-  }
-
-  void _addNewTravelPlaceToFirebase(BuildContext context, WidgetRef ref) async {
-    final firestoreDBVM = ref.read(firestoreDatabaseProvider);
-    final addNewPlaceVM = ref.read(addNewPlaceProvider);
-    final authVM = ref.read(authenticationProvider);
-    final response = await firestoreDBVM.addNewPlace(
-        addNewPlaceVM.travelPlace!, authVM.currentUser!.id);
-    if (response) Navigator.of(context).pop();
-  }
-
-  void _onSubmittedOrigin(String value, WidgetRef ref) async {
-    final geolocationVM = ref.read(geolocationProvider);
-    final addNewPlaceVM = ref.read(addNewPlaceProvider);
-    if (value.length > 3) {
-      await geolocationVM.getLocationsFromAddress(value).then((latLng) {
-        if (latLng != null) {
-          geolocationVM.getPlacemarkFromCoordinates(latLng).then((placemark) {
-            if (placemark != null) {
-              addNewPlaceVM.originPlacemark = placemark;
-            }
-          });
-          addNewPlaceVM.origin = latLng;
-        }
-      });
-    }
-  }
-
-  void _onSubmittedDestination(String value, WidgetRef ref) async {
-    final geolocationVM = ref.read(geolocationProvider);
-    final mapVM = ref.read(mapProvider);
-    final addNewPlaceVM = ref.read(addNewPlaceProvider);
-    if (value.length > 3) {
-      await geolocationVM.getLocationsFromAddress(value).then((latLng) {
-        if (latLng != null) {
-          geolocationVM.getPlacemarkFromCoordinates(latLng).then((placemark) {
-            if (placemark != null) {
-              addNewPlaceVM.destinationPlacemark = placemark;
-            }
-          });
-          mapVM.mapMoveTo(
-            position: latLng,
-          );
-          addNewPlaceVM.destination = latLng;
-        }
-      });
-    }
   }
 }
