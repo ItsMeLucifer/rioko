@@ -25,14 +25,15 @@ class GeolocationViewModel extends ChangeNotifier {
   Future<LatLng?> getCurrentPosition() async {
     try {
       Position position = await GeolocationService().getCurrentLocation();
-      return _maskActualPosition(position);
+      return maskActualPosition(position);
     } catch (e) {
       debugPrint("Couldn't get current position: $e");
       return null;
     }
   }
 
-  LatLng _maskActualPosition(Position position) {
+  @visibleForTesting
+  LatLng maskActualPosition(Position position) {
     final random = Random();
     double latitudeOffset = 0;
     double longitudeOffset = 0;
@@ -58,11 +59,11 @@ class GeolocationViewModel extends ChangeNotifier {
   }
 
   String getAddressFromPlacemark(Placemark placemark) {
-    final cityName = Utilities.checkIfNullOrEmptyString(placemark.locality)
+    final cityName = Utilities.isNullOrEmptyString(placemark.locality)
         ? ''
         : '${placemark.locality}, ';
     final administrativeArea =
-        Utilities.checkIfNullOrEmptyString(placemark.administrativeArea)
+        Utilities.isNullOrEmptyString(placemark.administrativeArea)
             ? ''
             : '${placemark.administrativeArea}, ';
     return "$cityName$administrativeArea${placemark.country ?? '?'}";
