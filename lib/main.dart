@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rioko/common/color_palette.dart';
 import 'package:rioko/common/route_names.dart';
 import 'package:rioko/view/authentication/authentication_page.dart';
 import 'package:rioko/view/data_completion/data_completion_page.dart';
@@ -11,6 +12,7 @@ import 'package:rioko/viewmodel/firebase/firestore_database_view_model.dart';
 import 'package:rioko/viewmodel/geolocation/geolocation_view_model.dart';
 import 'package:rioko/viewmodel/map/add_new_place_view_model.dart';
 import 'package:rioko/viewmodel/map/map_view_model.dart';
+import 'package:rioko/viewmodel/registration/data_completion_view_model.dart';
 
 final ChangeNotifierProvider<MapViewModel> mapProvider =
     ChangeNotifierProvider((_) => MapViewModel());
@@ -38,6 +40,15 @@ final ChangeNotifierProvider<BaseViewModel> baseProvider =
     authVM: authVM,
   );
 });
+final ChangeNotifierProvider<DataCompletionViewModel> dataCompletionProvider =
+    ChangeNotifierProvider((_) {
+  final geolocationVM = _.watch(geolocationProvider);
+  final authVM = _.watch(authenticationProvider);
+  return DataCompletionViewModel(
+    geolocationVM: geolocationVM,
+    authVM: authVM,
+  );
+});
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -60,6 +71,10 @@ class MyApp extends StatelessWidget {
       title: 'Rioko',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        colorScheme:
+            ColorScheme.fromSwatch(primarySwatch: Colors.blue).copyWith(
+          primary: ColorPalette.babyBlue,
+        ),
         textTheme: ThemeData.light().textTheme.copyWith(
               headline1: const TextStyle(
                 fontFamily: 'CeasarDressing',
@@ -67,6 +82,11 @@ class MyApp extends StatelessWidget {
                 color: Colors.black,
               ),
             ),
+        buttonTheme: ButtonThemeData(
+            colorScheme:
+                ColorScheme.fromSwatch(primarySwatch: Colors.pink).copyWith(
+          background: ColorPalette.tickleMePink,
+        )),
       ),
       home: const MapDisplay(),
       debugShowCheckedModeBanner: false,

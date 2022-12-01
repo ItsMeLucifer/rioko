@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
-class CustomButton extends StatelessWidget {
+class RiokoButton extends StatelessWidget {
   final String? text;
   final IconData? icon;
   final Color? fillColor;
   final Color accentColor;
   final Function()? onPressed;
-  const CustomButton({
+  const RiokoButton({
     Key? key,
     required this.onPressed,
     this.text,
     this.icon,
     this.fillColor,
-    this.accentColor = Colors.white54,
+    this.accentColor = Colors.white,
   }) : super(key: key);
 
   @override
@@ -25,7 +25,8 @@ class CustomButton extends StatelessWidget {
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: fillColor,
+            color: fillColor ??
+                Theme.of(context).buttonTheme.colorScheme?.background,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

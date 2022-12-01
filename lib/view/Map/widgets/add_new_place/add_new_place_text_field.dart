@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rioko/view/components/text_field.dart';
 
 class AddNewPlaceTextField extends StatelessWidget {
-  final CustomTextField? textField;
+  final RiokoTextField? textField;
   final Function? onPressedEdit;
   final String prefix;
   const AddNewPlaceTextField({

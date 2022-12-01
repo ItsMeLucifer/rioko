@@ -29,7 +29,7 @@ class AddNewPlace extends ConsumerWidget {
       children: [
         AddNewPlaceTextField(
           prefix: 'Title: ',
-          textField: CustomTextField(
+          textField: RiokoTextField(
             labelText:
                 addNewPlaceVM.title == '' ? ' Title' : addNewPlaceVM.title,
             controller: titleTextController,
@@ -39,7 +39,7 @@ class AddNewPlace extends ConsumerWidget {
           ),
         ),
         AddNewPlaceTextField(
-          textField: CustomTextField(
+          textField: RiokoTextField(
             enabled: addNewPlaceVM.origin == null,
             onSubmitted: (value) => baseVM.addNewPlaceOnSubmittedOrigin(value),
             labelText: addNewPlaceVM.originPlacemark == null
@@ -55,7 +55,7 @@ class AddNewPlace extends ConsumerWidget {
           },
         ),
         AddNewPlaceTextField(
-          textField: CustomTextField(
+          textField: RiokoTextField(
             enabled: addNewPlaceVM.destination == null,
             onSubmitted: (value) =>
                 baseVM.addNewPlaceOnSubmittedDestination(value),
