@@ -6,6 +6,7 @@ import 'package:rioko/common/route_names.dart';
 import 'package:rioko/main.dart';
 import 'package:rioko/view/authentication/widgets/login_screen.dart';
 import 'package:rioko/view/authentication/widgets/register_screen.dart';
+import 'package:rioko/view/components/app_logo.dart';
 import 'package:rioko/view/components/button.dart';
 import 'package:rioko/view/components/text_field.dart';
 import 'package:rioko/viewmodel/firebase/authentication_view_model.dart';
@@ -27,22 +28,7 @@ class AuthenticationPage extends ConsumerWidget {
               flex: 2,
               child: SizedBox(),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
-                  child: SizedBox(
-                      width: 80,
-                      height: 70,
-                      child: Image.asset('assets/icons/travel.png')),
-                ),
-                Text(
-                  'Rioko',
-                  style: Theme.of(context).textTheme.headline1,
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
+            const AppLogo(),
             const Expanded(
               flex: 1,
               child: SizedBox(),

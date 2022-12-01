@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CustomTextField extends StatelessWidget {
+class RiokoTextField extends StatelessWidget {
   final TextEditingController controller;
   final Function(String)? onChanged;
   final Function(String)? onSubmitted;
@@ -10,7 +10,9 @@ class CustomTextField extends StatelessWidget {
   final IconData? sufixIconData;
   final Color accentColor;
   final Color? fillColor;
-  const CustomTextField({
+  final double height;
+  final Function()? onPressedIcon;
+  const RiokoTextField({
     Key? key,
     required this.controller,
     this.onChanged,
@@ -20,12 +22,15 @@ class CustomTextField extends StatelessWidget {
     this.enabled,
     this.sufixIconData,
     this.fillColor,
-    this.accentColor = Colors.white54,
+    this.accentColor = Colors.white,
+    this.height = 50,
+    this.onPressedIcon,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
+      height: height,
       padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
       child: TextFormField(
         enabled: enabled,
@@ -38,15 +43,19 @@ class CustomTextField extends StatelessWidget {
         decoration: InputDecoration(
           labelText: labelText,
           contentPadding: const EdgeInsets.all(10.0),
-          suffixIcon: Icon(sufixIconData, color: accentColor),
+          suffixIcon: InkWell(
+            onTap: onPressedIcon,
+            child: Icon(sufixIconData, color: accentColor),
+          ),
           floatingLabelBehavior: FloatingLabelBehavior.never,
           labelStyle: Theme.of(context)
               .textTheme
               .bodyText1
               ?.copyWith(color: accentColor),
           focusColor: accentColor,
+          isDense: true,
           filled: true,
-          fillColor: fillColor,
+          fillColor: fillColor ?? Theme.of(context).colorScheme.primary,
           border: OutlineInputBorder(
             borderSide: BorderSide.none,
             borderRadius: BorderRadius.circular(10),

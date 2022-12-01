@@ -16,26 +16,23 @@ class RegisterScreen extends ConsumerWidget {
     final authVM = ref.watch(authenticationProvider);
     return Column(
       children: [
-        CustomTextField(
+        RiokoTextField(
           controller: nameController,
           labelText: 'Name',
-          fillColor: ColorPalette.babyBlue,
           sufixIconData: Icons.person,
         ),
-        CustomTextField(
+        RiokoTextField(
           controller: emailController,
           labelText: 'Email',
-          fillColor: ColorPalette.babyBlue,
           sufixIconData: Icons.mail,
         ),
-        CustomTextField(
+        RiokoTextField(
           controller: passwordController,
           obscureText: true,
           labelText: 'Password',
-          fillColor: ColorPalette.babyBlue,
           sufixIconData: Icons.key,
         ),
-        CustomButton(
+        RiokoButton(
           text: 'Register',
           onPressed: () => baseVM.register(
             context,
@@ -43,7 +40,6 @@ class RegisterScreen extends ConsumerWidget {
             password: passwordController.text,
           ),
           icon: Icons.create,
-          fillColor: ColorPalette.cottonCandy,
         ),
         const SizedBox(height: 10),
         GestureDetector(

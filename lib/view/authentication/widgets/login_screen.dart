@@ -16,21 +16,19 @@ class LoginScreen extends ConsumerWidget {
     final authVM = ref.watch(authenticationProvider);
     return Column(
       children: [
-        CustomTextField(
+        RiokoTextField(
           controller: emailController,
           labelText: 'Email',
-          fillColor: ColorPalette.babyBlue,
           sufixIconData: Icons.mail,
         ),
-        CustomTextField(
+        RiokoTextField(
           controller: passwordController,
           obscureText: true,
           labelText: 'Password',
-          fillColor: ColorPalette.babyBlue,
           sufixIconData: Icons.key,
         ),
         const SizedBox(height: 10.0),
-        CustomButton(
+        RiokoButton(
           text: 'Login',
           onPressed: () => baseVM.login(
             context,

@@ -15,9 +15,9 @@ class GeolocationViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Placemark _tempPositionPlacemark = Placemark();
-  Placemark get tempPositionPlacemark => _tempPositionPlacemark;
-  set tempPositionPlacemark(Placemark placemark) {
+  Placemark? _tempPositionPlacemark = Placemark();
+  Placemark? get tempPositionPlacemark => _tempPositionPlacemark;
+  set tempPositionPlacemark(Placemark? placemark) {
     _tempPositionPlacemark = placemark;
     notifyListeners();
   }
