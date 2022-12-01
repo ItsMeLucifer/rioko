@@ -11,8 +11,8 @@ class AuthenticationPage extends ConsumerWidget {
   final TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final mapVM = ref.watch(mapProvider);
     final authVM = ref.watch(authenticationProvider);
+    final baseVM = ref.watch(baseProvider);
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -38,32 +38,21 @@ class AuthenticationPage extends ConsumerWidget {
           ),
           IconButton(
             onPressed: () {
-              authVM
-                  .login(
-                      email: emailController.text,
-                      password: passwordController.text)
-                  .then(
-                (authenticated) {
-                  if (authenticated) {
-                    Navigator.of(context).pushReplacementNamed(RouteNames.map);
-                  }
-                },
+              baseVM.login(
+                context,
+                email: emailController.text,
+                password: passwordController.text,
               );
             },
             icon: const Icon(Icons.login),
           ),
           IconButton(
             onPressed: () {
-              authVM
-                  .signUp(
-                      email: emailController.text,
-                      password: passwordController.text)
-                  .then((authenticated) {
-                if (authenticated) {
-                  Navigator.of(context)
-                      .pushReplacementNamed(RouteNames.dataCompletion);
-                }
-              });
+              baseVM.register(
+                context,
+                email: emailController.text,
+                password: passwordController.text,
+              );
             },
             icon: const Icon(Icons.create),
           ),

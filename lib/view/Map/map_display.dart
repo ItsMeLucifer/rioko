@@ -5,26 +5,46 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:rioko/main.dart';
-import 'package:rioko/view/map/widgets/add_new_place.dart';
+import 'package:rioko/view/map/widgets/add_new_place/add_new_place.dart';
+import 'package:rioko/view/map/widgets/map_marker.dart';
 
 class MapDisplay extends ConsumerWidget {
   const MapDisplay({Key? key}) : super(key: key);
 
-  void _displayAddNewPlaceBottomSheet(BuildContext context) {
+  void _displayAddNewPlaceBottomSheet(
+      BuildContext context, WidgetRef ref) async {
+    final mapVM = ref.read(mapProvider);
+    final authVM = ref.read(authenticationProvider);
+    final addNewPlaceVM = ref.read(addNewPlaceProvider);
+    addNewPlaceVM.travelPlace = mapVM.newPlace;
+    if (authVM.currentUser?.home != null) {
+      final addNewPlaceVM = ref.read(addNewPlaceProvider);
+      final geolocationVM = ref.read(geolocationProvider);
+      addNewPlaceVM.origin = authVM.currentUser!.home;
+      addNewPlaceVM.originPlacemark = await geolocationVM
+          .getPlacemarkFromCoordinates(authVM.currentUser!.home!);
+    }
+    addNewPlaceVM.destination = null;
+    addNewPlaceVM.description = '';
+    addNewPlaceVM.title = '';
+    addNewPlaceVM.destinationPlacemark = null;
     showModalBottomSheet(context: context, builder: (_) => AddNewPlace());
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mapVM = ref.watch(mapProvider);
+    final authVM = ref.watch(authenticationProvider);
+
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'addNewPlace',
         shape: BeveledRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
         backgroundColor: Colors.grey[100],
         elevation: 5,
-        onPressed: () => _displayAddNewPlaceBottomSheet(context),
+        onPressed: () => _displayAddNewPlaceBottomSheet(context, ref),
         label: const SizedBox(
           width: 50,
           child: Icon(
@@ -39,7 +59,7 @@ class MapDisplay extends ConsumerWidget {
           FlutterMap(
             mapController: mapVM.mapController,
             options: MapOptions(
-              center: LatLng(35.68518815714286, 139.75280093812933),
+              center: mapVM.startCenter,
               zoom: 6,
               minZoom: 1,
               maxZoom: 15,
@@ -63,45 +83,35 @@ class MapDisplay extends ConsumerWidget {
                   retinaMode: MediaQuery.of(context).devicePixelRatio > 1.0,
                 ),
               ),
-              PolylineLayerWidget(
-                options: PolylineLayerOptions(
-                  polylineCulling: false,
-                  polylines: mapVM.travelPlaces
-                      .map(
-                        (travelPlace) => Polyline(
-                          points: [
-                            travelPlace.originCoordinates,
-                            travelPlace.destinationCoordinates,
-                          ],
-                          color: Colors.black,
-                        ),
-                      )
-                      .toList(),
-                ),
-              ),
               MarkerClusterLayerWidget(
                 options: MarkerClusterLayerOptions(
                   maxClusterRadius: 80,
                   size: const Size(40, 40),
-                  markers: mapVM.travelPlaces
-                      .map(
-                        (travelPlace) => Marker(
-                          height: 40,
-                          width: 40,
-                          point: travelPlace.destinationCoordinates,
-                          builder: (_) => IconButton(
-                            icon: const FittedBox(
-                              child: FaIcon(
-                                FontAwesomeIcons.locationDot,
-                              ),
-                            ),
+                  markers: [
+                    ...mapVM.travelPlaces
+                        .map(
+                          (travelPlace) => MapUtils.getMarker(
+                            point: travelPlace.destinationCoordinates,
                             onPressed: () {
-                              print('clicked');
+                              mapVM.mapMoveTo(
+                                position: travelPlace.destinationCoordinates,
+                                zoom: 7,
+                              );
                             },
                           ),
+                        )
+                        .toList(),
+                    if (authVM.currentUser != null &&
+                        authVM.currentUser!.home != null)
+                      Marker(
+                        key: UniqueKey(),
+                        point: authVM.currentUser!.home!,
+                        builder: (_) => IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.home),
                         ),
-                      )
-                      .toList(),
+                      ),
+                  ],
                   polygonOptions: const PolygonOptions(
                     borderColor: Colors.redAccent,
                     borderStrokeWidth: 3,
@@ -116,7 +126,7 @@ class MapDisplay extends ConsumerWidget {
                     );
                   },
                 ),
-              )
+              ),
             ],
           ),
           const SafeArea(

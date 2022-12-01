@@ -4,36 +4,31 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:rioko/common/utilities.dart';
 import 'package:rioko/service/geolocation_service.dart';
 
 class GeolocationViewModel extends ChangeNotifier {
-  LatLng _currentPosition = LatLng(0, 0);
-  LatLng get currentPosition => _currentPosition;
-  set currentPosition(LatLng position) {
-    _currentPosition = position;
+  LatLng? _tempPosition;
+  LatLng? get tempPosition => _tempPosition;
+  set tempPosition(LatLng? position) {
+    _tempPosition = position;
     notifyListeners();
   }
 
-  Placemark _currentPositionPlacemark = Placemark();
-  Placemark get currentPositionPlacemark => _currentPositionPlacemark;
-  set currentPositionPlacemark(Placemark placemark) {
-    _currentPositionPlacemark = placemark;
+  Placemark _tempPositionPlacemark = Placemark();
+  Placemark get tempPositionPlacemark => _tempPositionPlacemark;
+  set tempPositionPlacemark(Placemark placemark) {
+    _tempPositionPlacemark = placemark;
     notifyListeners();
   }
 
-  LatLng _newPlacePosition = LatLng(0, 0);
-  LatLng get newPlacePosition => _newPlacePosition;
-  set newPlacePosition(LatLng position) {
-    _newPlacePosition = position;
-    notifyListeners();
-  }
-
-  Future<void> getCurrentPosition() async {
+  Future<LatLng?> getCurrentPosition() async {
     try {
       Position position = await GeolocationService().getCurrentLocation();
-      currentPosition = _maskActualPosition(position);
+      return _maskActualPosition(position);
     } catch (e) {
       debugPrint("Couldn't get current position: $e");
+      return null;
     }
   }
 
@@ -52,24 +47,42 @@ class GeolocationViewModel extends ChangeNotifier {
     );
   }
 
-  Future<void> getPlacemaerkFromCoordinates() async {
+  Future<Placemark?> getPlacemarkFromCoordinates(LatLng coordinates) async {
     try {
-      Placemark placemark = await GeolocationService()
-          .getPlacemarkFromCoordinates(currentPosition);
-      currentPositionPlacemark = placemark;
+      Placemark placemark =
+          await GeolocationService().getPlacemarkFromCoordinates(coordinates);
+      return placemark;
     } catch (e) {
-      debugPrint("Couldn't get adress from coordinates");
+      rethrow;
     }
   }
 
-  Future<void> getLocationsFromAddress(String address) async {
+  String getAddressFromPlacemark(Placemark placemark) {
+    final cityName = Utilities.checkIfNullOrEmptyString(placemark.locality)
+        ? ''
+        : '${placemark.locality}, ';
+    final administrativeArea =
+        Utilities.checkIfNullOrEmptyString(placemark.administrativeArea)
+            ? ''
+            : '${placemark.administrativeArea}, ';
+    return "$cityName$administrativeArea${placemark.country ?? '?'}";
+  }
+
+  Future<LatLng?> getLocationsFromAddress(String address) async {
     try {
       List<Location> locations =
           await GeolocationService().getLocationsFromAddress(address);
-      newPlacePosition =
-          LatLng(locations.first.latitude, locations.first.longitude);
+      return LatLng(locations.first.latitude, locations.first.longitude);
     } catch (e) {
       debugPrint("Couldn't get locations from address");
+      return null;
     }
+  }
+
+  static const Distance _distance = Distance();
+
+  double getDistanceInKilometers(LatLng? origin, LatLng? destination) {
+    if (origin == null || destination == null) return 0;
+    return _distance.as(LengthUnit.Kilometer, origin, destination);
   }
 }

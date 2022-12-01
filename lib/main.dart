@@ -5,9 +5,11 @@ import 'package:rioko/common/route_names.dart';
 import 'package:rioko/view/authentication/authentication_page.dart';
 import 'package:rioko/view/data_completion/data_completion_page.dart';
 import 'package:rioko/view/map/map_display.dart';
+import 'package:rioko/viewmodel/base_view_model.dart';
 import 'package:rioko/viewmodel/firebase/authentication_view_model.dart';
 import 'package:rioko/viewmodel/firebase/firestore_database_view_model.dart';
 import 'package:rioko/viewmodel/geolocation/geolocation_view_model.dart';
+import 'package:rioko/viewmodel/map/add_new_place_view_model.dart';
 import 'package:rioko/viewmodel/map/map_view_model.dart';
 
 final ChangeNotifierProvider<MapViewModel> mapProvider =
@@ -19,6 +21,23 @@ final ChangeNotifierProvider<FirestoreDatabaseViewModel>
     ChangeNotifierProvider((_) => FirestoreDatabaseViewModel());
 final ChangeNotifierProvider<GeolocationViewModel> geolocationProvider =
     ChangeNotifierProvider((_) => GeolocationViewModel());
+final ChangeNotifierProvider<AddNewPlaceViewModel> addNewPlaceProvider =
+    ChangeNotifierProvider((_) => AddNewPlaceViewModel());
+final ChangeNotifierProvider<BaseViewModel> baseProvider =
+    ChangeNotifierProvider((_) {
+  final mapVM = _.watch(mapProvider);
+  final firestoreDBVM = _.watch(firestoreDatabaseProvider);
+  final addNewPlaceVM = _.watch(addNewPlaceProvider);
+  final geolocationVM = _.watch(geolocationProvider);
+  final authVM = _.watch(authenticationProvider);
+  return BaseViewModel(
+    firestoreDBVM: firestoreDBVM,
+    mapVM: mapVM,
+    addNewPlaceVM: addNewPlaceVM,
+    geolocationVM: geolocationVM,
+    authVM: authVM,
+  );
+});
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
