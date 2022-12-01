@@ -1,12 +1,33 @@
 import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:motion_toast/resources/arrays.dart';
+import 'package:rioko/main.dart';
 import 'package:rioko/model/user.dart';
 import 'package:flutter/material.dart';
 import 'package:rioko/common/route_names.dart';
 import 'package:rioko/service/authentication_service.dart';
 import 'package:rioko/service/firestore_database_service.dart';
 import 'package:rioko/view/components/dialogs.dart';
+import 'package:motion_toast/motion_toast.dart';
+
+enum AuthenticationPageStatus {
+  login,
+  register,
+}
 
 class AuthenticationViewModel extends ChangeNotifier {
+  AuthenticationPageStatus _authenticationPageStatus =
+      AuthenticationPageStatus.login;
+  AuthenticationPageStatus get authenticationPageStatus =>
+      _authenticationPageStatus;
+  void toggleAuthenticationPageStatus() {
+    if (_authenticationPageStatus == AuthenticationPageStatus.login) {
+      _authenticationPageStatus = AuthenticationPageStatus.register;
+    } else {
+      _authenticationPageStatus = AuthenticationPageStatus.login;
+    }
+    notifyListeners();
+  }
+
   String _exceptionMessage = '';
   String get exceptionMessage => _exceptionMessage;
   set exceptionMessage(String exceptionMessage) {
