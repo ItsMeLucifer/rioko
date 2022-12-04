@@ -62,7 +62,7 @@ class DataCompletionPage extends ConsumerWidget {
                   dataCompletionVM.onSubmittedHome(value, ref);
                 },
                 sufixIconData: Icons.location_searching,
-                onPressedIcon: () {
+                onPressedSuffixIcon: () {
                   homeController.clear();
                   dataCompletionVM.setHomeAsCurrentPosition(ref);
                   homeFocus.unfocus();

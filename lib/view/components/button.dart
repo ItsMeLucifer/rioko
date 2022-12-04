@@ -32,7 +32,7 @@ class RiokoButton extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (icon != null) Icon(icon, color: accentColor),
-              const SizedBox(width: 10),
+              if (icon != null && text != null) const SizedBox(width: 10),
               if (text != null)
                 Text(
                   text!,

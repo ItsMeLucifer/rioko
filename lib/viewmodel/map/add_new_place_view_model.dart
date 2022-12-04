@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:rioko/main.dart';
 import 'package:rioko/model/travel_place.dart';
 
 class AddNewPlaceViewModel extends ChangeNotifier {
@@ -51,5 +53,33 @@ class AddNewPlaceViewModel extends ChangeNotifier {
   set description(String description) {
     _description = description;
     notifyListeners();
+  }
+
+  void saveNewPlace(
+    BuildContext context,
+    WidgetRef ref, {
+    required String titleText,
+    required String originText,
+    required String destinationText,
+    required double? kilometers,
+  }) {
+    final authVM = ref.read(authenticationProvider);
+    final mapVM = ref.read(mapProvider);
+    final baseVM = ref.read(baseProvider);
+    baseVM.addNewPlaceOnSubmittedOrigin(originText);
+    baseVM.addNewPlaceOnSubmittedDestination(destinationText);
+    if (authVM.currentUser?.id == null ||
+        travelPlace == null ||
+        origin == null ||
+        destination == null) return;
+    travelPlace = travelPlace?.copyWith(
+      originCoordinates: origin,
+      destinationCoordinates: destination,
+      title: title,
+      description: description,
+      kilometers: kilometers,
+    );
+    baseVM.addNewTravelPlaceToFirebase(context);
+    mapVM.addTravelPlace(travelPlace!);
   }
 }
