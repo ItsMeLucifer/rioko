@@ -12,6 +12,8 @@ class RiokoTextField extends StatelessWidget {
   final Color? fillColor;
   final double height;
   final Function()? onPressedIcon;
+  final String prefix;
+  final FocusNode? focusNode;
   const RiokoTextField({
     Key? key,
     required this.controller,
@@ -25,6 +27,8 @@ class RiokoTextField extends StatelessWidget {
     this.accentColor = Colors.white,
     this.height = 50,
     this.onPressedIcon,
+    this.prefix = '',
+    this.focusNode,
   }) : super(key: key);
 
   @override
@@ -33,6 +37,7 @@ class RiokoTextField extends StatelessWidget {
       height: height,
       padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
       child: TextFormField(
+        focusNode: focusNode,
         enabled: enabled,
         controller: controller,
         onChanged: onChanged,
@@ -60,6 +65,10 @@ class RiokoTextField extends StatelessWidget {
             borderSide: BorderSide.none,
             borderRadius: BorderRadius.circular(10),
           ),
+          prefix: prefix == '' ? null : Text('$prefix: '),
+          prefixStyle: Theme.of(context).textTheme.bodyText1?.copyWith(
+                color: accentColor,
+              ),
         ),
       ),
     );

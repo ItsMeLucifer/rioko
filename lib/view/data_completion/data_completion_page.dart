@@ -11,13 +11,13 @@ class DataCompletionPage extends ConsumerWidget {
   DataCompletionPage({Key? key}) : super(key: key);
   final TextEditingController nameController = TextEditingController();
   final TextEditingController homeController = TextEditingController();
+  final FocusNode homeFocus = FocusNode();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dataCompletionVM = ref.watch(dataCompletionProvider);
     final geolocationVM = ref.watch(geolocationProvider);
     final firestoreDBVM = ref.watch(firestoreDatabaseProvider);
     final authVM = ref.watch(authenticationProvider);
-    final baseVM = ref.watch(baseProvider);
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -39,29 +39,35 @@ class DataCompletionPage extends ConsumerWidget {
               ),
               const SizedBox(height: 20.0),
               RiokoTextField(
-                labelText: 'Name',
-                controller: nameController,
-                fillColor: ColorPalette.babyBlue,
-                onChanged: (value) {
-                  if (authVM.currentUser != null) {
-                    authVM.currentUser = authVM.currentUser!.copyWith(
-                      name: nameController.text,
-                    );
-                  }
-                },
-              ),
+                  labelText: 'Name',
+                  controller: nameController,
+                  fillColor: ColorPalette.babyBlue,
+                  onChanged: (value) {
+                    if (authVM.currentUser != null) {
+                      authVM.currentUser = authVM.currentUser!.copyWith(
+                        name: nameController.text,
+                      );
+                    }
+                  },
+                  prefix: 'Name'),
               RiokoTextField(
+                focusNode: homeFocus,
                 controller: homeController,
                 labelText: dataCompletionVM.tempPositionPlacemark == null
-                    ? 'Your home address'
+                    ? 'Home'
                     : geolocationVM.getAddressFromPlacemark(
                         dataCompletionVM.tempPositionPlacemark!),
                 onSubmitted: (String value) {
                   homeController.clear();
-                  dataCompletionVM.onSubmittedHome(value);
+                  dataCompletionVM.onSubmittedHome(value, ref);
                 },
                 sufixIconData: Icons.location_searching,
-                onPressedIcon: dataCompletionVM.setHomeAsCurrentPosition,
+                onPressedIcon: () {
+                  homeController.clear();
+                  dataCompletionVM.setHomeAsCurrentPosition(ref);
+                  homeFocus.unfocus();
+                },
+                prefix: 'Home',
               ),
               RiokoButton(
                 text: 'Continue',

@@ -41,14 +41,7 @@ final ChangeNotifierProvider<BaseViewModel> baseProvider =
   );
 });
 final ChangeNotifierProvider<DataCompletionViewModel> dataCompletionProvider =
-    ChangeNotifierProvider((_) {
-  final geolocationVM = _.watch(geolocationProvider);
-  final authVM = _.watch(authenticationProvider);
-  return DataCompletionViewModel(
-    geolocationVM: geolocationVM,
-    authVM: authVM,
-  );
-});
+    ChangeNotifierProvider((_) => DataCompletionViewModel());
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
