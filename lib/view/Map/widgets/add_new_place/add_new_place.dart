@@ -23,87 +23,110 @@ class AddNewPlace extends ConsumerWidget {
     final kilometers = geolocationVM.getDistanceInKilometers(
         addNewPlaceVM.origin, addNewPlaceVM.destination);
 
-    return Column(
-      children: [
-        const Expanded(flex: 1, child: SizedBox()),
-        RiokoTextField(
-          labelText: addNewPlaceVM.title == '' ? ' Title' : addNewPlaceVM.title,
-          controller: titleTextController,
-          prefix: 'Title',
-        ),
-        RiokoTextField(
-          enabled: addNewPlaceVM.origin == null,
-          onSubmitted: (value) => baseVM.addNewPlaceOnSubmittedOrigin(value),
-          labelText: addNewPlaceVM.originPlacemark == null
-              ? 'Where did you start?'
-              : geolocationVM
-                  .getAddressFromPlacemark(addNewPlaceVM.originPlacemark!),
-          controller: originTextController,
-          prefix: 'Origin',
-          sufixIconData: Icons.edit,
-          onPressedSuffixIcon: () {
-            addNewPlaceVM.origin = null;
-            addNewPlaceVM.originPlacemark = null;
-            originTextController.clear();
-          },
-        ),
-        RiokoTextField(
-          enabled: addNewPlaceVM.destination == null,
-          onSubmitted: (value) =>
-              baseVM.addNewPlaceOnSubmittedDestination(value),
-          labelText: addNewPlaceVM.destinationPlacemark == null
-              ? 'Where did you travel?'
-              : geolocationVM
-                  .getAddressFromPlacemark(addNewPlaceVM.destinationPlacemark!),
-          controller: destinationTextController,
-          prefix: 'Destination',
-          sufixIconData: Icons.edit,
-          onPressedSuffixIcon: () {
-            addNewPlaceVM.destination = null;
-            addNewPlaceVM.destinationPlacemark = null;
-          },
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-          width: double.infinity,
-          child: RichText(
-            textAlign: TextAlign.start,
-            text: TextSpan(
-              style: Theme.of(context).textTheme.bodyText2,
-              children: [
-                const TextSpan(
-                  text: 'Distance: ',
-                ),
-                TextSpan(
-                  text: '$kilometers',
-                  style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: ColorPalette.cyclamen,
-                        fontSize: 16,
+    return Container(
+      margin: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
+      child: FractionallySizedBox(
+        heightFactor: 0.7,
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            vertical: 20.0,
+          ),
+          child: Column(
+            children: [
+              Text(
+                'NEW PLACE',
+                style: Theme.of(context).textTheme.headline3?.copyWith(
+                      fontFamily: 'CeasarDressing',
+                      color: Colors.black,
+                    ),
+              ),
+              const Expanded(flex: 1, child: SizedBox()),
+              RiokoTextField(
+                labelText:
+                    addNewPlaceVM.title == '' ? ' Title' : addNewPlaceVM.title,
+                controller: titleTextController,
+                prefix: 'Title',
+              ),
+              RiokoTextField(
+                enabled: addNewPlaceVM.origin == null,
+                onSubmitted: (value) =>
+                    baseVM.addNewPlaceOnSubmittedOrigin(value),
+                labelText: addNewPlaceVM.originPlacemark == null
+                    ? 'Where did you start?'
+                    : geolocationVM.getAddressFromPlacemark(
+                        addNewPlaceVM.originPlacemark!),
+                controller: originTextController,
+                prefix: 'Origin',
+                sufixIconData: Icons.edit,
+                onPressedSuffixIcon: () {
+                  addNewPlaceVM.origin = null;
+                  addNewPlaceVM.originPlacemark = null;
+                  originTextController.clear();
+                },
+              ),
+              RiokoTextField(
+                enabled: addNewPlaceVM.destination == null,
+                onSubmitted: (value) =>
+                    baseVM.addNewPlaceOnSubmittedDestination(value),
+                labelText: addNewPlaceVM.destinationPlacemark == null
+                    ? 'Where did you travel?'
+                    : geolocationVM.getAddressFromPlacemark(
+                        addNewPlaceVM.destinationPlacemark!),
+                controller: destinationTextController,
+                prefix: 'Destination',
+                sufixIconData: Icons.edit,
+                onPressedSuffixIcon: () {
+                  addNewPlaceVM.destination = null;
+                  addNewPlaceVM.destinationPlacemark = null;
+                },
+              ),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                width: double.infinity,
+                child: RichText(
+                  textAlign: TextAlign.start,
+                  text: TextSpan(
+                    style: Theme.of(context).textTheme.bodyText2,
+                    children: [
+                      const TextSpan(
+                        text: 'Distance: ',
                       ),
+                      TextSpan(
+                        text: '$kilometers',
+                        style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: ColorPalette.cyclamen,
+                              fontSize: 16,
+                            ),
+                      ),
+                      const TextSpan(text: ' km'),
+                    ],
+                  ),
                 ),
-                const TextSpan(text: ' km'),
-              ],
-            ),
+              ),
+              const Expanded(flex: 8, child: SizedBox()),
+              SizedBox(
+                width: 150,
+                child: RiokoButton(
+                  onPressed: () => addNewPlaceVM.saveNewPlace(
+                    context,
+                    ref,
+                    titleText: titleTextController.text,
+                    originText: originTextController.text,
+                    destinationText: destinationTextController.text,
+                    kilometers: kilometers,
+                  ),
+                  icon: Icons.add,
+                ),
+              ),
+              const Expanded(flex: 4, child: SizedBox()),
+            ],
           ),
         ),
-        const Expanded(flex: 2, child: SizedBox()),
-        SizedBox(
-          width: 150,
-          child: RiokoButton(
-            onPressed: () => addNewPlaceVM.saveNewPlace(
-              context,
-              ref,
-              titleText: titleTextController.text,
-              originText: originTextController.text,
-              destinationText: destinationTextController.text,
-              kilometers: kilometers,
-            ),
-            icon: Icons.add,
-          ),
-        ),
-        const Expanded(flex: 1, child: SizedBox()),
-      ],
+      ),
     );
   }
 }

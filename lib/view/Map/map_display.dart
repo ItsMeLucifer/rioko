@@ -28,7 +28,17 @@ class MapDisplay extends ConsumerWidget {
     addNewPlaceVM.description = '';
     addNewPlaceVM.title = '';
     addNewPlaceVM.destinationPlacemark = null;
-    showModalBottomSheet(context: context, builder: (_) => AddNewPlace());
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(25.0),
+          topRight: Radius.circular(25.0),
+        ),
+      ),
+      builder: (_) => AddNewPlace(),
+      isScrollControlled: true,
+    );
   }
 
   @override
@@ -106,9 +116,8 @@ class MapDisplay extends ConsumerWidget {
                       Marker(
                         key: UniqueKey(),
                         point: authVM.currentUser!.home!,
-                        builder: (_) => IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.home),
+                        builder: (_) => const FaIcon(
+                          FontAwesomeIcons.houseUser,
                         ),
                       ),
                   ],

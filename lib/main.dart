@@ -67,6 +67,7 @@ class MyApp extends StatelessWidget {
         colorScheme:
             ColorScheme.fromSwatch(primarySwatch: Colors.blue).copyWith(
           primary: ColorPalette.babyBlue,
+          secondary: ColorPalette.tickleMePink,
         ),
         textTheme: ThemeData.light().textTheme.copyWith(
               headline1: const TextStyle(
