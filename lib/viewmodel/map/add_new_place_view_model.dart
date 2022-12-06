@@ -76,10 +76,13 @@ class AddNewPlaceViewModel extends ChangeNotifier {
       Navigator.of(context).pushReplacementNamed(RouteNames.authentication);
       return;
     }
-    if (travelPlace == null || origin == null || destination == null) return;
+    if (travelPlace == null ||
+        origin == null ||
+        destination == null ||
+        kilometers == null) return;
     travelPlace = travelPlace?.copyWith(
-      originCoordinates: origin,
-      destinationCoordinates: destination,
+      originCoordinates: origin!,
+      destinationCoordinates: destination!,
       title: title,
       description: description,
       kilometers: kilometers,
