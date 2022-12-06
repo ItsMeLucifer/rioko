@@ -20,12 +20,14 @@ class LoginScreen extends ConsumerWidget {
           controller: emailController,
           labelText: 'Email',
           sufixIconData: Icons.mail,
+          prefix: 'Email',
         ),
         RiokoTextField(
           controller: passwordController,
           obscureText: true,
           labelText: 'Password',
           sufixIconData: Icons.key,
+          prefix: 'Password',
         ),
         const SizedBox(height: 10.0),
         RiokoButton(
@@ -36,7 +38,6 @@ class LoginScreen extends ConsumerWidget {
             password: passwordController.text,
           ),
           icon: Icons.login,
-          fillColor: ColorPalette.cottonCandy,
         ),
         const SizedBox(height: 10),
         GestureDetector(
@@ -54,6 +55,7 @@ class LoginScreen extends ConsumerWidget {
                   style: Theme.of(context).textTheme.bodyText2?.copyWith(
                         color: ColorPalette.cyclamen,
                         fontSize: 13,
+                        fontWeight: FontWeight.bold,
                       ),
                 ),
               ],

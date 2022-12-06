@@ -18,19 +18,22 @@ class RegisterScreen extends ConsumerWidget {
       children: [
         RiokoTextField(
           controller: nameController,
-          labelText: 'Name',
+          labelText: 'Username',
           sufixIconData: Icons.person,
+          prefix: 'Username',
         ),
         RiokoTextField(
           controller: emailController,
           labelText: 'Email',
           sufixIconData: Icons.mail,
+          prefix: 'Email',
         ),
         RiokoTextField(
           controller: passwordController,
           obscureText: true,
           labelText: 'Password',
           sufixIconData: Icons.key,
+          prefix: 'Password',
         ),
         RiokoButton(
           text: 'Register',
@@ -57,6 +60,7 @@ class RegisterScreen extends ConsumerWidget {
                   style: Theme.of(context).textTheme.bodyText2?.copyWith(
                         color: ColorPalette.cyclamen,
                         fontSize: 13,
+                        fontWeight: FontWeight.bold,
                       ),
                 ),
               ],
