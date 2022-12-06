@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:motion_toast/motion_toast.dart';
+import 'package:motion_toast/resources/arrays.dart';
 import 'package:rioko/common/color_palette.dart';
 import 'package:rioko/main.dart';
 import 'package:rioko/view/components/button.dart';
@@ -54,7 +56,7 @@ class AddNewPlace extends ConsumerWidget {
                 onSubmitted: (value) =>
                     baseVM.addNewPlaceOnSubmittedOrigin(value),
                 labelText: addNewPlaceVM.originPlacemark == null
-                    ? 'Where did you start?'
+                    ? 'Origin'
                     : geolocationVM.getAddressFromPlacemark(
                         addNewPlaceVM.originPlacemark!),
                 controller: originTextController,
@@ -71,7 +73,7 @@ class AddNewPlace extends ConsumerWidget {
                 onSubmitted: (value) =>
                     baseVM.addNewPlaceOnSubmittedDestination(value),
                 labelText: addNewPlaceVM.destinationPlacemark == null
-                    ? 'Where did you travel?'
+                    ? 'Destination'
                     : geolocationVM.getAddressFromPlacemark(
                         addNewPlaceVM.destinationPlacemark!),
                 controller: destinationTextController,
@@ -111,14 +113,38 @@ class AddNewPlace extends ConsumerWidget {
               SizedBox(
                 width: 150,
                 child: RiokoButton(
-                  onPressed: () => addNewPlaceVM.saveNewPlace(
-                    context,
-                    ref,
-                    titleText: titleTextController.text,
-                    originText: originTextController.text,
-                    destinationText: destinationTextController.text,
-                    kilometers: kilometers,
-                  ),
+                  onPressed: () {
+                    if ((addNewPlaceVM.origin == null &&
+                            originTextController.text == '') ||
+                        (addNewPlaceVM.destination == null &&
+                            destinationTextController.text == '')) {
+                      MotionToast.info(
+                        title: Text(
+                          "Provide all informations",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText2
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        description: const Text(
+                          'You must specify origin and destination!',
+                        ),
+                        position: MotionToastPosition.top,
+                        animationType: AnimationType.fromTop,
+                        enableAnimation: true,
+                      ).show(
+                        context,
+                      );
+                    }
+                    addNewPlaceVM.saveNewPlace(
+                      context,
+                      ref,
+                      titleText: titleTextController.text,
+                      originText: originTextController.text,
+                      destinationText: destinationTextController.text,
+                      kilometers: kilometers,
+                    );
+                  },
                   icon: Icons.add,
                 ),
               ),

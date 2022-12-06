@@ -47,20 +47,13 @@ class MapDisplay extends ConsumerWidget {
     final authVM = ref.watch(authenticationProvider);
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton(
         heroTag: 'addNewPlace',
-        shape: BeveledRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        backgroundColor: Colors.grey[100],
         elevation: 5,
+        backgroundColor: Theme.of(context).colorScheme.tertiary,
         onPressed: () => _displayAddNewPlaceBottomSheet(context, ref),
-        label: const SizedBox(
-          width: 50,
-          child: Icon(
-            Icons.add,
-            color: Colors.black,
-          ),
+        child: const FaIcon(
+          FontAwesomeIcons.plus,
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -127,7 +120,7 @@ class MapDisplay extends ConsumerWidget {
                   ),
                   builder: (context, markers) {
                     return FloatingActionButton(
-                      backgroundColor: Colors.black,
+                      backgroundColor: Theme.of(context).colorScheme.tertiary,
                       onPressed: null,
                       child: Text(
                         markers.length.toString(),

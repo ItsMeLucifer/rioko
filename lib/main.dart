@@ -68,6 +68,7 @@ class MyApp extends StatelessWidget {
             ColorScheme.fromSwatch(primarySwatch: Colors.blue).copyWith(
           primary: ColorPalette.babyBlue,
           secondary: ColorPalette.tickleMePink,
+          tertiary: Colors.black,
         ),
         textTheme: ThemeData.light().textTheme.copyWith(
               headline1: const TextStyle(
@@ -81,6 +82,7 @@ class MyApp extends StatelessWidget {
                 ColorScheme.fromSwatch(primarySwatch: Colors.pink).copyWith(
           background: ColorPalette.tickleMePink,
         )),
+        useMaterial3: true,
       ),
       home: const MapDisplay(),
       debugShowCheckedModeBanner: false,

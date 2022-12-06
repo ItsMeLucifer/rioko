@@ -95,7 +95,7 @@ class BaseViewModel extends ChangeNotifier {
     if (response) Navigator.of(context).pop();
   }
 
-  void addNewPlaceOnSubmittedOrigin(String value) async {
+  Future addNewPlaceOnSubmittedOrigin(String value) async {
     if (value.length > 3) {
       await geolocationVM.getLocationsFromAddress(value).then((latLng) {
         if (latLng != null) {
@@ -110,7 +110,7 @@ class BaseViewModel extends ChangeNotifier {
     }
   }
 
-  void addNewPlaceOnSubmittedDestination(String value) async {
+  Future addNewPlaceOnSubmittedDestination(String value) async {
     if (value.length > 3) {
       await geolocationVM.getLocationsFromAddress(value).then((latLng) {
         if (latLng != null) {
