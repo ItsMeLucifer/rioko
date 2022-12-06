@@ -41,9 +41,7 @@ class BaseViewModel extends ChangeNotifier {
               await geolocationVM.getPlacemarkFromCoordinates(home);
           authVM.currentUser = authVM.currentUser!.copyWith(
             home: home,
-            homeAddress: placemark != null
-                ? geolocationVM.getAddressFromPlacemark(placemark)
-                : null,
+            homeAddress: geolocationVM.getAddressFromPlacemark(placemark),
           );
           final places =
               await firestoreDBVM.fetchUserPlaces(authVM.currentUser!.id);

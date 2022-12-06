@@ -44,7 +44,8 @@ class GeolocationViewModel extends ChangeNotifier {
     }
   }
 
-  String getAddressFromPlacemark(Placemark placemark) {
+  String getAddressFromPlacemark(Placemark? placemark) {
+    if (placemark == null) return '';
     final cityName = Utilities.isNullOrEmptyString(placemark.locality)
         ? ''
         : '${placemark.locality}, ';
