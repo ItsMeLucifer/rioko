@@ -4,7 +4,10 @@ import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:rioko/common/debug_utils.dart';
 import 'package:rioko/main.dart';
+import 'package:rioko/model/travel_place.dart';
+import 'package:rioko/view/Map/widgets/place_details/place_details.dart';
 import 'package:rioko/view/map/widgets/add_new_place/add_new_place.dart';
 import 'package:rioko/view/map/widgets/map_marker.dart';
 
@@ -38,6 +41,26 @@ class MapDisplay extends ConsumerWidget {
       ),
       builder: (_) => AddNewPlace(),
       isScrollControlled: true,
+    );
+  }
+
+  void _displayPlaceDetailsBottomSheet(
+    BuildContext context, {
+    required WidgetRef ref,
+    required TravelPlace place,
+  }) async {
+    final placeDetailsVM = ref.read(placeDetailsProvider);
+    final geolocationVM = ref.read(geolocationProvider);
+    placeDetailsVM.place = place;
+    placeDetailsVM.originPlacemark = await geolocationVM
+        .getPlacemarkFromCoordinates(place.originCoordinates);
+    placeDetailsVM.destinationPlacemark = await geolocationVM
+        .getPlacemarkFromCoordinates(place.destinationCoordinates);
+    showModalBottomSheet(
+      context: context,
+      builder: (_) => const PlaceDetails(),
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
     );
   }
 
@@ -99,6 +122,11 @@ class MapDisplay extends ConsumerWidget {
                               mapVM.mapMoveTo(
                                 position: travelPlace.destinationCoordinates,
                                 zoom: 7,
+                              );
+                              _displayPlaceDetailsBottomSheet(
+                                context,
+                                ref: ref,
+                                place: travelPlace,
                               );
                             },
                           ),

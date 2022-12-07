@@ -83,7 +83,7 @@ class AddNewPlaceViewModel extends ChangeNotifier {
     travelPlace = travelPlace?.copyWith(
       originCoordinates: origin!,
       destinationCoordinates: destination!,
-      title: title,
+      title: titleText,
       description: description,
       kilometers: kilometers,
     );

@@ -47,7 +47,7 @@ class AddNewPlace extends ConsumerWidget {
               const Expanded(flex: 1, child: SizedBox()),
               RiokoTextField(
                 labelText:
-                    addNewPlaceVM.title == '' ? ' Title' : addNewPlaceVM.title,
+                    addNewPlaceVM.title == '' ? 'Title' : addNewPlaceVM.title,
                 controller: titleTextController,
                 prefix: 'Title',
               ),
@@ -91,18 +91,14 @@ class AddNewPlace extends ConsumerWidget {
                 child: RichText(
                   textAlign: TextAlign.start,
                   text: TextSpan(
-                    style: Theme.of(context).textTheme.bodyText2,
+                    style: Theme.of(context).textTheme.bodyMedium,
                     children: [
                       const TextSpan(
                         text: 'Distance: ',
                       ),
                       TextSpan(
                         text: '$kilometers',
-                        style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: ColorPalette.cyclamen,
-                              fontSize: 16,
-                            ),
+                        style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       const TextSpan(text: ' km'),
                     ],
@@ -123,7 +119,7 @@ class AddNewPlace extends ConsumerWidget {
                           "Provide all informations",
                           style: Theme.of(context)
                               .textTheme
-                              .bodyText2
+                              .bodyMedium
                               ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         description: const Text(
