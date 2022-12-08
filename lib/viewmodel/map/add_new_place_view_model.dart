@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:latlong2/latlong.dart';
-import 'package:motion_toast/motion_toast.dart';
-import 'package:motion_toast/resources/arrays.dart';
-import 'package:rioko/common/debug_utils.dart';
 import 'package:rioko/common/route_names.dart';
 import 'package:rioko/main.dart';
 import 'package:rioko/model/travel_place.dart';
 
 class AddNewPlaceViewModel extends ChangeNotifier {
-  LatLng? _destination;
-  LatLng? get destination => _destination;
-  set destination(LatLng? position) {
-    _destination = position;
+  TravelPlace _place = TravelPlace.newPlace;
+  TravelPlace get place => _place;
+  set place(TravelPlace place) {
+    _place = place;
     notifyListeners();
   }
 
@@ -24,13 +20,6 @@ class AddNewPlaceViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  LatLng? _origin;
-  LatLng? get origin => _origin;
-  set origin(LatLng? position) {
-    _origin = position;
-    notifyListeners();
-  }
-
   Placemark? _originPlacemark;
   Placemark? get originPlacemark => _originPlacemark;
   set originPlacemark(Placemark? placemark) {
@@ -38,25 +27,40 @@ class AddNewPlaceViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  TravelPlace? _travelPlace;
-  TravelPlace? get travelPlace => _travelPlace;
-  set travelPlace(TravelPlace? travelPlace) {
-    _travelPlace = travelPlace;
-    notifyListeners();
+  Future onSubmittedOrigin(String value, WidgetRef ref) async {
+    final geolocationVM = ref.read(geolocationProvider);
+    if (value.length > 3) {
+      await geolocationVM.getLocationsFromAddress(value).then((latLng) {
+        if (latLng != null) {
+          geolocationVM.getPlacemarkFromCoordinates(latLng).then((placemark) {
+            if (placemark != null) {
+              originPlacemark = placemark;
+            }
+          });
+          place = place.copyWith(origin: latLng);
+        }
+      });
+    }
   }
 
-  String _title = '';
-  String get title => _title;
-  set title(String title) {
-    _title = title;
-    notifyListeners();
-  }
-
-  String _description = '';
-  String get description => _description;
-  set description(String description) {
-    _description = description;
-    notifyListeners();
+  Future onSubmittedDestination(String value, WidgetRef ref) async {
+    final geolocationVM = ref.read(geolocationProvider);
+    final mapVM = ref.read(mapProvider);
+    if (value.length > 3) {
+      await geolocationVM.getLocationsFromAddress(value).then((latLng) {
+        if (latLng != null) {
+          geolocationVM.getPlacemarkFromCoordinates(latLng).then((placemark) {
+            if (placemark != null) {
+              destinationPlacemark = placemark;
+            }
+          });
+          mapVM.mapMoveTo(
+            position: latLng,
+          );
+          place = place.copyWith(destination: latLng);
+        }
+      });
+    }
   }
 
   void saveNewPlace(
@@ -70,24 +74,17 @@ class AddNewPlaceViewModel extends ChangeNotifier {
     final authVM = ref.read(authenticationProvider);
     final mapVM = ref.read(mapProvider);
     final baseVM = ref.read(baseProvider);
-    await baseVM.addNewPlaceOnSubmittedOrigin(originText);
-    await baseVM.addNewPlaceOnSubmittedDestination(destinationText);
+    await onSubmittedOrigin(originText, ref);
+    await onSubmittedDestination(destinationText, ref);
     if (authVM.currentUser?.id == null) {
       Navigator.of(context).pushReplacementNamed(RouteNames.authentication);
       return;
     }
-    if (travelPlace == null ||
-        origin == null ||
-        destination == null ||
-        kilometers == null) return;
-    travelPlace = travelPlace?.copyWith(
-      originCoordinates: origin!,
-      destinationCoordinates: destination!,
-      title: title,
-      description: description,
-      kilometers: kilometers,
-    );
+    if (place.origin == null || place.destination == null || kilometers == 0) {
+      return;
+    }
+
     baseVM.addNewTravelPlaceToFirebase(context);
-    mapVM.addTravelPlace(travelPlace!);
+    mapVM.addTravelPlace(place);
   }
 }
