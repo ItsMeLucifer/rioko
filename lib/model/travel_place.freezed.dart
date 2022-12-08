@@ -21,11 +21,11 @@ mixin _$TravelPlace {
   String get countryIso3Code => throw _privateConstructorUsedError;
   DateTime get date => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
-  LatLng get destinationCoordinates => throw _privateConstructorUsedError;
+  LatLng? get destination => throw _privateConstructorUsedError;
   List<String> get imagesURLs => throw _privateConstructorUsedError;
   double get kilometers => throw _privateConstructorUsedError;
   List<String> get likes => throw _privateConstructorUsedError;
-  LatLng get originCoordinates => throw _privateConstructorUsedError;
+  LatLng? get origin => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -45,11 +45,11 @@ abstract class $TravelPlaceCopyWith<$Res> {
       String countryIso3Code,
       DateTime date,
       String description,
-      LatLng destinationCoordinates,
+      LatLng? destination,
       List<String> imagesURLs,
       double kilometers,
       List<String> likes,
-      LatLng originCoordinates,
+      LatLng? origin,
       String title});
 }
 
@@ -71,11 +71,11 @@ class _$TravelPlaceCopyWithImpl<$Res, $Val extends TravelPlace>
     Object? countryIso3Code = null,
     Object? date = null,
     Object? description = null,
-    Object? destinationCoordinates = null,
+    Object? destination = freezed,
     Object? imagesURLs = null,
     Object? kilometers = null,
     Object? likes = null,
-    Object? originCoordinates = null,
+    Object? origin = freezed,
     Object? title = null,
   }) {
     return _then(_value.copyWith(
@@ -99,10 +99,10 @@ class _$TravelPlaceCopyWithImpl<$Res, $Val extends TravelPlace>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String,
-      destinationCoordinates: null == destinationCoordinates
-          ? _value.destinationCoordinates
-          : destinationCoordinates // ignore: cast_nullable_to_non_nullable
-              as LatLng,
+      destination: freezed == destination
+          ? _value.destination
+          : destination // ignore: cast_nullable_to_non_nullable
+              as LatLng?,
       imagesURLs: null == imagesURLs
           ? _value.imagesURLs
           : imagesURLs // ignore: cast_nullable_to_non_nullable
@@ -115,10 +115,10 @@ class _$TravelPlaceCopyWithImpl<$Res, $Val extends TravelPlace>
           ? _value.likes
           : likes // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      originCoordinates: null == originCoordinates
-          ? _value.originCoordinates
-          : originCoordinates // ignore: cast_nullable_to_non_nullable
-              as LatLng,
+      origin: freezed == origin
+          ? _value.origin
+          : origin // ignore: cast_nullable_to_non_nullable
+              as LatLng?,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -141,11 +141,11 @@ abstract class _$$_TravelPlaceCopyWith<$Res>
       String countryIso3Code,
       DateTime date,
       String description,
-      LatLng destinationCoordinates,
+      LatLng? destination,
       List<String> imagesURLs,
       double kilometers,
       List<String> likes,
-      LatLng originCoordinates,
+      LatLng? origin,
       String title});
 }
 
@@ -165,11 +165,11 @@ class __$$_TravelPlaceCopyWithImpl<$Res>
     Object? countryIso3Code = null,
     Object? date = null,
     Object? description = null,
-    Object? destinationCoordinates = null,
+    Object? destination = freezed,
     Object? imagesURLs = null,
     Object? kilometers = null,
     Object? likes = null,
-    Object? originCoordinates = null,
+    Object? origin = freezed,
     Object? title = null,
   }) {
     return _then(_$_TravelPlace(
@@ -193,10 +193,10 @@ class __$$_TravelPlaceCopyWithImpl<$Res>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String,
-      destinationCoordinates: null == destinationCoordinates
-          ? _value.destinationCoordinates
-          : destinationCoordinates // ignore: cast_nullable_to_non_nullable
-              as LatLng,
+      destination: freezed == destination
+          ? _value.destination
+          : destination // ignore: cast_nullable_to_non_nullable
+              as LatLng?,
       imagesURLs: null == imagesURLs
           ? _value._imagesURLs
           : imagesURLs // ignore: cast_nullable_to_non_nullable
@@ -209,10 +209,10 @@ class __$$_TravelPlaceCopyWithImpl<$Res>
           ? _value._likes
           : likes // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      originCoordinates: null == originCoordinates
-          ? _value.originCoordinates
-          : originCoordinates // ignore: cast_nullable_to_non_nullable
-              as LatLng,
+      origin: freezed == origin
+          ? _value.origin
+          : origin // ignore: cast_nullable_to_non_nullable
+              as LatLng?,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -230,11 +230,11 @@ class _$_TravelPlace implements _TravelPlace {
       required this.countryIso3Code,
       required this.date,
       this.description = '',
-      required this.destinationCoordinates,
+      required this.destination,
       final List<String> imagesURLs = const <String>[],
       required this.kilometers,
       final List<String> likes = const <String>[],
-      required this.originCoordinates,
+      required this.origin,
       this.title = ''})
       : _comrades = comrades,
         _imagesURLs = imagesURLs,
@@ -258,7 +258,7 @@ class _$_TravelPlace implements _TravelPlace {
   @JsonKey()
   final String description;
   @override
-  final LatLng destinationCoordinates;
+  final LatLng? destination;
   final List<String> _imagesURLs;
   @override
   @JsonKey()
@@ -278,14 +278,14 @@ class _$_TravelPlace implements _TravelPlace {
   }
 
   @override
-  final LatLng originCoordinates;
+  final LatLng? origin;
   @override
   @JsonKey()
   final String title;
 
   @override
   String toString() {
-    return 'TravelPlace(id: $id, comrades: $comrades, countryIso3Code: $countryIso3Code, date: $date, description: $description, destinationCoordinates: $destinationCoordinates, imagesURLs: $imagesURLs, kilometers: $kilometers, likes: $likes, originCoordinates: $originCoordinates, title: $title)';
+    return 'TravelPlace(id: $id, comrades: $comrades, countryIso3Code: $countryIso3Code, date: $date, description: $description, destination: $destination, imagesURLs: $imagesURLs, kilometers: $kilometers, likes: $likes, origin: $origin, title: $title)';
   }
 
   @override
@@ -300,15 +300,14 @@ class _$_TravelPlace implements _TravelPlace {
             (identical(other.date, date) || other.date == date) &&
             (identical(other.description, description) ||
                 other.description == description) &&
-            (identical(other.destinationCoordinates, destinationCoordinates) ||
-                other.destinationCoordinates == destinationCoordinates) &&
+            (identical(other.destination, destination) ||
+                other.destination == destination) &&
             const DeepCollectionEquality()
                 .equals(other._imagesURLs, _imagesURLs) &&
             (identical(other.kilometers, kilometers) ||
                 other.kilometers == kilometers) &&
             const DeepCollectionEquality().equals(other._likes, _likes) &&
-            (identical(other.originCoordinates, originCoordinates) ||
-                other.originCoordinates == originCoordinates) &&
+            (identical(other.origin, origin) || other.origin == origin) &&
             (identical(other.title, title) || other.title == title));
   }
 
@@ -320,11 +319,11 @@ class _$_TravelPlace implements _TravelPlace {
       countryIso3Code,
       date,
       description,
-      destinationCoordinates,
+      destination,
       const DeepCollectionEquality().hash(_imagesURLs),
       kilometers,
       const DeepCollectionEquality().hash(_likes),
-      originCoordinates,
+      origin,
       title);
 
   @JsonKey(ignore: true)
@@ -341,11 +340,11 @@ abstract class _TravelPlace implements TravelPlace {
       required final String countryIso3Code,
       required final DateTime date,
       final String description,
-      required final LatLng destinationCoordinates,
+      required final LatLng? destination,
       final List<String> imagesURLs,
       required final double kilometers,
       final List<String> likes,
-      required final LatLng originCoordinates,
+      required final LatLng? origin,
       final String title}) = _$_TravelPlace;
 
   @override
@@ -359,7 +358,7 @@ abstract class _TravelPlace implements TravelPlace {
   @override
   String get description;
   @override
-  LatLng get destinationCoordinates;
+  LatLng? get destination;
   @override
   List<String> get imagesURLs;
   @override
@@ -367,7 +366,7 @@ abstract class _TravelPlace implements TravelPlace {
   @override
   List<String> get likes;
   @override
-  LatLng get originCoordinates;
+  LatLng? get origin;
   @override
   String get title;
   @override

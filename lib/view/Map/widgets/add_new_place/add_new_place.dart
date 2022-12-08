@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
 import 'package:rioko/common/color_palette.dart';
@@ -23,7 +24,7 @@ class AddNewPlace extends ConsumerWidget {
     final addNewPlaceVM = ref.watch(addNewPlaceProvider);
     final baseVM = ref.watch(baseProvider);
     final kilometers = geolocationVM.getDistanceInKilometers(
-        addNewPlaceVM.origin, addNewPlaceVM.destination);
+        addNewPlaceVM.place.origin, addNewPlaceVM.place.destination);
 
     return Container(
       margin: EdgeInsets.only(
@@ -46,15 +47,16 @@ class AddNewPlace extends ConsumerWidget {
               ),
               const Expanded(flex: 1, child: SizedBox()),
               RiokoTextField(
-                labelText:
-                    addNewPlaceVM.title == '' ? ' Title' : addNewPlaceVM.title,
+                labelText: addNewPlaceVM.place.title == ''
+                    ? ' Title'
+                    : addNewPlaceVM.place.title,
                 controller: titleTextController,
                 prefix: 'Title',
               ),
               RiokoTextField(
-                enabled: addNewPlaceVM.origin == null,
+                enabled: addNewPlaceVM.place.origin == null,
                 onSubmitted: (value) =>
-                    baseVM.addNewPlaceOnSubmittedOrigin(value),
+                    addNewPlaceVM.onSubmittedOrigin(value, ref),
                 labelText: addNewPlaceVM.originPlacemark == null
                     ? 'Origin'
                     : geolocationVM.getAddressFromPlacemark(
@@ -63,15 +65,16 @@ class AddNewPlace extends ConsumerWidget {
                 prefix: 'Origin',
                 sufixIconData: Icons.edit,
                 onPressedSuffixIcon: () {
-                  addNewPlaceVM.origin = null;
+                  addNewPlaceVM.place =
+                      addNewPlaceVM.place.copyWith(origin: null);
                   addNewPlaceVM.originPlacemark = null;
                   originTextController.clear();
                 },
               ),
               RiokoTextField(
-                enabled: addNewPlaceVM.destination == null,
+                enabled: addNewPlaceVM.place.destination == null,
                 onSubmitted: (value) =>
-                    baseVM.addNewPlaceOnSubmittedDestination(value),
+                    addNewPlaceVM.onSubmittedDestination(value, ref),
                 labelText: addNewPlaceVM.destinationPlacemark == null
                     ? 'Destination'
                     : geolocationVM.getAddressFromPlacemark(
@@ -80,7 +83,8 @@ class AddNewPlace extends ConsumerWidget {
                 prefix: 'Destination',
                 sufixIconData: Icons.edit,
                 onPressedSuffixIcon: () {
-                  addNewPlaceVM.destination = null;
+                  addNewPlaceVM.place =
+                      addNewPlaceVM.place.copyWith(destination: null);
                   addNewPlaceVM.destinationPlacemark = null;
                 },
               ),
@@ -114,9 +118,9 @@ class AddNewPlace extends ConsumerWidget {
                 width: 150,
                 child: RiokoButton(
                   onPressed: () {
-                    if ((addNewPlaceVM.origin == null &&
+                    if ((addNewPlaceVM.place.origin == null &&
                             originTextController.text == '') ||
-                        (addNewPlaceVM.destination == null &&
+                        (addNewPlaceVM.place.destination == null &&
                             destinationTextController.text == '')) {
                       MotionToast.info(
                         title: Text(

@@ -26,8 +26,8 @@ class FirestoreDatabaseService {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
     await users.doc(userId).collection('places').doc(place.id).set({
       'id': place.id,
-      'origin': Utilities.latLngToGeoPoint(place.originCoordinates),
-      'destination': Utilities.latLngToGeoPoint(place.destinationCoordinates),
+      'origin': Utilities.latLngToGeoPoint(place.origin!),
+      'destination': Utilities.latLngToGeoPoint(place.destination!),
       'images': place.imagesURLs,
       'title': place.title,
       'description': place.description,

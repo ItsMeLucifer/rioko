@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:rioko/main.dart';
+import 'package:rioko/model/travel_place.dart';
 import 'package:rioko/view/map/widgets/add_new_place/add_new_place.dart';
 import 'package:rioko/view/map/widgets/map_marker.dart';
 
@@ -13,20 +14,17 @@ class MapDisplay extends ConsumerWidget {
 
   void _displayAddNewPlaceBottomSheet(
       BuildContext context, WidgetRef ref) async {
-    final mapVM = ref.read(mapProvider);
     final authVM = ref.read(authenticationProvider);
     final addNewPlaceVM = ref.read(addNewPlaceProvider);
-    addNewPlaceVM.travelPlace = mapVM.newPlace;
+    addNewPlaceVM.place = TravelPlace.newPlace;
     if (authVM.currentUser?.home != null) {
       final addNewPlaceVM = ref.read(addNewPlaceProvider);
       final geolocationVM = ref.read(geolocationProvider);
-      addNewPlaceVM.origin = authVM.currentUser!.home;
+      addNewPlaceVM.place =
+          addNewPlaceVM.place.copyWith(origin: authVM.currentUser!.home);
       addNewPlaceVM.originPlacemark = await geolocationVM
           .getPlacemarkFromCoordinates(authVM.currentUser!.home!);
     }
-    addNewPlaceVM.destination = null;
-    addNewPlaceVM.description = '';
-    addNewPlaceVM.title = '';
     addNewPlaceVM.destinationPlacemark = null;
     showModalBottomSheet(
       context: context,
@@ -94,10 +92,10 @@ class MapDisplay extends ConsumerWidget {
                     ...mapVM.travelPlaces
                         .map(
                           (travelPlace) => MapUtils.getMarker(
-                            point: travelPlace.destinationCoordinates,
+                            point: travelPlace.destination!,
                             onPressed: () {
                               mapVM.mapMoveTo(
-                                position: travelPlace.destinationCoordinates,
+                                position: travelPlace.destination!,
                                 zoom: 7,
                               );
                             },
