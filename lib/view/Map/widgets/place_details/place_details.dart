@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rioko/main.dart';
+import 'package:rioko/view/Map/widgets/add_new_place/add_new_place.dart';
 
 class PlaceDetails extends ConsumerWidget {
   const PlaceDetails({Key? key}) : super(key: key);
@@ -16,7 +17,7 @@ class PlaceDetails extends ConsumerWidget {
           Container(
             width: double.infinity,
             padding: const EdgeInsets.only(
-              top: 40.0,
+              top: 50.0,
               right: 20.0,
               left: 20.0,
             ),
@@ -139,12 +140,29 @@ class PlaceDetails extends ConsumerWidget {
             ),
           ),
           Positioned(
-            left: 5.0,
-            top: 5.0,
+            left: 10.0,
+            top: 10.0,
             child: IconButton(
               onPressed: () => Navigator.of(context).pop(),
               icon: const Icon(
                 Icons.close,
+                size: 25,
+              ),
+            ),
+          ),
+          Positioned(
+            right: 10.0,
+            top: 10.0,
+            child: IconButton(
+              onPressed: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute<void>(
+                    builder: (BuildContext context) => AddNewPlace(),
+                  ),
+                );
+              },
+              icon: const Icon(
+                Icons.menu,
                 size: 25,
               ),
             ),
