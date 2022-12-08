@@ -70,12 +70,18 @@ class AddNewPlaceViewModel extends ChangeNotifier {
     required String originText,
     required String destinationText,
     required double? kilometers,
+    required String descriptionText,
   }) async {
     final authVM = ref.read(authenticationProvider);
     final mapVM = ref.read(mapProvider);
     final baseVM = ref.read(baseProvider);
-    await onSubmittedOrigin(originText, ref);
-    await onSubmittedDestination(destinationText, ref);
+    if (place.origin == null) {
+      await onSubmittedOrigin(originText, ref);
+    }
+    if (place.destination == null) {
+      await onSubmittedDestination(destinationText, ref);
+    }
+
     if (authVM.currentUser?.id == null) {
       Navigator.of(context).pushReplacementNamed(RouteNames.authentication);
       return;
@@ -83,7 +89,7 @@ class AddNewPlaceViewModel extends ChangeNotifier {
     if (place.origin == null || place.destination == null || kilometers == 0) {
       return;
     }
-
+    place = place.copyWith(title: titleText, description: descriptionText);
     baseVM.addNewTravelPlaceToFirebase(context);
     mapVM.addTravelPlace(place);
   }

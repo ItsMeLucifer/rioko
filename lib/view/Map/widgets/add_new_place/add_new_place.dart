@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
-import 'package:rioko/common/color_palette.dart';
 import 'package:rioko/main.dart';
 import 'package:rioko/view/components/button.dart';
 import 'package:rioko/view/components/text_field.dart';
@@ -22,7 +20,6 @@ class AddNewPlace extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final geolocationVM = ref.watch(geolocationProvider);
     final addNewPlaceVM = ref.watch(addNewPlaceProvider);
-    final baseVM = ref.watch(baseProvider);
     final kilometers = geolocationVM.getDistanceInKilometers(
         addNewPlaceVM.place.origin, addNewPlaceVM.place.destination);
 
@@ -31,7 +28,7 @@ class AddNewPlace extends ConsumerWidget {
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       child: FractionallySizedBox(
-        heightFactor: 0.7,
+        heightFactor: 0.97,
         child: Container(
           padding: const EdgeInsets.symmetric(
             vertical: 20.0,
@@ -109,6 +106,18 @@ class AddNewPlace extends ConsumerWidget {
                   ),
                 ),
               ),
+              RiokoTextField(
+                enabled: addNewPlaceVM.place.destination == null,
+                onSubmitted: (value) =>
+                    addNewPlaceVM.onSubmittedDestination(value, ref),
+                labelText: 'Description',
+                controller: descriptionTextController,
+                prefix: 'Description',
+                maxLines: null,
+                height: null,
+                maxHeight: 100,
+                keyboardType: TextInputType.multiline,
+              ),
               const Expanded(flex: 8, child: SizedBox()),
               SizedBox(
                 width: 150,
@@ -143,6 +152,7 @@ class AddNewPlace extends ConsumerWidget {
                       originText: originTextController.text,
                       destinationText: destinationTextController.text,
                       kilometers: kilometers,
+                      descriptionText: descriptionTextController.text,
                     );
                   },
                   icon: Icons.add,
