@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:rioko/common/utilities.dart';
+import 'package:uuid/uuid.dart';
 part 'travel_place.freezed.dart';
 
 ///```dart
@@ -27,11 +28,11 @@ class TravelPlace with _$TravelPlace {
     required String countryIso3Code,
     required DateTime date,
     @Default('') String description,
-    required LatLng destinationCoordinates,
+    required LatLng? destination,
     @Default(<String>[]) List<String> imagesURLs,
     required double kilometers,
     @Default(<String>[]) List<String> likes,
-    required LatLng originCoordinates,
+    required LatLng? origin,
     @Default('') String title,
   }) = _TravelPlace;
 
@@ -40,11 +41,10 @@ class TravelPlace with _$TravelPlace {
         id: snapshot.get('id') as String,
         countryIso3Code: snapshot.get('country') as String,
         date: DateTime.fromMicrosecondsSinceEpoch(snapshot.get('date') as int),
-        destinationCoordinates:
+        destination:
             Utilities.geoPointToLatLng(snapshot.get('destination') as GeoPoint),
         kilometers: snapshot.get('kilometers') as double,
-        originCoordinates:
-            Utilities.geoPointToLatLng(snapshot.get('origin') as GeoPoint),
+        origin: Utilities.geoPointToLatLng(snapshot.get('origin') as GeoPoint),
         description: snapshot.get('description') as String,
         title: snapshot.get('title') as String,
         imagesURLs: snapshot.get('images').isNotEmpty
@@ -56,5 +56,29 @@ class TravelPlace with _$TravelPlace {
         comrades: snapshot.get('comrades').isNotEmpty
             ? snapshot.get('comrades') as List<String>
             : [],
+      );
+
+  ///```dart
+  ///TravelPlace(
+  ///   id: const Uuid().v1(),
+  ///   countryIso3Code: '',
+  ///   date: DateTime.now(),
+  ///   destination: null,
+  ///   kilometers: 0,
+  ///   origin: null,
+  ///   comrades: [],
+  ///   likes: [],
+  ///   title: '',
+  ///   imagesURLs: [],
+  ///   description: '',
+  ///);
+  ///```
+  static TravelPlace get newPlace => TravelPlace(
+        id: const Uuid().v1(),
+        countryIso3Code: '',
+        date: DateTime.now(),
+        destination: null,
+        kilometers: 0,
+        origin: null,
       );
 }

@@ -89,40 +89,7 @@ class BaseViewModel extends ChangeNotifier {
 
   void addNewTravelPlaceToFirebase(BuildContext context) async {
     final response = await firestoreDBVM.addNewPlace(
-        addNewPlaceVM.travelPlace!, authVM.currentUser!.id);
+        addNewPlaceVM.place, authVM.currentUser!.id);
     if (response) Navigator.of(context).pop();
-  }
-
-  Future addNewPlaceOnSubmittedOrigin(String value) async {
-    if (value.length > 3) {
-      await geolocationVM.getLocationsFromAddress(value).then((latLng) {
-        if (latLng != null) {
-          geolocationVM.getPlacemarkFromCoordinates(latLng).then((placemark) {
-            if (placemark != null) {
-              addNewPlaceVM.originPlacemark = placemark;
-            }
-          });
-          addNewPlaceVM.origin = latLng;
-        }
-      });
-    }
-  }
-
-  Future addNewPlaceOnSubmittedDestination(String value) async {
-    if (value.length > 3) {
-      await geolocationVM.getLocationsFromAddress(value).then((latLng) {
-        if (latLng != null) {
-          geolocationVM.getPlacemarkFromCoordinates(latLng).then((placemark) {
-            if (placemark != null) {
-              addNewPlaceVM.destinationPlacemark = placemark;
-            }
-          });
-          mapVM.mapMoveTo(
-            position: latLng,
-          );
-          addNewPlaceVM.destination = latLng;
-        }
-      });
-    }
   }
 }

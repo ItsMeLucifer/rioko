@@ -17,9 +17,9 @@ class PlaceDetailsViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  TravelPlace? _place;
-  TravelPlace? get place => _place;
-  set place(TravelPlace? place) {
+  TravelPlace _place = TravelPlace.newPlace;
+  TravelPlace get place => _place;
+  set place(TravelPlace place) {
     _place = place;
     notifyListeners();
   }

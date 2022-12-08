@@ -33,7 +33,7 @@ class PlaceDetails extends ConsumerWidget {
               children: [
                 Center(
                   child: Text(
-                    placeDetailsVM.place!.title,
+                    placeDetailsVM.place.title,
                     style: Theme.of(context)
                         .textTheme
                         .headline3
@@ -81,7 +81,7 @@ class PlaceDetails extends ConsumerWidget {
                         text: 'Distance: ',
                       ),
                       TextSpan(
-                        text: '${placeDetailsVM.place!.kilometers}',
+                        text: '${placeDetailsVM.place.kilometers}',
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       const TextSpan(text: ' km'),
@@ -97,7 +97,7 @@ class PlaceDetails extends ConsumerWidget {
                         text: 'Description: ',
                       ),
                       TextSpan(
-                        text: placeDetailsVM.place!.description,
+                        text: placeDetailsVM.place.description,
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ],
@@ -113,7 +113,7 @@ class PlaceDetails extends ConsumerWidget {
                         text: 'Likes: ',
                       ),
                       TextSpan(
-                        text: '${placeDetailsVM.place!.likes.length}',
+                        text: '${placeDetailsVM.place.likes.length}',
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ],
@@ -128,7 +128,7 @@ class PlaceDetails extends ConsumerWidget {
                         text: 'Travelled with ',
                       ),
                       TextSpan(
-                        text: '${placeDetailsVM.place!.comrades.length}',
+                        text: '${placeDetailsVM.place.comrades.length}',
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       const TextSpan(text: ' comrades'),
