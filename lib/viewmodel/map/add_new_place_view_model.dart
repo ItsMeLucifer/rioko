@@ -93,4 +93,17 @@ class AddNewPlaceViewModel extends ChangeNotifier {
     baseVM.addNewTravelPlaceToFirebase(context);
     mapVM.addTravelPlace(place);
   }
+
+  void setPlaceToEdit(TravelPlace place, WidgetRef ref) async {
+    final geolocationVM = ref.read(geolocationProvider);
+    this.place = place;
+    if (place.origin != null) {
+      originPlacemark =
+          await geolocationVM.getPlacemarkFromCoordinates(place.origin!);
+    }
+    if (place.destination != null) {
+      destinationPlacemark =
+          await geolocationVM.getPlacemarkFromCoordinates(place.destination!);
+    }
+  }
 }

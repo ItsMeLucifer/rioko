@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
+import 'package:rioko/common/debug_utils.dart';
 import 'package:rioko/main.dart';
 import 'package:rioko/view/components/button.dart';
 import 'package:rioko/view/components/text_field.dart';
 
 class AddNewPlace extends ConsumerWidget {
-  AddNewPlace({Key? key}) : super(key: key);
+  final bool edit;
+  AddNewPlace({Key? key, this.edit = false}) : super(key: key);
 
   final TextEditingController destinationTextController =
       TextEditingController();
@@ -22,7 +24,7 @@ class AddNewPlace extends ConsumerWidget {
     final addNewPlaceVM = ref.watch(addNewPlaceProvider);
     final kilometers = geolocationVM.getDistanceInKilometers(
         addNewPlaceVM.place.origin, addNewPlaceVM.place.destination);
-
+    DebugUtils.printInfo(addNewPlaceVM.place.toString());
     return Container(
       margin: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -36,7 +38,7 @@ class AddNewPlace extends ConsumerWidget {
           child: Column(
             children: [
               Text(
-                'NEW PLACE',
+                "${edit ? 'EDIT' : 'NEW'} PLACE",
                 style: Theme.of(context).textTheme.headline3?.copyWith(
                       fontFamily: 'CeasarDressing',
                       color: Colors.black,

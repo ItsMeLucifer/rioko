@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rioko/main.dart';
+import 'package:rioko/view/Map/widgets/add_new_place/add_new_place.dart';
 
 class PlaceDetails extends ConsumerWidget {
   const PlaceDetails({Key? key}) : super(key: key);
@@ -152,7 +153,18 @@ class PlaceDetails extends ConsumerWidget {
             right: 10.0,
             top: 10.0,
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                ref.read(addNewPlaceProvider).setPlaceToEdit(
+                      placeDetailsVM.place,
+                      ref,
+                    );
+                showModalBottomSheet(
+                  context: context,
+                  builder: (_) => AddNewPlace(
+                    edit: true,
+                  ),
+                );
+              },
               icon: const Icon(
                 Icons.menu,
                 size: 25,
