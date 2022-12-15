@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rioko/common/debug_utils.dart';
 import 'package:rioko/main.dart';
 import 'package:rioko/view/Map/widgets/add_new_place/add_new_place.dart';
 
@@ -9,6 +10,8 @@ class PlaceDetails extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final placeDetailsVM = ref.watch(placeDetailsProvider);
+    final place =
+        ref.watch(mapProvider).travelPlaces[placeDetailsVM.placeIndex];
     return FractionallySizedBox(
       heightFactor: 0.97,
       child: Stack(
@@ -32,7 +35,7 @@ class PlaceDetails extends ConsumerWidget {
               children: [
                 Center(
                   child: Text(
-                    placeDetailsVM.place.title,
+                    place.title,
                     style: Theme.of(context)
                         .textTheme
                         .headline3
@@ -80,7 +83,7 @@ class PlaceDetails extends ConsumerWidget {
                         text: 'Distance: ',
                       ),
                       TextSpan(
-                        text: '${placeDetailsVM.place.kilometers}',
+                        text: '${place.kilometers}',
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       const TextSpan(text: ' km'),
@@ -96,7 +99,7 @@ class PlaceDetails extends ConsumerWidget {
                         text: 'Description: ',
                       ),
                       TextSpan(
-                        text: placeDetailsVM.place.description,
+                        text: place.description,
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ],
@@ -112,7 +115,7 @@ class PlaceDetails extends ConsumerWidget {
                         text: 'Likes: ',
                       ),
                       TextSpan(
-                        text: '${placeDetailsVM.place.likes.length}',
+                        text: '${place.likes.length}',
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ],
@@ -127,7 +130,7 @@ class PlaceDetails extends ConsumerWidget {
                         text: 'Travelled with ',
                       ),
                       TextSpan(
-                        text: '${placeDetailsVM.place.comrades.length}',
+                        text: '${place.comrades.length}',
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       const TextSpan(text: ' comrades'),
@@ -155,15 +158,13 @@ class PlaceDetails extends ConsumerWidget {
             child: IconButton(
               onPressed: () {
                 ref.read(addNewPlaceProvider).setPlaceToEdit(
-                      placeDetailsVM.place,
+                      place,
                       ref,
                     );
-                showModalBottomSheet(
-                  context: context,
-                  builder: (_) => AddNewPlace(
-                    edit: true,
-                  ),
-                );
+                DebugUtils.printInfo(place.toString());
+                ref
+                    .read(mapProvider)
+                    .displayAddNewPlaceBottomSheet(context, ref, edit: true);
               },
               icon: const Icon(
                 Icons.menu,

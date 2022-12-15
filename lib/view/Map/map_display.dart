@@ -13,53 +13,6 @@ import 'package:rioko/view/map/widgets/map_marker.dart';
 class MapDisplay extends ConsumerWidget {
   const MapDisplay({Key? key}) : super(key: key);
 
-  void _displayAddNewPlaceBottomSheet(
-      BuildContext context, WidgetRef ref) async {
-    final authVM = ref.read(authenticationProvider);
-    final addNewPlaceVM = ref.read(addNewPlaceProvider);
-    addNewPlaceVM.place = TravelPlace.newPlace;
-    if (authVM.currentUser?.home != null) {
-      final addNewPlaceVM = ref.read(addNewPlaceProvider);
-      final geolocationVM = ref.read(geolocationProvider);
-      addNewPlaceVM.place =
-          addNewPlaceVM.place.copyWith(origin: authVM.currentUser!.home);
-      addNewPlaceVM.originPlacemark = await geolocationVM
-          .getPlacemarkFromCoordinates(authVM.currentUser!.home!);
-    }
-    addNewPlaceVM.destinationPlacemark = null;
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(25.0),
-          topRight: Radius.circular(25.0),
-        ),
-      ),
-      builder: (_) => AddNewPlace(),
-      isScrollControlled: true,
-    );
-  }
-
-  void _displayPlaceDetailsBottomSheet(
-    BuildContext context, {
-    required WidgetRef ref,
-    required TravelPlace place,
-  }) async {
-    final placeDetailsVM = ref.read(placeDetailsProvider);
-    final geolocationVM = ref.read(geolocationProvider);
-    placeDetailsVM.place = place;
-    placeDetailsVM.originPlacemark = await geolocationVM
-        .getPlacemarkFromCoordinates(placeDetailsVM.place.origin!);
-    placeDetailsVM.destinationPlacemark = await geolocationVM
-        .getPlacemarkFromCoordinates(placeDetailsVM.place.destination!);
-    showModalBottomSheet(
-      context: context,
-      builder: (_) => const PlaceDetails(),
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-    );
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mapVM = ref.watch(mapProvider);
@@ -70,7 +23,7 @@ class MapDisplay extends ConsumerWidget {
         heroTag: 'addNewPlace',
         elevation: 5,
         backgroundColor: Theme.of(context).colorScheme.tertiary,
-        onPressed: () => _displayAddNewPlaceBottomSheet(context, ref),
+        onPressed: () => mapVM.displayAddNewPlaceBottomSheet(context, ref),
         child: const FaIcon(
           FontAwesomeIcons.plus,
         ),
@@ -119,7 +72,7 @@ class MapDisplay extends ConsumerWidget {
                                 position: travelPlace.destination!,
                                 zoom: 7,
                               );
-                              _displayPlaceDetailsBottomSheet(
+                              mapVM.displayPlaceDetailsBottomSheet(
                                 context,
                                 ref: ref,
                                 place: travelPlace,

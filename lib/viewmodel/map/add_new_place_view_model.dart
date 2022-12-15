@@ -89,7 +89,11 @@ class AddNewPlaceViewModel extends ChangeNotifier {
     if (place.origin == null || place.destination == null || kilometers == 0) {
       return;
     }
-    place = place.copyWith(title: titleText, description: descriptionText);
+    place = place.copyWith(
+      title: titleText,
+      description: descriptionText,
+      kilometers: kilometers!,
+    );
     baseVM.addNewTravelPlaceToFirebase(context);
     mapVM.addTravelPlace(place);
   }

@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:rioko/main.dart';
 import 'package:rioko/model/travel_place.dart';
 
 class PlaceDetailsViewModel extends ChangeNotifier {
@@ -17,10 +19,10 @@ class PlaceDetailsViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  TravelPlace _place = TravelPlace.newPlace;
-  TravelPlace get place => _place;
-  set place(TravelPlace place) {
-    _place = place;
+  int _placeIndex = 0;
+  int get placeIndex => _placeIndex;
+  set placeIndex(int placeIndex) {
+    _placeIndex = placeIndex;
     notifyListeners();
   }
 }
