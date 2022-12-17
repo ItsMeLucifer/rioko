@@ -5,7 +5,7 @@ import 'package:rioko/model/travel_place.dart';
 import 'package:rioko/model/user.dart';
 
 class FirestoreDatabaseService {
-  void createNewUser(User user) {
+  static void createNewUser(User user) {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
     users.doc(user.id).set({
       'id': user.id,
@@ -15,13 +15,13 @@ class FirestoreDatabaseService {
     });
   }
 
-  Future<DocumentSnapshot> getUserInfo(String userId) async {
+  static Future<DocumentSnapshot> getUserInfo(String userId) async {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
     DocumentSnapshot user = await users.doc(userId).get();
     return user;
   }
 
-  Future<void> addNewPlace(TravelPlace place, String userId) async {
+  static Future<void> addNewPlace(TravelPlace place, String userId) async {
     debugPrint('got: $place, $userId');
     CollectionReference users = FirebaseFirestore.instance.collection('users');
     await users.doc(userId).collection('places').doc(place.id).set({
@@ -39,7 +39,12 @@ class FirestoreDatabaseService {
     });
   }
 
-  Future<List<TravelPlace>> fetchCurrentUserPlaces(String userId) async {
+  static Future<void> removePlace(String placeId, String userId) async {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    await users.doc(userId).collection('places').doc(placeId).delete();
+  }
+
+  static Future<List<TravelPlace>> fetchCurrentUserPlaces(String userId) async {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
     List<QueryDocumentSnapshot> placeSnapshots = await users
         .doc(userId)

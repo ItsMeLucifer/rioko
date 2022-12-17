@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:motion_toast/motion_toast.dart';
+import 'package:motion_toast/resources/arrays.dart';
 import 'package:rioko/common/route_names.dart';
 import 'package:rioko/main.dart';
 import 'package:rioko/model/travel_place.dart';
@@ -109,5 +111,35 @@ class AddNewPlaceViewModel extends ChangeNotifier {
       destinationPlacemark =
           await geolocationVM.getPlacemarkFromCoordinates(place.destination!);
     }
+  }
+
+  Future onPressedRemovePlace(BuildContext context, WidgetRef ref) async {
+    final firestoreVM = ref.read(firestoreDatabaseProvider);
+    final authVM = ref.read(authenticationProvider);
+    //Remove from the database
+    String? response;
+    if (authVM.currentUser != null) {
+      response = await firestoreVM.removePlace(
+        place.id,
+        authVM.currentUser!.id,
+      );
+    }
+    if (response != null) {
+      MotionToast.error(
+        title: const Text("Error"),
+        description: Text(
+          response,
+        ),
+        position: MotionToastPosition.top,
+        animationType: AnimationType.fromTop,
+      ).show(
+        context,
+      );
+      return;
+    }
+    //Remove locally
+    final mapVM = ref.read(mapProvider);
+    mapVM.removePlaceLocally(place.id);
+    Navigator.of(context).popUntil(ModalRoute.withName(RouteNames.map));
   }
 }

@@ -106,4 +106,8 @@ class MapViewModel extends ChangeNotifier {
       backgroundColor: Colors.transparent,
     );
   }
+
+  void removePlaceLocally(String placeId) {
+    _travelPlaces.removeWhere((p) => p.id == placeId);
+  }
 }

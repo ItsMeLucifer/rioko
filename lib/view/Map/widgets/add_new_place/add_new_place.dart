@@ -179,7 +179,7 @@ class AddNewPlace extends ConsumerWidget {
                       title:
                           'Are you sure to delete ${addNewPlaceVM.place.title}?',
                       onPressedYes: () {
-                        // Delete
+                        addNewPlaceVM.onPressedRemovePlace(context, ref);
                       },
                     ),
                   );

@@ -106,7 +106,7 @@ class MyApp extends StatelessWidget {
           case RouteNames.dataCompletion:
             return customPageRoute(settings, DataCompletionPage());
           default:
-            return customPageRoute(settings, AuthenticationPage());
+            return customPageRoute(settings, const AuthenticationPage());
         }
       },
     );
