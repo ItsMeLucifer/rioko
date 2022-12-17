@@ -56,14 +56,13 @@ class GeolocationViewModel extends ChangeNotifier {
     return "$cityName$administrativeArea${placemark.country ?? '?'}";
   }
 
-  Future<LatLng?> getLocationsFromAddress(String address) async {
+  Future<LatLng> getLocationsFromAddress(String address) async {
     try {
       List<Location> locations =
           await GeolocationService().getLocationsFromAddress(address);
       return LatLng(locations.first.latitude, locations.first.longitude);
     } catch (e) {
-      debugPrint("Couldn't get locations from address");
-      return null;
+      rethrow;
     }
   }
 

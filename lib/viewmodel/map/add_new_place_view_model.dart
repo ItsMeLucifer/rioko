@@ -29,39 +29,67 @@ class AddNewPlaceViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future onSubmittedOrigin(String value, WidgetRef ref) async {
+  Future onSubmittedOrigin(
+    BuildContext context, {
+    required String value,
+    required WidgetRef ref,
+  }) async {
+    if (value.length < 4) return;
     final geolocationVM = ref.read(geolocationProvider);
-    if (value.length > 3) {
+    try {
       await geolocationVM.getLocationsFromAddress(value).then((latLng) {
-        if (latLng != null) {
-          geolocationVM.getPlacemarkFromCoordinates(latLng).then((placemark) {
-            if (placemark != null) {
-              originPlacemark = placemark;
-            }
-          });
-          place = place.copyWith(origin: latLng);
-        }
+        geolocationVM.getPlacemarkFromCoordinates(latLng).then((placemark) {
+          if (placemark != null) {
+            originPlacemark = placemark;
+          }
+        });
+        place = place.copyWith(origin: latLng);
       });
+    } catch (e) {
+      MotionToast.error(
+        title: const Text("Error"),
+        description: Text(
+          e.toString(),
+        ),
+        position: MotionToastPosition.top,
+        animationType: AnimationType.fromTop,
+      ).show(
+        context,
+      );
     }
   }
 
-  Future onSubmittedDestination(String value, WidgetRef ref) async {
+  Future onSubmittedDestination(
+    BuildContext context, {
+    required String value,
+    required WidgetRef ref,
+  }) async {
+    if (value.length < 4) return;
     final geolocationVM = ref.read(geolocationProvider);
     final mapVM = ref.read(mapProvider);
-    if (value.length > 3) {
+    try {
       await geolocationVM.getLocationsFromAddress(value).then((latLng) {
-        if (latLng != null) {
-          geolocationVM.getPlacemarkFromCoordinates(latLng).then((placemark) {
-            if (placemark != null) {
-              destinationPlacemark = placemark;
-            }
-          });
-          mapVM.mapMoveTo(
-            position: latLng,
-          );
-          place = place.copyWith(destination: latLng);
-        }
+        geolocationVM.getPlacemarkFromCoordinates(latLng).then((placemark) {
+          if (placemark != null) {
+            destinationPlacemark = placemark;
+          }
+        });
+        mapVM.mapMoveTo(
+          position: latLng,
+        );
+        place = place.copyWith(destination: latLng);
       });
+    } catch (e) {
+      MotionToast.error(
+        title: const Text("Error"),
+        description: Text(
+          e.toString(),
+        ),
+        position: MotionToastPosition.top,
+        animationType: AnimationType.fromTop,
+      ).show(
+        context,
+      );
     }
   }
 
@@ -78,10 +106,10 @@ class AddNewPlaceViewModel extends ChangeNotifier {
     final mapVM = ref.read(mapProvider);
     final baseVM = ref.read(baseProvider);
     if (place.origin == null) {
-      await onSubmittedOrigin(originText, ref);
+      await onSubmittedOrigin(context, value: originText, ref: ref);
     }
     if (place.destination == null) {
-      await onSubmittedDestination(destinationText, ref);
+      await onSubmittedDestination(context, value: destinationText, ref: ref);
     }
 
     if (authVM.currentUser?.id == null) {

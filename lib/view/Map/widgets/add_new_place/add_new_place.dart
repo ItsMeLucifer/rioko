@@ -58,8 +58,11 @@ class AddNewPlace extends ConsumerWidget {
                   ),
                   RiokoTextField(
                     enabled: addNewPlaceVM.place.origin == null,
-                    onSubmitted: (value) =>
-                        addNewPlaceVM.onSubmittedOrigin(value, ref),
+                    onSubmitted: (value) => addNewPlaceVM.onSubmittedOrigin(
+                      context,
+                      value: value,
+                      ref: ref,
+                    ),
                     labelText: addNewPlaceVM.originPlacemark == null
                         ? 'Origin'
                         : geolocationVM.getAddressFromPlacemark(
@@ -77,7 +80,11 @@ class AddNewPlace extends ConsumerWidget {
                   RiokoTextField(
                     enabled: addNewPlaceVM.place.destination == null,
                     onSubmitted: (value) =>
-                        addNewPlaceVM.onSubmittedDestination(value, ref),
+                        addNewPlaceVM.onSubmittedDestination(
+                      context,
+                      value: value,
+                      ref: ref,
+                    ),
                     labelText: addNewPlaceVM.destinationPlacemark == null
                         ? 'Destination'
                         : geolocationVM.getAddressFromPlacemark(
@@ -115,7 +122,11 @@ class AddNewPlace extends ConsumerWidget {
                   RiokoTextField(
                     enabled: addNewPlaceVM.place.destination == null,
                     onSubmitted: (value) =>
-                        addNewPlaceVM.onSubmittedDestination(value, ref),
+                        addNewPlaceVM.onSubmittedDestination(
+                      context,
+                      value: value,
+                      ref: ref,
+                    ),
                     labelText: 'Description',
                     controller: descriptionTextController,
                     prefix: 'Description',
@@ -168,28 +179,29 @@ class AddNewPlace extends ConsumerWidget {
                 ],
               ),
             ),
-            Positioned(
-              right: 10.0,
-              top: 10.0,
-              child: IconButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (_) => YesNoDialog(
-                      title:
-                          'Are you sure to delete ${addNewPlaceVM.place.title}?',
-                      onPressedYes: () {
-                        addNewPlaceVM.onPressedRemovePlace(context, ref);
-                      },
-                    ),
-                  );
-                },
-                icon: const Icon(
-                  Icons.delete,
-                  color: Colors.red,
+            if (edit)
+              Positioned(
+                right: 10.0,
+                top: 10.0,
+                child: IconButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (_) => YesNoDialog(
+                        title:
+                            'Are you sure to delete ${addNewPlaceVM.place.title}?',
+                        onPressedYes: () {
+                          addNewPlaceVM.onPressedRemovePlace(context, ref);
+                        },
+                      ),
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ),
