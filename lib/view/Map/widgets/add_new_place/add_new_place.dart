@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
-import 'package:rioko/common/debug_utils.dart';
 import 'package:rioko/common/dialogs/yes_no_dialog.dart';
 import 'package:rioko/main.dart';
 import 'package:rioko/view/components/button.dart';
@@ -16,8 +15,11 @@ class AddNewPlace extends ConsumerWidget {
       TextEditingController();
   final TextEditingController originTextController = TextEditingController();
   static TextEditingController titleTextController = TextEditingController();
-  final TextEditingController descriptionTextController =
+  static TextEditingController descriptionTextController =
       TextEditingController();
+
+  static FocusNode originFocusNode = FocusNode();
+  static FocusNode destinationFocusNode = FocusNode();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -25,7 +27,6 @@ class AddNewPlace extends ConsumerWidget {
     final addNewPlaceVM = ref.watch(addNewPlaceProvider);
     final kilometers = geolocationVM.getDistanceInKilometers(
         addNewPlaceVM.place.origin, addNewPlaceVM.place.destination);
-    DebugUtils.printInfo(addNewPlaceVM.place.toString());
     return Container(
       margin: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -57,6 +58,7 @@ class AddNewPlace extends ConsumerWidget {
                     prefix: 'Title',
                   ),
                   RiokoTextField(
+                    focusNode: originFocusNode,
                     enabled: addNewPlaceVM.place.origin == null,
                     onSubmitted: (value) => addNewPlaceVM.onSubmittedOrigin(
                       context,
@@ -66,7 +68,8 @@ class AddNewPlace extends ConsumerWidget {
                     labelText: addNewPlaceVM.originPlacemark == null
                         ? 'Origin'
                         : geolocationVM.getAddressFromPlacemark(
-                            addNewPlaceVM.originPlacemark!),
+                            addNewPlaceVM.originPlacemark!,
+                          ),
                     controller: originTextController,
                     prefix: 'Origin',
                     sufixIconData: Icons.edit,
@@ -78,6 +81,7 @@ class AddNewPlace extends ConsumerWidget {
                     },
                   ),
                   RiokoTextField(
+                    focusNode: destinationFocusNode,
                     enabled: addNewPlaceVM.place.destination == null,
                     onSubmitted: (value) =>
                         addNewPlaceVM.onSubmittedDestination(
@@ -120,13 +124,6 @@ class AddNewPlace extends ConsumerWidget {
                     ),
                   ),
                   RiokoTextField(
-                    enabled: addNewPlaceVM.place.destination == null,
-                    onSubmitted: (value) =>
-                        addNewPlaceVM.onSubmittedDestination(
-                      context,
-                      value: value,
-                      ref: ref,
-                    ),
                     labelText: 'Description',
                     controller: descriptionTextController,
                     prefix: 'Description',

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rioko/common/debug_utils.dart';
 import 'package:rioko/main.dart';
-import 'package:rioko/view/Map/widgets/add_new_place/add_new_place.dart';
+import 'package:rioko/viewmodel/geolocation/geolocation_view_model.dart';
 
 class PlaceDetails extends ConsumerWidget {
   const PlaceDetails({Key? key}) : super(key: key);
@@ -10,6 +10,7 @@ class PlaceDetails extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final placeDetailsVM = ref.watch(placeDetailsProvider);
+    final geolocationVM = ref.watch(geolocationProvider);
     final place =
         ref.watch(mapProvider).travelPlaces[placeDetailsVM.placeIndex];
     return FractionallySizedBox(
@@ -53,7 +54,11 @@ class PlaceDetails extends ConsumerWidget {
                         text: 'Origin: ',
                       ),
                       TextSpan(
-                        text: placeDetailsVM.originPlacemark.locality,
+                        text: geolocationVM.getAddressFromPlacemark(
+                          placeDetailsVM.originPlacemark,
+                          administrativeAreaDisplayOption:
+                              DisplayOption.showConditionally,
+                        ),
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ],
@@ -68,7 +73,11 @@ class PlaceDetails extends ConsumerWidget {
                         text: 'Destination: ',
                       ),
                       TextSpan(
-                        text: placeDetailsVM.destinationPlacemark.locality,
+                        text: geolocationVM.getAddressFromPlacemark(
+                          placeDetailsVM.destinationPlacemark,
+                          administrativeAreaDisplayOption:
+                              DisplayOption.showConditionally,
+                        ),
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ],

@@ -7,6 +7,12 @@ import 'package:latlong2/latlong.dart';
 import 'package:rioko/common/utilities.dart';
 import 'package:rioko/service/geolocation_service.dart';
 
+enum DisplayOption {
+  show,
+  showConditionally,
+  hide,
+}
+
 class GeolocationViewModel extends ChangeNotifier {
   Future<LatLng?> getCurrentPosition() async {
     try {
@@ -44,16 +50,42 @@ class GeolocationViewModel extends ChangeNotifier {
     }
   }
 
-  String getAddressFromPlacemark(Placemark? placemark) {
+  /// Locality and Country is displayed both for `DisplayOption.show`
+  /// and `DisplayOption.showConditionally`.
+  ///
+  /// If administrativeAreaDisplayOption
+  /// is set to `DisplayOption.showConditionally`, administrativeArea will be
+  /// displayed only if locality is empty.
+  String getAddressFromPlacemark(
+    Placemark? placemark, {
+    DisplayOption localityDisplayOption = DisplayOption.show,
+    DisplayOption administrativeAreaDisplayOption = DisplayOption.show,
+    DisplayOption countryDisplayOption = DisplayOption.show,
+  }) {
     if (placemark == null) return '';
-    final cityName = Utilities.isNullOrEmptyString(placemark.locality)
-        ? ''
-        : '${placemark.locality}, ';
-    final administrativeArea =
-        Utilities.isNullOrEmptyString(placemark.administrativeArea)
-            ? ''
-            : '${placemark.administrativeArea}, ';
-    return "$cityName$administrativeArea${placemark.country ?? '?'}";
+    String cityName = '';
+    if (localityDisplayOption != DisplayOption.hide) {
+      cityName = Utilities.isNullOrEmptyString(placemark.locality)
+          ? ''
+          : '${placemark.locality}, ';
+    }
+    String administrativeArea = '';
+    if (administrativeAreaDisplayOption != DisplayOption.hide) {
+      administrativeArea =
+          Utilities.isNullOrEmptyString(placemark.administrativeArea)
+              ? ''
+              : '${placemark.administrativeArea}, ';
+      if (administrativeAreaDisplayOption == DisplayOption.showConditionally &&
+          cityName != '') {
+        administrativeArea = '';
+      }
+    }
+    String country = '';
+    if (countryDisplayOption != DisplayOption.hide) {
+      country = placemark.country ?? '?';
+    }
+
+    return "$cityName$administrativeArea$country";
   }
 
   Future<LatLng> getLocationsFromAddress(String address) async {

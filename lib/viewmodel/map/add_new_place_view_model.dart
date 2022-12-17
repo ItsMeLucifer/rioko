@@ -47,7 +47,7 @@ class AddNewPlaceViewModel extends ChangeNotifier {
       });
     } catch (e) {
       MotionToast.error(
-        title: const Text("Error"),
+        title: const Text("Error - Origin field"),
         description: Text(
           e.toString(),
         ),
@@ -81,7 +81,7 @@ class AddNewPlaceViewModel extends ChangeNotifier {
       });
     } catch (e) {
       MotionToast.error(
-        title: const Text("Error"),
+        title: const Text("Error - Destination field"),
         description: Text(
           e.toString(),
         ),
