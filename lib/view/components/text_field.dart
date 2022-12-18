@@ -10,10 +10,13 @@ class RiokoTextField extends StatelessWidget {
   final IconData? sufixIconData;
   final Color accentColor;
   final Color? fillColor;
-  final double height;
+  final double? height;
   final Function()? onPressedSuffixIcon;
   final String prefix;
   final FocusNode? focusNode;
+  final int? maxLines;
+  final TextInputType keyboardType;
+  final double? maxHeight;
   const RiokoTextField({
     Key? key,
     required this.controller,
@@ -29,61 +32,69 @@ class RiokoTextField extends StatelessWidget {
     this.onPressedSuffixIcon,
     this.prefix = '',
     this.focusNode,
+    this.maxLines = 1,
+    this.keyboardType = TextInputType.text,
+    this.maxHeight,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: height,
-      padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
-      child: Stack(
-        children: [
-          TextFormField(
-            focusNode: focusNode,
-            enabled: enabled,
-            controller: controller,
-            onChanged: onChanged,
-            onFieldSubmitted: onSubmitted,
-            obscureText: obscureText,
-            style: Theme.of(context)
-                .textTheme
-                .bodyText1
-                ?.copyWith(color: accentColor),
-            decoration: InputDecoration(
-              labelText: labelText,
-              contentPadding: const EdgeInsets.all(10.0),
-              floatingLabelBehavior: FloatingLabelBehavior.never,
-              labelStyle: Theme.of(context)
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxHeight: maxHeight ?? height ?? 50),
+      child: Container(
+        height: height,
+        padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
+        child: Stack(
+          children: [
+            TextFormField(
+              focusNode: focusNode,
+              enabled: enabled,
+              controller: controller,
+              onChanged: onChanged,
+              onFieldSubmitted: onSubmitted,
+              obscureText: obscureText,
+              maxLines: maxLines,
+              keyboardType: keyboardType,
+              style: Theme.of(context)
                   .textTheme
                   .bodyText1
                   ?.copyWith(color: accentColor),
-              focusColor: accentColor,
-              isDense: true,
-              filled: true,
-              fillColor: fillColor ?? Theme.of(context).colorScheme.primary,
-              border: OutlineInputBorder(
-                borderSide: BorderSide.none,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              prefix: prefix == '' ? null : Text('$prefix: '),
-              prefixStyle: Theme.of(context).textTheme.bodyText1?.copyWith(
-                    color: accentColor,
-                  ),
-            ),
-          ),
-          Positioned(
-            right: 8,
-            top: 8,
-            child: GestureDetector(
-              onTap: onPressedSuffixIcon,
-              child: Icon(
-                sufixIconData,
-                color: accentColor,
-                size: 20,
+              decoration: InputDecoration(
+                labelText: labelText,
+                contentPadding: const EdgeInsets.all(10.0),
+                floatingLabelBehavior: FloatingLabelBehavior.never,
+                labelStyle: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    ?.copyWith(color: accentColor),
+                focusColor: accentColor,
+                isDense: true,
+                filled: true,
+                fillColor: fillColor ?? Theme.of(context).colorScheme.primary,
+                border: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                prefix: prefix == '' ? null : Text('$prefix: '),
+                prefixStyle: Theme.of(context).textTheme.bodyText1?.copyWith(
+                      color: accentColor,
+                    ),
               ),
             ),
-          ),
-        ],
+            Positioned(
+              right: 8,
+              top: 8,
+              child: GestureDetector(
+                onTap: onPressedSuffixIcon,
+                child: Icon(
+                  sufixIconData,
+                  color: accentColor,
+                  size: 20,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

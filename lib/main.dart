@@ -12,6 +12,7 @@ import 'package:rioko/viewmodel/firebase/firestore_database_view_model.dart';
 import 'package:rioko/viewmodel/geolocation/geolocation_view_model.dart';
 import 'package:rioko/viewmodel/map/add_new_place_view_model.dart';
 import 'package:rioko/viewmodel/map/map_view_model.dart';
+import 'package:rioko/viewmodel/map/place_details_view_model.dart';
 import 'package:rioko/viewmodel/registration/data_completion_view_model.dart';
 
 final ChangeNotifierProvider<MapViewModel> mapProvider =
@@ -42,6 +43,8 @@ final ChangeNotifierProvider<BaseViewModel> baseProvider =
 });
 final ChangeNotifierProvider<DataCompletionViewModel> dataCompletionProvider =
     ChangeNotifierProvider((_) => DataCompletionViewModel());
+final ChangeNotifierProvider<PlaceDetailsViewModel> placeDetailsProvider =
+    ChangeNotifierProvider((_) => PlaceDetailsViewModel());
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -64,24 +67,32 @@ class MyApp extends StatelessWidget {
       title: 'Rioko',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        backgroundColor: Colors.white,
         colorScheme:
             ColorScheme.fromSwatch(primarySwatch: Colors.blue).copyWith(
           primary: ColorPalette.babyBlue,
           secondary: ColorPalette.tickleMePink,
+          onSecondary: ColorPalette.cyclamen,
           tertiary: Colors.black,
         ),
         textTheme: ThemeData.light().textTheme.copyWith(
-              headline1: const TextStyle(
+              headlineLarge: const TextStyle(
                 fontFamily: 'CeasarDressing',
                 fontSize: 80,
                 color: Colors.black,
               ),
+              bodyLarge: const TextStyle(
+                fontSize: 16,
+                color: ColorPalette.cyclamen,
+                fontWeight: FontWeight.bold,
+              ),
             ),
         buttonTheme: ButtonThemeData(
-            colorScheme:
-                ColorScheme.fromSwatch(primarySwatch: Colors.pink).copyWith(
-          background: ColorPalette.tickleMePink,
-        )),
+          colorScheme:
+              ColorScheme.fromSwatch(primarySwatch: Colors.pink).copyWith(
+            background: ColorPalette.tickleMePink,
+          ),
+        ),
         useMaterial3: true,
       ),
       home: const MapDisplay(),
@@ -95,7 +106,7 @@ class MyApp extends StatelessWidget {
           case RouteNames.dataCompletion:
             return customPageRoute(settings, DataCompletionPage());
           default:
-            return customPageRoute(settings, AuthenticationPage());
+            return customPageRoute(settings, const AuthenticationPage());
         }
       },
     );

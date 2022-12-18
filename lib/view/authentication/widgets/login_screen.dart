@@ -47,12 +47,14 @@ class LoginScreen extends ConsumerWidget {
           child: RichText(
             text: TextSpan(
               text: "Don't have an account? ",
-              style:
-                  Theme.of(context).textTheme.bodyText2?.copyWith(fontSize: 13),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(fontSize: 13),
               children: <TextSpan>[
                 TextSpan(
                   text: 'Register!',
-                  style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: ColorPalette.cyclamen,
                         fontSize: 13,
                         fontWeight: FontWeight.bold,

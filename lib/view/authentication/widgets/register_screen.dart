@@ -52,12 +52,14 @@ class RegisterScreen extends ConsumerWidget {
           child: RichText(
             text: TextSpan(
               text: "Already have an account? ",
-              style:
-                  Theme.of(context).textTheme.bodyText2?.copyWith(fontSize: 13),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(fontSize: 13),
               children: <TextSpan>[
                 TextSpan(
                   text: 'Login!',
-                  style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: ColorPalette.cyclamen,
                         fontSize: 13,
                         fontWeight: FontWeight.bold,
