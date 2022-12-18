@@ -109,5 +109,6 @@ class MapViewModel extends ChangeNotifier {
 
   void removePlaceLocally(String placeId) {
     _travelPlaces.removeWhere((p) => p.id == placeId);
+    notifyListeners();
   }
 }

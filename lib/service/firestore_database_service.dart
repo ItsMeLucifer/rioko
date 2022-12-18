@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:rioko/common/debug_utils.dart';
 import 'package:rioko/common/utilities.dart';
 import 'package:rioko/model/travel_place.dart';
 import 'package:rioko/model/user.dart';
@@ -40,8 +41,14 @@ class FirestoreDatabaseService {
   }
 
   static Future<void> removePlace(String placeId, String userId) async {
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
-    await users.doc(userId).collection('places').doc(placeId).delete();
+    try {
+      CollectionReference users =
+          FirebaseFirestore.instance.collection('users');
+      await users.doc(userId).collection('places').doc(placeId).delete();
+    } catch (e) {
+      DebugUtils.printError(e.toString());
+      rethrow;
+    }
   }
 
   static Future<List<TravelPlace>> fetchCurrentUserPlaces(String userId) async {

@@ -53,8 +53,8 @@ class GeolocationViewModel extends ChangeNotifier {
   /// Locality and Country is displayed both for `DisplayOption.show`
   /// and `DisplayOption.showConditionally`.
   ///
-  /// If administrativeAreaDisplayOption
-  /// is set to `DisplayOption.showConditionally`, administrativeArea will be
+  /// If administrativeAreaDisplayOption is set to
+  /// `DisplayOption.showConditionally`, administrativeArea will be
   /// displayed only if locality is empty.
   String getAddressFromPlacemark(
     Placemark? placemark, {

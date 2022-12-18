@@ -37,9 +37,8 @@ class FirestoreDatabaseViewModel extends ChangeNotifier {
   Future<String?> removePlace(String placeId, String userId) async {
     try {
       await FirestoreDatabaseService.removePlace(placeId, userId);
-      return '';
+      return null;
     } catch (e) {
-      DebugUtils.printError(e.toString());
       return e.toString();
     }
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rioko/common/debug_utils.dart';
 import 'package:rioko/main.dart';
+import 'package:rioko/model/travel_place.dart';
 import 'package:rioko/viewmodel/geolocation/geolocation_view_model.dart';
 
 class PlaceDetails extends ConsumerWidget {
@@ -11,8 +12,12 @@ class PlaceDetails extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final placeDetailsVM = ref.watch(placeDetailsProvider);
     final geolocationVM = ref.watch(geolocationProvider);
-    final place =
-        ref.watch(mapProvider).travelPlaces[placeDetailsVM.placeIndex];
+    final mapVM = ref.watch(mapProvider);
+    final TravelPlace? place =
+        placeDetailsVM.placeIndex < mapVM.travelPlaces.length &&
+                placeDetailsVM.placeIndex > -1
+            ? mapVM.travelPlaces.elementAt(placeDetailsVM.placeIndex)
+            : null;
     return FractionallySizedBox(
       heightFactor: 0.97,
       child: Stack(
@@ -36,7 +41,7 @@ class PlaceDetails extends ConsumerWidget {
               children: [
                 Center(
                   child: Text(
-                    place.title,
+                    place?.title ?? '',
                     style: Theme.of(context)
                         .textTheme
                         .headline3
@@ -92,7 +97,7 @@ class PlaceDetails extends ConsumerWidget {
                         text: 'Distance: ',
                       ),
                       TextSpan(
-                        text: '${place.kilometers}',
+                        text: '${place?.kilometers}',
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       const TextSpan(text: ' km'),
@@ -108,7 +113,7 @@ class PlaceDetails extends ConsumerWidget {
                         text: 'Description: ',
                       ),
                       TextSpan(
-                        text: place.description,
+                        text: place?.description,
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ],
@@ -124,7 +129,7 @@ class PlaceDetails extends ConsumerWidget {
                         text: 'Likes: ',
                       ),
                       TextSpan(
-                        text: '${place.likes.length}',
+                        text: '${place?.likes.length}',
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ],
@@ -139,7 +144,7 @@ class PlaceDetails extends ConsumerWidget {
                         text: 'Travelled with ',
                       ),
                       TextSpan(
-                        text: '${place.comrades.length}',
+                        text: '${place?.comrades.length}',
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       const TextSpan(text: ' comrades'),
@@ -166,6 +171,7 @@ class PlaceDetails extends ConsumerWidget {
             top: 10.0,
             child: IconButton(
               onPressed: () {
+                if (place == null) return;
                 ref.read(addNewPlaceProvider).setPlaceToEdit(
                       place,
                       ref,
