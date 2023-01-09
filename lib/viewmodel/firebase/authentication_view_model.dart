@@ -36,6 +36,14 @@ class AuthenticationViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<bool> updateDisplayName(String displayName) async {
+    try {
+      await _authenticationService.updateDisplayName(displayName);
+      return true;
+    } catch (e) {}
+    return false;
+  }
+
   final AuthenticationService _authenticationService = AuthenticationService();
   Future<bool> login({
     required String email,

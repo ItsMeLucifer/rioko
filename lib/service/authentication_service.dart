@@ -32,4 +32,17 @@ class AuthenticationService {
       rethrow;
     }
   }
+
+  Future<bool> updateDisplayName(String displayName) async {
+    if (auth.FirebaseAuth.instance.currentUser != null) {
+      try {
+        await auth.FirebaseAuth.instance.currentUser!
+            .updateDisplayName(displayName);
+        return true;
+      } catch (e) {
+        rethrow;
+      }
+    }
+    return false;
+  }
 }
