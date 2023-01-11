@@ -21,10 +21,7 @@ class UserTile extends StatelessWidget {
         child: Flex(
           direction: Axis.horizontal,
           children: [
-            Expanded(
-              flex: 1,
-              child: _buildUserAvatar(context),
-            ),
+            _buildUserAvatar(context),
             const SizedBox(width: 10.0),
             Expanded(
               flex: 3,
@@ -60,7 +57,9 @@ class UserTile extends StatelessWidget {
               overflow: TextOverflow.fade,
               maxLines: 1,
               softWrap: false,
-              style: Theme.of(context).textTheme.bodySmall,
+              style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                    color: Theme.of(context).listTileTheme.textColor,
+                  ),
             ),
           ),
         ],

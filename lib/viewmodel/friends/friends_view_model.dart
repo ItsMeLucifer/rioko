@@ -1,13 +1,17 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
 import 'package:rioko/common/debug_utils.dart';
 import 'package:rioko/common/enums.dart';
 import 'package:rioko/common/utilities.dart';
+import 'package:rioko/main.dart';
 import 'package:rioko/model/user.dart';
 import 'package:rioko/service/firestore_database_service.dart';
 
 class FriendsViewModel extends ChangeNotifier {
+  final TextEditingController searchController = TextEditingController();
+
   List<User> _friends = [];
   List<User> get friends => _friends;
 
@@ -58,7 +62,7 @@ class FriendsViewModel extends ChangeNotifier {
     try {
       final friends =
           await FirestoreDatabaseService.fetchCurrentUserFriends(userId);
-      searchFriendFetchStatus = FetchStatus.fetched;
+      friendsFetchStatus = FetchStatus.fetched;
       setFriends(friends);
     } catch (e) {
       DebugUtils.printError('Could not fetch friends: $e');
@@ -66,10 +70,9 @@ class FriendsViewModel extends ChangeNotifier {
     }
   }
 
-  Future searchForUser(
-    BuildContext context, {
-    required String input,
-  }) async {
+  Future searchForUser(BuildContext context,
+      {required String input, required WidgetRef ref}) async {
+    final authVM = ref.read(authenticationProvider);
     searchFriendFetchStatus = FetchStatus.fetching;
     input = Utilities.deleteAllWhitespacesFromString(input);
     if (input.length < 4) {
@@ -88,7 +91,9 @@ class FriendsViewModel extends ChangeNotifier {
     try {
       final users = await FirestoreDatabaseService.searchForUsers(input);
       users.removeWhere(
-        (u) => friendRequests.any((r) => r == u) || friends.any((f) => f == u),
+        (u) =>
+            friendRequests.any((r) => r.id == u.id) ||
+            friends.any((f) => f.id == u.id || u.id == authVM.currentUser!.id),
       );
       searchFriendFetchStatus = FetchStatus.fetched;
       setSearchedFriends(users);

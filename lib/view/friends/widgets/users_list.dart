@@ -4,7 +4,12 @@ import 'package:rioko/view/friends/widgets/user_tile.dart';
 
 class UsersList extends StatelessWidget {
   final List<User> users;
-  const UsersList(this.users, {Key? key}) : super(key: key);
+  final void Function(User user) onPressedUser;
+  const UsersList(
+    this.users, {
+    Key? key,
+    required this.onPressedUser,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +18,7 @@ class UsersList extends StatelessWidget {
       itemCount: users.length,
       itemBuilder: (context, index) {
         final user = users[index];
-        return UserTile(user);
+        return InkWell(onTap: () => onPressedUser(user), child: UserTile(user));
       },
     );
   }

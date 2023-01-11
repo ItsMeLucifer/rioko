@@ -5,6 +5,8 @@ import 'package:rioko/common/color_palette.dart';
 import 'package:rioko/common/route_names.dart';
 import 'package:rioko/view/authentication/authentication_page.dart';
 import 'package:rioko/view/data_completion/data_completion_page.dart';
+import 'package:rioko/view/friends/friend_requests_page.dart';
+import 'package:rioko/view/friends/friend_search_page.dart';
 import 'package:rioko/view/friends/friends_page.dart';
 import 'package:rioko/view/map/map_display.dart';
 import 'package:rioko/view/profile/profile_page.dart';
@@ -59,7 +61,7 @@ void main() async {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   PageRouteBuilder customPageRoute(dynamic settings, Widget page) =>
       PageRouteBuilder(
@@ -70,7 +72,8 @@ class MyApp extends StatelessWidget {
       );
   const MyApp({Key? key}) : super(key: key);
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authVM = ref.watch(authenticationProvider);
     return MaterialApp(
       title: 'Rioko',
       theme: ThemeData(
@@ -98,9 +101,10 @@ class MyApp extends StatelessWidget {
                 color: ColorPalette.cyclamen,
                 fontWeight: FontWeight.bold,
               ),
-              bodySmall: TextStyle(
-                color: Colors.grey[500],
+              bodySmall: const TextStyle(
+                color: Colors.black,
                 fontWeight: FontWeight.bold,
+                fontSize: 15,
               ),
             ),
         buttonTheme: ButtonThemeData(
@@ -111,7 +115,10 @@ class MyApp extends StatelessWidget {
         ),
         listTileTheme: ListTileThemeData(
           tileColor: Colors.grey[300],
-          textColor: Colors.black,
+          textColor: Colors.grey[500],
+        ),
+        progressIndicatorTheme: const ProgressIndicatorThemeData(
+          color: ColorPalette.tickleMePink,
         ),
         useMaterial3: true,
       ),
@@ -120,6 +127,9 @@ class MyApp extends StatelessWidget {
       initialRoute: RouteNames.authentication,
       navigatorKey: MyApp.navigatorKey,
       onGenerateRoute: (settings) {
+        if (authVM.currentUser == null) {
+          return customPageRoute(settings, const AuthenticationPage());
+        }
         switch (settings.name) {
           case RouteNames.map:
             return customPageRoute(settings, const MapDisplay());
@@ -127,6 +137,10 @@ class MyApp extends StatelessWidget {
             return customPageRoute(settings, DataCompletionPage());
           case RouteNames.friends:
             return customPageRoute(settings, const FriendsPage());
+          case RouteNames.friendRequests:
+            return customPageRoute(settings, const FriendRequestsPage());
+          case RouteNames.searchFriends:
+            return customPageRoute(settings, const FriendSearchPage());
           case RouteNames.profile:
             return customPageRoute(settings, const ProfilePage());
           default:
