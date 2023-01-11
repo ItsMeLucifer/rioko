@@ -7,6 +7,7 @@ import 'package:rioko/common/utilities.dart';
 import 'package:rioko/model/user.dart';
 import 'package:rioko/viewmodel/firebase/authentication_view_model.dart';
 import 'package:rioko/viewmodel/firebase/firestore_database_view_model.dart';
+import 'package:rioko/viewmodel/friends/friends_view_model.dart';
 import 'package:rioko/viewmodel/geolocation/geolocation_view_model.dart';
 import 'package:rioko/viewmodel/map/add_new_place_view_model.dart';
 import 'package:rioko/viewmodel/map/map_view_model.dart';
@@ -17,12 +18,14 @@ class BaseViewModel extends ChangeNotifier {
   final AddNewPlaceViewModel addNewPlaceVM;
   final GeolocationViewModel geolocationVM;
   final AuthenticationViewModel authVM;
+  final FriendsViewModel friendsVM;
   BaseViewModel({
     required this.firestoreDBVM,
     required this.mapVM,
     required this.addNewPlaceVM,
     required this.geolocationVM,
     required this.authVM,
+    required this.friendsVM,
   });
 
   Future<void> login(
@@ -35,7 +38,7 @@ class BaseViewModel extends ChangeNotifier {
         if (authenticated) {
           final userSnapshot = await firestoreDBVM
               .getCurrentUserBasicInfo(authVM.currentUser!.id);
-          authVM.updateDisplayName(userSnapshot) // TO DO 
+          friendsVM.fetchFriends(authVM.currentUser!.id);
           final home =
               Utilities.geoPointToLatLng(userSnapshot.get('home') as GeoPoint);
           mapVM.setStartCenter(home);

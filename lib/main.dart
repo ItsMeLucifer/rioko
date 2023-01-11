@@ -5,10 +5,13 @@ import 'package:rioko/common/color_palette.dart';
 import 'package:rioko/common/route_names.dart';
 import 'package:rioko/view/authentication/authentication_page.dart';
 import 'package:rioko/view/data_completion/data_completion_page.dart';
+import 'package:rioko/view/friends/friends_page.dart';
 import 'package:rioko/view/map/map_display.dart';
+import 'package:rioko/view/profile/profile_page.dart';
 import 'package:rioko/viewmodel/base_view_model.dart';
 import 'package:rioko/viewmodel/firebase/authentication_view_model.dart';
 import 'package:rioko/viewmodel/firebase/firestore_database_view_model.dart';
+import 'package:rioko/viewmodel/friends/friends_view_model.dart';
 import 'package:rioko/viewmodel/geolocation/geolocation_view_model.dart';
 import 'package:rioko/viewmodel/map/add_new_place_view_model.dart';
 import 'package:rioko/viewmodel/map/map_view_model.dart';
@@ -26,6 +29,8 @@ final ChangeNotifierProvider<GeolocationViewModel> geolocationProvider =
     ChangeNotifierProvider((_) => GeolocationViewModel());
 final ChangeNotifierProvider<AddNewPlaceViewModel> addNewPlaceProvider =
     ChangeNotifierProvider((_) => AddNewPlaceViewModel());
+final ChangeNotifierProvider<FriendsViewModel> friendsProvider =
+    ChangeNotifierProvider((_) => FriendsViewModel());
 final ChangeNotifierProvider<BaseViewModel> baseProvider =
     ChangeNotifierProvider((_) {
   final mapVM = _.watch(mapProvider);
@@ -33,18 +38,21 @@ final ChangeNotifierProvider<BaseViewModel> baseProvider =
   final addNewPlaceVM = _.watch(addNewPlaceProvider);
   final geolocationVM = _.watch(geolocationProvider);
   final authVM = _.watch(authenticationProvider);
+  final friendsVM = _.watch(friendsProvider);
   return BaseViewModel(
     firestoreDBVM: firestoreDBVM,
     mapVM: mapVM,
     addNewPlaceVM: addNewPlaceVM,
     geolocationVM: geolocationVM,
     authVM: authVM,
+    friendsVM: friendsVM,
   );
 });
 final ChangeNotifierProvider<DataCompletionViewModel> dataCompletionProvider =
     ChangeNotifierProvider((_) => DataCompletionViewModel());
 final ChangeNotifierProvider<PlaceDetailsViewModel> placeDetailsProvider =
     ChangeNotifierProvider((_) => PlaceDetailsViewModel());
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -81,9 +89,17 @@ class MyApp extends StatelessWidget {
                 fontSize: 80,
                 color: Colors.black,
               ),
+              headlineSmall: const TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+              ),
               bodyLarge: const TextStyle(
                 fontSize: 16,
                 color: ColorPalette.cyclamen,
+                fontWeight: FontWeight.bold,
+              ),
+              bodySmall: TextStyle(
+                color: Colors.grey[500],
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -92,6 +108,10 @@ class MyApp extends StatelessWidget {
               ColorScheme.fromSwatch(primarySwatch: Colors.pink).copyWith(
             background: ColorPalette.tickleMePink,
           ),
+        ),
+        listTileTheme: ListTileThemeData(
+          tileColor: Colors.grey[300],
+          textColor: Colors.black,
         ),
         useMaterial3: true,
       ),
@@ -105,6 +125,10 @@ class MyApp extends StatelessWidget {
             return customPageRoute(settings, const MapDisplay());
           case RouteNames.dataCompletion:
             return customPageRoute(settings, DataCompletionPage());
+          case RouteNames.friends:
+            return customPageRoute(settings, const FriendsPage());
+          case RouteNames.profile:
+            return customPageRoute(settings, const ProfilePage());
           default:
             return customPageRoute(settings, const AuthenticationPage());
         }

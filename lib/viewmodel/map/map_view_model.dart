@@ -6,7 +6,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:rioko/main.dart';
 import 'package:rioko/model/travel_place.dart';
 import 'package:collection/collection.dart';
-import 'package:rioko/view/Map/widgets/place_details/place_details.dart';
+import 'package:rioko/view/map/widgets/place_details/place_details.dart';
 import 'package:rioko/view/map/widgets/add_new_place/add_new_place.dart';
 
 class MapViewModel extends ChangeNotifier {

@@ -6,8 +6,9 @@ import 'package:rioko/model/travel_place.dart';
 import 'package:rioko/model/user.dart';
 
 class FirestoreDatabaseService {
+  static CollectionReference users =
+      FirebaseFirestore.instance.collection('users');
   static void createNewUser(User user) {
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
     users.doc(user.id).set({
       'id': user.id,
       'email': user.email,
@@ -17,14 +18,12 @@ class FirestoreDatabaseService {
   }
 
   static Future<DocumentSnapshot> getUserInfo(String userId) async {
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
     DocumentSnapshot user = await users.doc(userId).get();
     return user;
   }
 
   static Future<void> addNewPlace(TravelPlace place, String userId) async {
     debugPrint('got: $place, $userId');
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
     await users.doc(userId).collection('places').doc(place.id).set({
       'id': place.id,
       'origin': Utilities.latLngToGeoPoint(place.origin!),
@@ -42,8 +41,6 @@ class FirestoreDatabaseService {
 
   static Future<void> removePlace(String placeId, String userId) async {
     try {
-      CollectionReference users =
-          FirebaseFirestore.instance.collection('users');
       await users.doc(userId).collection('places').doc(placeId).delete();
     } catch (e) {
       DebugUtils.printError(e.toString());
@@ -52,7 +49,6 @@ class FirestoreDatabaseService {
   }
 
   static Future<List<TravelPlace>> fetchCurrentUserPlaces(String userId) async {
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
     List<QueryDocumentSnapshot> placeSnapshots = await users
         .doc(userId)
         .collection('places')
@@ -65,6 +61,54 @@ class FirestoreDatabaseService {
     });
     return placeSnapshots
         .map((snapshot) => TravelPlace.fromDocumentSnapshot(snapshot))
+        .toList();
+  }
+
+  static Future<List<User>> fetchCurrentUserFriends(String userId) async {
+    List<QueryDocumentSnapshot> friendSnapshots = await users
+        .doc(userId)
+        .collection('friends')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      if (querySnapshot.size > 0) {
+        return querySnapshot.docs;
+      }
+      return [];
+    });
+    return friendSnapshots
+        .map((snapshot) => User.fromDocumentSnapshot(snapshot))
+        .toList();
+  }
+
+  static Future<List<User>> searchForUsers(String input) async {
+    final isSearchedByEmail = input.contains('@');
+    final userSnapshots = await users
+        .where(isSearchedByEmail ? 'email' : 'name', isEqualTo: input)
+        .get()
+        .then((querySnapshot) {
+      if (querySnapshot.size > 0) {
+        return querySnapshot.docs;
+      }
+      return [];
+    });
+    return userSnapshots
+        .map((snapshot) => User.fromDocumentSnapshot(snapshot))
+        .toList();
+  }
+
+  static Future<List<User>> fetchFriendRequests(String userId) async {
+    List<QueryDocumentSnapshot> friendSnapshots = await users
+        .doc(userId)
+        .collection('friend-requests')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      if (querySnapshot.size > 0) {
+        return querySnapshot.docs;
+      }
+      return [];
+    });
+    return friendSnapshots
+        .map((snapshot) => User.fromDocumentSnapshot(snapshot))
         .toList();
   }
 }

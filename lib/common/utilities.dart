@@ -8,4 +8,6 @@ class Utilities {
       LatLng(geoPoint.latitude, geoPoint.longitude);
   static GeoPoint latLngToGeoPoint(LatLng latLng) =>
       GeoPoint(latLng.latitude, latLng.longitude);
+  static String deleteAllWhitespacesFromString(String input) =>
+      input.replaceAll(' ', '');
 }
