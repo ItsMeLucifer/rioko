@@ -24,4 +24,9 @@ class User with _$User {
         name: snapshot.get('name') as String,
         email: snapshot.get('email') as String,
       );
+  static Map<String, dynamic> toMap(User user) => {
+        "id": user.id,
+        "name": user.name,
+        "email": user.email,
+      };
 }

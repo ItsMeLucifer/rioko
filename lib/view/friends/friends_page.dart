@@ -15,6 +15,7 @@ class FriendsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final friendsVM = ref.watch(friendsProvider);
+    final authVM = ref.watch(authenticationProvider);
     return Scaffold(
       body: SizedBox(
         height: double.infinity,
@@ -42,8 +43,9 @@ class FriendsPage extends ConsumerWidget {
                           builder: (context) => YesNoDialog(
                             title:
                                 'Are you sure you want to remove ${user.name} from friends list?',
-                            onPressedYes: () => DebugUtils.printSuccess(
-                              'Removed a friend',
+                            onPressedYes: () => friendsVM.removeFriend(
+                              user.id,
+                              authVM.currentUser!.id,
                             ),
                           ),
                         ),

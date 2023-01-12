@@ -13,6 +13,7 @@ class FriendRequestsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final friendsVM = ref.watch(friendsProvider);
+    final authVM = ref.watch(authenticationProvider);
     return Scaffold(
         body: SizedBox(
       height: double.infinity,
@@ -41,8 +42,9 @@ class FriendRequestsPage extends ConsumerWidget {
                         builder: (context) => YesNoDialog(
                           title:
                               'Do you accept friend request from ${user.name}?',
-                          onPressedYes: () => DebugUtils.printSuccess(
-                            'Accepted a friend request',
+                          onPressedYes: () => friendsVM.acceptFriendRequest(
+                            user,
+                            authVM.currentUser!,
                           ),
                         ),
                       ),

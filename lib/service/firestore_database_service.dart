@@ -39,18 +39,19 @@ class FirestoreDatabaseService {
     });
   }
 
-  static Future<void> removePlace(String placeId, String userId) async {
+  static Future<void> removePlace(String placeId, String currentUserId) async {
     try {
-      await users.doc(userId).collection('places').doc(placeId).delete();
+      await users.doc(currentUserId).collection('places').doc(placeId).delete();
     } catch (e) {
       DebugUtils.printError(e.toString());
       rethrow;
     }
   }
 
-  static Future<List<TravelPlace>> fetchCurrentUserPlaces(String userId) async {
+  static Future<List<TravelPlace>> fetchCurrentUserPlaces(
+      String currentUserId) async {
     List<QueryDocumentSnapshot> placeSnapshots = await users
-        .doc(userId)
+        .doc(currentUserId)
         .collection('places')
         .get()
         .then((QuerySnapshot querySnapshot) {
@@ -64,9 +65,10 @@ class FirestoreDatabaseService {
         .toList();
   }
 
-  static Future<List<User>> fetchCurrentUserFriends(String userId) async {
+  static Future<List<User>> fetchCurrentUserFriends(
+      String currentUserId) async {
     List<QueryDocumentSnapshot> friendSnapshots = await users
-        .doc(userId)
+        .doc(currentUserId)
         .collection('friends')
         .get()
         .then((QuerySnapshot querySnapshot) {
@@ -96,9 +98,9 @@ class FirestoreDatabaseService {
         .toList();
   }
 
-  static Future<List<User>> fetchFriendRequests(String userId) async {
+  static Future<List<User>> fetchFriendRequests(String currentUserId) async {
     List<QueryDocumentSnapshot> friendSnapshots = await users
-        .doc(userId)
+        .doc(currentUserId)
         .collection('friend-requests')
         .get()
         .then((QuerySnapshot querySnapshot) {
@@ -110,5 +112,39 @@ class FirestoreDatabaseService {
     return friendSnapshots
         .map((snapshot) => User.fromDocumentSnapshot(snapshot))
         .toList();
+  }
+
+  static Future<void> removeFriend(
+      String friendId, String currentUserId) async {
+    // Remove current user from friend's friends list
+    await users.doc(friendId).collection('friends').doc(currentUserId).delete();
+    // Remove friend from current user's friends list
+    await users.doc(currentUserId).collection('friends').doc(friendId).delete();
+  }
+
+  static Future sendFriendRequest(String targetUserId, User currentUser) async {
+    // Add current user to the target user's friend requests list (TO DO outgoing flag = false)
+    await users
+        .doc(targetUserId)
+        .collection('friend-requests')
+        .doc(currentUser.id)
+        .set(User.toMap(currentUser));
+    // Add targetUser'id to current user's friend requests list with outgoing flag
+    // TO DO
+  }
+
+  static Future acceptFriendRequest(User targetUser, User currentUser) async {
+    // Add current user to target user's friends list
+    await users
+        .doc(targetUser.id)
+        .collection('friends')
+        .doc(currentUser.id)
+        .set(User.toMap(currentUser));
+    // Add target user to current user's friends list
+    await users
+        .doc(currentUser.id)
+        .collection('friends')
+        .doc(targetUser.id)
+        .set(User.toMap(targetUser));
   }
 }

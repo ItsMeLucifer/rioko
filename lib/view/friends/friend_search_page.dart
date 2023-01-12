@@ -14,6 +14,7 @@ class FriendSearchPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final friendsVM = ref.watch(friendsProvider);
+    final authVM = ref.watch(authenticationProvider);
     return Scaffold(
       body: SizedBox(
         height: double.infinity,
@@ -57,8 +58,9 @@ class FriendSearchPage extends ConsumerWidget {
                           context: context,
                           builder: (context) => YesNoDialog(
                             title: 'Send friend invitation to ${user.name}?',
-                            onPressedYes: () => DebugUtils.printSuccess(
-                              'Sent friend invitation',
+                            onPressedYes: () => friendsVM.sendFriendRequest(
+                              user.id,
+                              authVM.currentUser!,
                             ),
                           ),
                         ),

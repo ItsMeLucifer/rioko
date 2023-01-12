@@ -57,11 +57,13 @@ class FriendsViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future fetchFriends(String userId) async {
+  Future fetchFriends(
+    String currentUserId,
+  ) async {
     friendsFetchStatus = FetchStatus.fetching;
     try {
       final friends =
-          await FirestoreDatabaseService.fetchCurrentUserFriends(userId);
+          await FirestoreDatabaseService.fetchCurrentUserFriends(currentUserId);
       friendsFetchStatus = FetchStatus.fetched;
       setFriends(friends);
     } catch (e) {
@@ -70,8 +72,11 @@ class FriendsViewModel extends ChangeNotifier {
     }
   }
 
-  Future searchForUser(BuildContext context,
-      {required String input, required WidgetRef ref}) async {
+  Future searchForUser(
+    BuildContext context, {
+    required String input,
+    required WidgetRef ref,
+  }) async {
     final authVM = ref.read(authenticationProvider);
     searchFriendFetchStatus = FetchStatus.fetching;
     input = Utilities.deleteAllWhitespacesFromString(input);
@@ -93,7 +98,8 @@ class FriendsViewModel extends ChangeNotifier {
       users.removeWhere(
         (u) =>
             friendRequests.any((r) => r.id == u.id) ||
-            friends.any((f) => f.id == u.id || u.id == authVM.currentUser!.id),
+            friends.any((f) => f.id == u.id) ||
+            u.id == authVM.currentUser!.id,
       );
       searchFriendFetchStatus = FetchStatus.fetched;
       setSearchedFriends(users);
@@ -103,15 +109,68 @@ class FriendsViewModel extends ChangeNotifier {
     }
   }
 
-  Future fetchFriendRequests(String userId) async {
+  Future fetchFriendRequests(
+    String currentUserId,
+  ) async {
     friendRequestsFetchStatus = FetchStatus.fetching;
     try {
-      final users = await FirestoreDatabaseService.fetchFriendRequests(userId);
+      final users =
+          await FirestoreDatabaseService.fetchFriendRequests(currentUserId);
       friendRequestsFetchStatus = FetchStatus.fetched;
       setFriendRequests(users);
     } catch (e) {
       DebugUtils.printError('Could not fetch friend requests: $e');
       friendRequestsFetchStatus = FetchStatus.unfetched;
+    }
+  }
+
+  Future removeFriend(
+    String friendId,
+    String currentUserId,
+  ) async {
+    try {
+      await FirestoreDatabaseService.removeFriend(friendId, currentUserId).then(
+        (_) => friends.removeWhere(
+          (f) => f.id == friendId,
+        ),
+      );
+      notifyListeners();
+    } catch (e) {
+      DebugUtils.printError('Could not remove a friend: $e');
+    }
+  }
+
+  Future sendFriendRequest(
+    String targetUserId,
+    User currentUser,
+  ) async {
+    try {
+      await FirestoreDatabaseService.sendFriendRequest(
+        targetUserId,
+        currentUser,
+      );
+    } catch (e) {
+      DebugUtils.printError('Could not send a friend request: $e');
+    }
+  }
+
+  Future acceptFriendRequest(
+    User targetUser,
+    User currentUser,
+  ) async {
+    try {
+      await FirestoreDatabaseService.acceptFriendRequest(
+        targetUser,
+        currentUser,
+      ).then((_) {
+        friendRequests.removeWhere(
+          (f) => f.id == targetUser.id,
+        );
+        friends.add(targetUser);
+      });
+      notifyListeners();
+    } catch (e) {
+      DebugUtils.printError('Could not accept a friend request: $e');
     }
   }
 }
