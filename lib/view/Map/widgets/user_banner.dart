@@ -40,7 +40,7 @@ class UserBanner extends ConsumerWidget {
                   onTap: () =>
                       Navigator.of(context).pushNamed(RouteNames.profile),
                   child: const Icon(
-                    Icons.people_alt,
+                    Icons.person,
                     color: Colors.white,
                   ),
                 ),

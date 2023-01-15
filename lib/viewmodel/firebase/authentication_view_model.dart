@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:rioko/common/debug_utils.dart';
 import 'package:rioko/model/user.dart';
 import 'package:flutter/material.dart';
 import 'package:rioko/service/authentication_service.dart';
@@ -37,10 +38,13 @@ class AuthenticationViewModel extends ChangeNotifier {
   }
 
   Future<bool> updateDisplayName(String displayName) async {
+    DebugUtils.printInfo('Got name: $displayName');
     try {
       await _authenticationService.updateDisplayName(displayName);
       return true;
-    } catch (e) {}
+    } catch (e) {
+      DebugUtils.printError(e.toString());
+    }
     return false;
   }
 
