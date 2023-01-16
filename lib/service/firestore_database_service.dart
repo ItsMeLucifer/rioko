@@ -78,7 +78,8 @@ class FirestoreDatabaseService {
       return [];
     });
     return friendSnapshots
-        .map((snapshot) => User.fromDocumentSnapshot(snapshot))
+        .map((snapshot) =>
+            User.fromDocumentSnapshot(snapshot, getKilometers: false))
         .toList();
   }
 
@@ -155,5 +156,14 @@ class FirestoreDatabaseService {
     await users.doc(currentUserId).update({
       'kilometers': kilometers,
     });
+  }
+
+  static Future<List<User>> fetchFriendsStats(List<String> friendIds) async {
+    final List<User> result = [];
+    for (String friendId in friendIds) {
+      final friendSnapshot = await users.doc(friendId).get();
+      result.add(User.fromDocumentSnapshot(friendSnapshot));
+    }
+    return result;
   }
 }

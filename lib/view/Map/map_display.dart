@@ -7,6 +7,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:rioko/main.dart';
 import 'package:rioko/view/Map/widgets/user_banner.dart';
 import 'package:rioko/view/map/widgets/map_marker.dart';
+import 'package:rioko/view/map/widgets/open_leaderboard_button.dart';
 
 class MapDisplay extends ConsumerWidget {
   const MapDisplay({Key? key}) : super(key: key);
@@ -115,6 +116,7 @@ class MapDisplay extends ConsumerWidget {
             ),
           ),
           const UserBanner(),
+          const OpenLeaderboardButton(),
         ],
       ),
     );

@@ -8,6 +8,7 @@ import 'package:rioko/view/data_completion/data_completion_page.dart';
 import 'package:rioko/view/friends/friend_requests_page.dart';
 import 'package:rioko/view/friends/friend_search_page.dart';
 import 'package:rioko/view/friends/friends_page.dart';
+import 'package:rioko/view/leaderboard/leaderboard_page.dart';
 import 'package:rioko/view/map/map_display.dart';
 import 'package:rioko/view/profile/profile_page.dart';
 import 'package:rioko/viewmodel/base_view_model.dart';
@@ -18,7 +19,7 @@ import 'package:rioko/viewmodel/geolocation/geolocation_view_model.dart';
 import 'package:rioko/viewmodel/map/add_new_trip_view_model.dart';
 import 'package:rioko/viewmodel/map/map_view_model.dart';
 import 'package:rioko/viewmodel/map/trip_details_view_model.dart';
-import 'package:rioko/viewmodel/ranking/ranking_view_model.dart';
+import 'package:rioko/viewmodel/leaderboard/leaderboard_view_model.dart';
 import 'package:rioko/viewmodel/registration/data_completion_view_model.dart';
 
 final ChangeNotifierProvider<MapViewModel> mapProvider =
@@ -55,8 +56,8 @@ final ChangeNotifierProvider<DataCompletionViewModel> dataCompletionProvider =
     ChangeNotifierProvider((_) => DataCompletionViewModel());
 final ChangeNotifierProvider<TripDetailsViewModel> tripDetailsProvider =
     ChangeNotifierProvider((_) => TripDetailsViewModel());
-final ChangeNotifierProvider<RankingViewModel> rankingProvider =
-    ChangeNotifierProvider((_) => RankingViewModel());
+final ChangeNotifierProvider<LeaderboardViewModel> leaderboardProvider =
+    ChangeNotifierProvider((_) => LeaderboardViewModel());
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -146,6 +147,8 @@ class MyApp extends ConsumerWidget {
             return customPageRoute(settings, const FriendSearchPage());
           case RouteNames.profile:
             return customPageRoute(settings, const ProfilePage());
+          case RouteNames.leaderboard:
+            return customPageRoute(settings, const LeaderboardPage());
           default:
             return customPageRoute(settings, const AuthenticationPage());
         }

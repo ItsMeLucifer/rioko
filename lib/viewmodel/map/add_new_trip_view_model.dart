@@ -126,9 +126,13 @@ class AddNewTripViewModel extends ChangeNotifier {
       kilometers: kilometers!,
     );
     // Update kilometers in current user's profile
+    final currentUserKilometers = authVM.currentUser!.kilometers;
     FirestoreDatabaseService.updateCurrentUserKilometers(
       authVM.currentUser!.id,
-      authVM.currentUser!.kilometers + kilometers,
+      currentUserKilometers + kilometers,
+    );
+    authVM.currentUser = authVM.currentUser!.copyWith(
+      kilometers: currentUserKilometers + trip.kilometers,
     );
     baseVM.addNewTripToFirebase(context);
     mapVM.addTrip(trip);
@@ -152,12 +156,11 @@ class AddNewTripViewModel extends ChangeNotifier {
     final authVM = ref.read(authenticationProvider);
     //Remove from the database
     String? response;
-    if (authVM.currentUser != null) {
-      response = await firestoreVM.removeTrip(
-        trip.id,
-        authVM.currentUser!.id,
-      );
-    }
+    if (authVM.currentUser == null) return;
+    response = await firestoreVM.removeTrip(
+      trip.id,
+      authVM.currentUser!.id,
+    );
     if (response != null) {
       MotionToast.error(
         title: const Text("Error"),
@@ -172,9 +175,13 @@ class AddNewTripViewModel extends ChangeNotifier {
       return;
     }
     // Update kilometers in current user's profile
+    final currentUserKilometers = authVM.currentUser!.kilometers;
     FirestoreDatabaseService.updateCurrentUserKilometers(
       authVM.currentUser!.id,
-      authVM.currentUser!.kilometers - trip.kilometers,
+      currentUserKilometers - trip.kilometers,
+    );
+    authVM.currentUser = authVM.currentUser!.copyWith(
+      kilometers: currentUserKilometers - trip.kilometers,
     );
     //Remove locally
     final mapVM = ref.read(mapProvider);

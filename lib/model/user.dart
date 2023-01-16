@@ -20,12 +20,20 @@ class User with _$User {
         name: user.displayName ?? '',
         email: user.email ?? '',
       );
-  static User fromDocumentSnapshot(DocumentSnapshot snapshot) => User(
-        id: snapshot.get('id') as String,
-        name: snapshot.get('name') as String,
-        email: snapshot.get('email') as String,
-        kilometers: snapshot.get('kilometers') as double,
-      );
+  static User fromDocumentSnapshot(
+    DocumentSnapshot snapshot, {
+    bool getKilometers = true,
+  }) {
+    final kilometers =
+        getKilometers ? snapshot.get('kilometers') as double : 0.0;
+    return User(
+      id: snapshot.get('id') as String,
+      name: snapshot.get('name') as String,
+      email: snapshot.get('email') as String,
+      kilometers: kilometers,
+    );
+  }
+
   static Map<String, dynamic> toMap(User user) => {
         "id": user.id,
         "name": user.name,

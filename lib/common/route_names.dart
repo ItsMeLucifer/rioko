@@ -6,4 +6,5 @@ class RouteNames {
   static const String friendRequests = 'friend-requests';
   static const String searchFriends = 'search-friends';
   static const String profile = 'profile';
+  static const String leaderboard = 'leaderboard';
 }

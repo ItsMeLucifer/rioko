@@ -10,4 +10,13 @@ class Utilities {
       GeoPoint(latLng.latitude, latLng.longitude);
   static String deleteAllWhitespacesFromString(String input) =>
       input.replaceAll(' ', '');
+
+  /// ```
+  /// return kilometers * 1390;
+  /// ```
+  /// 1265 steps on average for men.<br>
+  /// 1515 steps on average for women.<br>
+  /// 1390 is an average of these.
+  static double convertKilometersIntoSteps(double kilometers) =>
+      kilometers * 1390;
 }
