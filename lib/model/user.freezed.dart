@@ -21,6 +21,7 @@ mixin _$User {
   String get email => throw _privateConstructorUsedError;
   LatLng? get home => throw _privateConstructorUsedError;
   String get homeAddress => throw _privateConstructorUsedError;
+  double get kilometers => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $UserCopyWith<User> get copyWith => throw _privateConstructorUsedError;
@@ -32,7 +33,12 @@ abstract class $UserCopyWith<$Res> {
       _$UserCopyWithImpl<$Res, User>;
   @useResult
   $Res call(
-      {String id, String name, String email, LatLng? home, String homeAddress});
+      {String id,
+      String name,
+      String email,
+      LatLng? home,
+      String homeAddress,
+      double kilometers});
 }
 
 /// @nodoc
@@ -53,6 +59,7 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
     Object? email = null,
     Object? home = freezed,
     Object? homeAddress = null,
+    Object? kilometers = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -75,6 +82,10 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
           ? _value.homeAddress
           : homeAddress // ignore: cast_nullable_to_non_nullable
               as String,
+      kilometers: null == kilometers
+          ? _value.kilometers
+          : kilometers // ignore: cast_nullable_to_non_nullable
+              as double,
     ) as $Val);
   }
 }
@@ -86,7 +97,12 @@ abstract class _$$_UserCopyWith<$Res> implements $UserCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String id, String name, String email, LatLng? home, String homeAddress});
+      {String id,
+      String name,
+      String email,
+      LatLng? home,
+      String homeAddress,
+      double kilometers});
 }
 
 /// @nodoc
@@ -103,6 +119,7 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
     Object? email = null,
     Object? home = freezed,
     Object? homeAddress = null,
+    Object? kilometers = null,
   }) {
     return _then(_$_User(
       id: null == id
@@ -125,6 +142,10 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
           ? _value.homeAddress
           : homeAddress // ignore: cast_nullable_to_non_nullable
               as String,
+      kilometers: null == kilometers
+          ? _value.kilometers
+          : kilometers // ignore: cast_nullable_to_non_nullable
+              as double,
     ));
   }
 }
@@ -137,7 +158,8 @@ class _$_User implements _User {
       required this.name,
       required this.email,
       this.home,
-      this.homeAddress = ''});
+      this.homeAddress = '',
+      this.kilometers = 0.0});
 
   @override
   final String id;
@@ -150,10 +172,13 @@ class _$_User implements _User {
   @override
   @JsonKey()
   final String homeAddress;
+  @override
+  @JsonKey()
+  final double kilometers;
 
   @override
   String toString() {
-    return 'User(id: $id, name: $name, email: $email, home: $home, homeAddress: $homeAddress)';
+    return 'User(id: $id, name: $name, email: $email, home: $home, homeAddress: $homeAddress, kilometers: $kilometers)';
   }
 
   @override
@@ -166,12 +191,14 @@ class _$_User implements _User {
             (identical(other.email, email) || other.email == email) &&
             (identical(other.home, home) || other.home == home) &&
             (identical(other.homeAddress, homeAddress) ||
-                other.homeAddress == homeAddress));
+                other.homeAddress == homeAddress) &&
+            (identical(other.kilometers, kilometers) ||
+                other.kilometers == kilometers));
   }
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, id, name, email, home, homeAddress);
+      Object.hash(runtimeType, id, name, email, home, homeAddress, kilometers);
 
   @JsonKey(ignore: true)
   @override
@@ -186,7 +213,8 @@ abstract class _User implements User {
       required final String name,
       required final String email,
       final LatLng? home,
-      final String homeAddress}) = _$_User;
+      final String homeAddress,
+      final double kilometers}) = _$_User;
 
   @override
   String get id;
@@ -198,6 +226,8 @@ abstract class _User implements User {
   LatLng? get home;
   @override
   String get homeAddress;
+  @override
+  double get kilometers;
   @override
   @JsonKey(ignore: true)
   _$$_UserCopyWith<_$_User> get copyWith => throw _privateConstructorUsedError;

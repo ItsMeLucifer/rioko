@@ -12,6 +12,7 @@ class User with _$User {
     required String email,
     LatLng? home,
     @Default('') String homeAddress,
+    @Default(0.0) double kilometers,
   }) = _User;
 
   static User fromFirebase(auth.User user) => User(
@@ -23,6 +24,7 @@ class User with _$User {
         id: snapshot.get('id') as String,
         name: snapshot.get('name') as String,
         email: snapshot.get('email') as String,
+        kilometers: snapshot.get('kilometers') as double,
       );
   static Map<String, dynamic> toMap(User user) => {
         "id": user.id,

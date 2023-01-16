@@ -18,10 +18,10 @@ class MapDisplay extends ConsumerWidget {
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        heroTag: 'addNewPlace',
+        heroTag: 'addNewTrip',
         elevation: 5,
         backgroundColor: Theme.of(context).colorScheme.tertiary,
-        onPressed: () => mapVM.displayAddNewPlaceBottomSheet(context, ref),
+        onPressed: () => mapVM.displayAddNewTripBottomSheet(context, ref),
         child: const FaIcon(
           FontAwesomeIcons.plus,
         ),
@@ -45,7 +45,7 @@ class MapDisplay extends ConsumerWidget {
                 MarkerClusterPlugin(),
               ],
               onLongPress: (tapPosition, point) => {
-                //Add new travel place
+                //Add new trip
               },
             ),
             children: [
@@ -61,19 +61,19 @@ class MapDisplay extends ConsumerWidget {
                   maxClusterRadius: 80,
                   size: const Size(40, 40),
                   markers: [
-                    ...mapVM.travelPlaces
+                    ...mapVM.trips
                         .map(
-                          (travelPlace) => MapUtils.getMarker(
-                            point: travelPlace.destination!,
+                          (trip) => MapUtils.getMarker(
+                            point: trip.destination!,
                             onPressed: () {
                               mapVM.mapMoveTo(
-                                position: travelPlace.destination!,
+                                position: trip.destination!,
                                 zoom: 7,
                               );
-                              mapVM.displayPlaceDetailsBottomSheet(
+                              mapVM.displayTripDetailsBottomSheet(
                                 context,
                                 ref: ref,
-                                place: travelPlace,
+                                trip: trip,
                               );
                             },
                           ),

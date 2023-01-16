@@ -15,9 +15,10 @@ import 'package:rioko/viewmodel/firebase/authentication_view_model.dart';
 import 'package:rioko/viewmodel/firebase/firestore_database_view_model.dart';
 import 'package:rioko/viewmodel/friends/friends_view_model.dart';
 import 'package:rioko/viewmodel/geolocation/geolocation_view_model.dart';
-import 'package:rioko/viewmodel/map/add_new_place_view_model.dart';
+import 'package:rioko/viewmodel/map/add_new_trip_view_model.dart';
 import 'package:rioko/viewmodel/map/map_view_model.dart';
-import 'package:rioko/viewmodel/map/place_details_view_model.dart';
+import 'package:rioko/viewmodel/map/trip_details_view_model.dart';
+import 'package:rioko/viewmodel/ranking/ranking_view_model.dart';
 import 'package:rioko/viewmodel/registration/data_completion_view_model.dart';
 
 final ChangeNotifierProvider<MapViewModel> mapProvider =
@@ -29,22 +30,22 @@ final ChangeNotifierProvider<FirestoreDatabaseViewModel>
     ChangeNotifierProvider((_) => FirestoreDatabaseViewModel());
 final ChangeNotifierProvider<GeolocationViewModel> geolocationProvider =
     ChangeNotifierProvider((_) => GeolocationViewModel());
-final ChangeNotifierProvider<AddNewPlaceViewModel> addNewPlaceProvider =
-    ChangeNotifierProvider((_) => AddNewPlaceViewModel());
+final ChangeNotifierProvider<AddNewTripViewModel> addNewTripProvider =
+    ChangeNotifierProvider((_) => AddNewTripViewModel());
 final ChangeNotifierProvider<FriendsViewModel> friendsProvider =
     ChangeNotifierProvider((_) => FriendsViewModel());
 final ChangeNotifierProvider<BaseViewModel> baseProvider =
     ChangeNotifierProvider((_) {
   final mapVM = _.watch(mapProvider);
   final firestoreDBVM = _.watch(firestoreDatabaseProvider);
-  final addNewPlaceVM = _.watch(addNewPlaceProvider);
+  final addNewTripVM = _.watch(addNewTripProvider);
   final geolocationVM = _.watch(geolocationProvider);
   final authVM = _.watch(authenticationProvider);
   final friendsVM = _.watch(friendsProvider);
   return BaseViewModel(
     firestoreDBVM: firestoreDBVM,
     mapVM: mapVM,
-    addNewPlaceVM: addNewPlaceVM,
+    addNewTripVM: addNewTripVM,
     geolocationVM: geolocationVM,
     authVM: authVM,
     friendsVM: friendsVM,
@@ -52,8 +53,10 @@ final ChangeNotifierProvider<BaseViewModel> baseProvider =
 });
 final ChangeNotifierProvider<DataCompletionViewModel> dataCompletionProvider =
     ChangeNotifierProvider((_) => DataCompletionViewModel());
-final ChangeNotifierProvider<PlaceDetailsViewModel> placeDetailsProvider =
-    ChangeNotifierProvider((_) => PlaceDetailsViewModel());
+final ChangeNotifierProvider<TripDetailsViewModel> tripDetailsProvider =
+    ChangeNotifierProvider((_) => TripDetailsViewModel());
+final ChangeNotifierProvider<RankingViewModel> rankingProvider =
+    ChangeNotifierProvider((_) => RankingViewModel());
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

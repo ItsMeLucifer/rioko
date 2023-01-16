@@ -7,9 +7,9 @@ import 'package:rioko/main.dart';
 import 'package:rioko/view/components/button.dart';
 import 'package:rioko/view/components/text_field.dart';
 
-class AddNewPlace extends ConsumerWidget {
+class AddNewTrip extends ConsumerWidget {
   final bool edit;
-  AddNewPlace({Key? key, this.edit = false}) : super(key: key);
+  AddNewTrip({Key? key, this.edit = false}) : super(key: key);
 
   final TextEditingController destinationTextController =
       TextEditingController();
@@ -24,9 +24,9 @@ class AddNewPlace extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final geolocationVM = ref.watch(geolocationProvider);
-    final addNewPlaceVM = ref.watch(addNewPlaceProvider);
+    final addNewTripVM = ref.watch(addNewTripProvider);
     final kilometers = geolocationVM.getDistanceInKilometers(
-        addNewPlaceVM.place.origin, addNewPlaceVM.place.destination);
+        addNewTripVM.trip.origin, addNewTripVM.trip.destination);
     return Container(
       margin: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -43,7 +43,7 @@ class AddNewPlace extends ConsumerWidget {
                 children: [
                   const SizedBox(height: 10.0),
                   Text(
-                    "${edit ? 'EDIT' : 'NEW'} PLACE",
+                    "${edit ? 'EDIT' : 'NEW'} TRIP",
                     style: Theme.of(context).textTheme.headline3?.copyWith(
                           fontFamily: 'CeasarDressing',
                           color: Colors.black,
@@ -51,55 +51,54 @@ class AddNewPlace extends ConsumerWidget {
                   ),
                   const Expanded(flex: 1, child: SizedBox()),
                   RiokoTextField(
-                    labelText: addNewPlaceVM.place.title == ''
+                    labelText: addNewTripVM.trip.title == ''
                         ? ' Title'
-                        : addNewPlaceVM.place.title,
+                        : addNewTripVM.trip.title,
                     controller: titleTextController,
                     prefix: 'Title',
                   ),
                   RiokoTextField(
                     focusNode: originFocusNode,
-                    enabled: addNewPlaceVM.place.origin == null,
-                    onSubmitted: (value) => addNewPlaceVM.onSubmittedOrigin(
+                    enabled: addNewTripVM.trip.origin == null,
+                    onSubmitted: (value) => addNewTripVM.onSubmittedOrigin(
                       context,
                       value: value,
                       ref: ref,
                     ),
-                    labelText: addNewPlaceVM.originPlacemark == null
+                    labelText: addNewTripVM.originPlacemark == null
                         ? 'Origin'
                         : geolocationVM.getAddressFromPlacemark(
-                            addNewPlaceVM.originPlacemark!,
+                            addNewTripVM.originPlacemark!,
                           ),
                     controller: originTextController,
                     prefix: 'Origin',
                     sufixIconData: Icons.edit,
                     onPressedSuffixIcon: () {
-                      addNewPlaceVM.place =
-                          addNewPlaceVM.place.copyWith(origin: null);
-                      addNewPlaceVM.originPlacemark = null;
+                      addNewTripVM.trip =
+                          addNewTripVM.trip.copyWith(origin: null);
+                      addNewTripVM.originPlacemark = null;
                       originTextController.clear();
                     },
                   ),
                   RiokoTextField(
                     focusNode: destinationFocusNode,
-                    enabled: addNewPlaceVM.place.destination == null,
-                    onSubmitted: (value) =>
-                        addNewPlaceVM.onSubmittedDestination(
+                    enabled: addNewTripVM.trip.destination == null,
+                    onSubmitted: (value) => addNewTripVM.onSubmittedDestination(
                       context,
                       value: value,
                       ref: ref,
                     ),
-                    labelText: addNewPlaceVM.destinationPlacemark == null
+                    labelText: addNewTripVM.destinationPlacemark == null
                         ? 'Destination'
                         : geolocationVM.getAddressFromPlacemark(
-                            addNewPlaceVM.destinationPlacemark!),
+                            addNewTripVM.destinationPlacemark!),
                     controller: destinationTextController,
                     prefix: 'Destination',
                     sufixIconData: Icons.edit,
                     onPressedSuffixIcon: () {
-                      addNewPlaceVM.place =
-                          addNewPlaceVM.place.copyWith(destination: null);
-                      addNewPlaceVM.destinationPlacemark = null;
+                      addNewTripVM.trip =
+                          addNewTripVM.trip.copyWith(destination: null);
+                      addNewTripVM.destinationPlacemark = null;
                     },
                   ),
                   Container(
@@ -137,9 +136,9 @@ class AddNewPlace extends ConsumerWidget {
                     width: 150,
                     child: RiokoButton(
                       onPressed: () {
-                        if ((addNewPlaceVM.place.origin == null &&
+                        if ((addNewTripVM.trip.origin == null &&
                                 originTextController.text == '') ||
-                            (addNewPlaceVM.place.destination == null &&
+                            (addNewTripVM.trip.destination == null &&
                                 destinationTextController.text == '')) {
                           MotionToast.info(
                             title: Text(
@@ -159,7 +158,7 @@ class AddNewPlace extends ConsumerWidget {
                             context,
                           );
                         }
-                        addNewPlaceVM.saveNewPlace(
+                        addNewTripVM.saveNewTrip(
                           context,
                           ref,
                           titleText: titleTextController.text,
@@ -186,9 +185,9 @@ class AddNewPlace extends ConsumerWidget {
                       context: context,
                       builder: (_) => YesNoDialog(
                         title:
-                            'Are you sure to delete ${addNewPlaceVM.place.title}?',
+                            'Are you sure to delete ${addNewTripVM.trip.title}?',
                         onPressedYes: () {
-                          addNewPlaceVM.onPressedRemovePlace(context, ref);
+                          addNewTripVM.onPressedRemoveTrip(context, ref);
                         },
                       ),
                     );

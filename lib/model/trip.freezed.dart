@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
-part of 'travel_place.dart';
+part of 'trip.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,7 +15,7 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
-mixin _$TravelPlace {
+mixin _$Trip {
   String get id => throw _privateConstructorUsedError;
   List<String> get comrades => throw _privateConstructorUsedError;
   String get countryIso3Code => throw _privateConstructorUsedError;
@@ -29,15 +29,13 @@ mixin _$TravelPlace {
   String get title => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $TravelPlaceCopyWith<TravelPlace> get copyWith =>
-      throw _privateConstructorUsedError;
+  $TripCopyWith<Trip> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $TravelPlaceCopyWith<$Res> {
-  factory $TravelPlaceCopyWith(
-          TravelPlace value, $Res Function(TravelPlace) then) =
-      _$TravelPlaceCopyWithImpl<$Res, TravelPlace>;
+abstract class $TripCopyWith<$Res> {
+  factory $TripCopyWith(Trip value, $Res Function(Trip) then) =
+      _$TripCopyWithImpl<$Res, Trip>;
   @useResult
   $Res call(
       {String id,
@@ -54,9 +52,9 @@ abstract class $TravelPlaceCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$TravelPlaceCopyWithImpl<$Res, $Val extends TravelPlace>
-    implements $TravelPlaceCopyWith<$Res> {
-  _$TravelPlaceCopyWithImpl(this._value, this._then);
+class _$TripCopyWithImpl<$Res, $Val extends Trip>
+    implements $TripCopyWith<$Res> {
+  _$TripCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -128,11 +126,9 @@ class _$TravelPlaceCopyWithImpl<$Res, $Val extends TravelPlace>
 }
 
 /// @nodoc
-abstract class _$$_TravelPlaceCopyWith<$Res>
-    implements $TravelPlaceCopyWith<$Res> {
-  factory _$$_TravelPlaceCopyWith(
-          _$_TravelPlace value, $Res Function(_$_TravelPlace) then) =
-      __$$_TravelPlaceCopyWithImpl<$Res>;
+abstract class _$$_TripCopyWith<$Res> implements $TripCopyWith<$Res> {
+  factory _$$_TripCopyWith(_$_Trip value, $Res Function(_$_Trip) then) =
+      __$$_TripCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -150,11 +146,9 @@ abstract class _$$_TravelPlaceCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TravelPlaceCopyWithImpl<$Res>
-    extends _$TravelPlaceCopyWithImpl<$Res, _$_TravelPlace>
-    implements _$$_TravelPlaceCopyWith<$Res> {
-  __$$_TravelPlaceCopyWithImpl(
-      _$_TravelPlace _value, $Res Function(_$_TravelPlace) _then)
+class __$$_TripCopyWithImpl<$Res> extends _$TripCopyWithImpl<$Res, _$_Trip>
+    implements _$$_TripCopyWith<$Res> {
+  __$$_TripCopyWithImpl(_$_Trip _value, $Res Function(_$_Trip) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -172,7 +166,7 @@ class __$$_TravelPlaceCopyWithImpl<$Res>
     Object? origin = freezed,
     Object? title = null,
   }) {
-    return _then(_$_TravelPlace(
+    return _then(_$_Trip(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -223,8 +217,8 @@ class __$$_TravelPlaceCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_TravelPlace implements _TravelPlace {
-  const _$_TravelPlace(
+class _$_Trip implements _Trip {
+  const _$_Trip(
       {required this.id,
       final List<String> comrades = const <String>[],
       required this.countryIso3Code,
@@ -285,14 +279,14 @@ class _$_TravelPlace implements _TravelPlace {
 
   @override
   String toString() {
-    return 'TravelPlace(id: $id, comrades: $comrades, countryIso3Code: $countryIso3Code, date: $date, description: $description, destination: $destination, imagesURLs: $imagesURLs, kilometers: $kilometers, likes: $likes, origin: $origin, title: $title)';
+    return 'Trip(id: $id, comrades: $comrades, countryIso3Code: $countryIso3Code, date: $date, description: $description, destination: $destination, imagesURLs: $imagesURLs, kilometers: $kilometers, likes: $likes, origin: $origin, title: $title)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TravelPlace &&
+            other is _$_Trip &&
             (identical(other.id, id) || other.id == id) &&
             const DeepCollectionEquality().equals(other._comrades, _comrades) &&
             (identical(other.countryIso3Code, countryIso3Code) ||
@@ -329,12 +323,12 @@ class _$_TravelPlace implements _TravelPlace {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TravelPlaceCopyWith<_$_TravelPlace> get copyWith =>
-      __$$_TravelPlaceCopyWithImpl<_$_TravelPlace>(this, _$identity);
+  _$$_TripCopyWith<_$_Trip> get copyWith =>
+      __$$_TripCopyWithImpl<_$_Trip>(this, _$identity);
 }
 
-abstract class _TravelPlace implements TravelPlace {
-  const factory _TravelPlace(
+abstract class _Trip implements Trip {
+  const factory _Trip(
       {required final String id,
       final List<String> comrades,
       required final String countryIso3Code,
@@ -345,7 +339,7 @@ abstract class _TravelPlace implements TravelPlace {
       required final double kilometers,
       final List<String> likes,
       required final LatLng? origin,
-      final String title}) = _$_TravelPlace;
+      final String title}) = _$_Trip;
 
   @override
   String get id;
@@ -371,6 +365,5 @@ abstract class _TravelPlace implements TravelPlace {
   String get title;
   @override
   @JsonKey(ignore: true)
-  _$$_TravelPlaceCopyWith<_$_TravelPlace> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$_TripCopyWith<_$_Trip> get copyWith => throw _privateConstructorUsedError;
 }
