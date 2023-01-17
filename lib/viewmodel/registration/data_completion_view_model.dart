@@ -49,14 +49,12 @@ class DataCompletionViewModel extends ChangeNotifier {
     final geolocationVM = ref.read(geolocationProvider);
     if (value.length > 3) {
       await geolocationVM.getLocationsFromAddress(value).then((latLng) {
-        if (latLng != null) {
-          geolocationVM.getPlacemarkFromCoordinates(latLng).then((placemark) {
-            if (placemark != null) {
-              tempPositionPlacemark = placemark;
-            }
-          });
-          tempPosition = latLng;
-        }
+        geolocationVM.getPlacemarkFromCoordinates(latLng).then((placemark) {
+          if (placemark != null) {
+            tempPositionPlacemark = placemark;
+          }
+        });
+        tempPosition = latLng;
       });
     }
   }

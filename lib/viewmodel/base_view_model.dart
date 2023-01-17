@@ -4,6 +4,7 @@ import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
 import 'package:rioko/common/route_names.dart';
 import 'package:rioko/common/utilities.dart';
+import 'package:rioko/model/user.dart';
 import 'package:rioko/viewmodel/firebase/authentication_view_model.dart';
 import 'package:rioko/viewmodel/firebase/firestore_database_view_model.dart';
 import 'package:rioko/viewmodel/geolocation/geolocation_view_model.dart';
@@ -34,6 +35,7 @@ class BaseViewModel extends ChangeNotifier {
         if (authenticated) {
           final userSnapshot = await firestoreDBVM
               .getCurrentUserBasicInfo(authVM.currentUser!.id);
+          authVM.updateDisplayName(userSnapshot) // TO DO 
           final home =
               Utilities.geoPointToLatLng(userSnapshot.get('home') as GeoPoint);
           mapVM.setStartCenter(home);
