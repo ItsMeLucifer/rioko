@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rioko/common/debug_utils.dart';
+import 'package:rioko/common/utilities.dart';
 import 'package:rioko/main.dart';
 import 'package:rioko/model/trip.dart';
 import 'package:rioko/viewmodel/geolocation/geolocation_view_model.dart';
@@ -99,7 +100,13 @@ class TripDetails extends ConsumerWidget {
                         text: '${trip?.kilometers}',
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
-                      const TextSpan(text: ' km'),
+                      const TextSpan(text: ' km  |  '),
+                      TextSpan(
+                        text:
+                            '${Utilities.convertKilometersIntoSteps(trip?.kilometers ?? 0).toInt()}',
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      const TextSpan(text: ' 👣')
                     ],
                   ),
                 ),
