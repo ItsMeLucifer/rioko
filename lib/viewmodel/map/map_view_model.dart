@@ -4,27 +4,27 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:rioko/main.dart';
-import 'package:rioko/model/travel_place.dart';
+import 'package:rioko/model/trip.dart';
 import 'package:collection/collection.dart';
-import 'package:rioko/view/map/widgets/place_details/place_details.dart';
-import 'package:rioko/view/map/widgets/add_new_place/add_new_place.dart';
+import 'package:rioko/view/map/widgets/trip_details/trip_details.dart';
+import 'package:rioko/view/map/widgets/add_new_trip/add_new_trip.dart';
 
 class MapViewModel extends ChangeNotifier {
-  List<TravelPlace> _travelPlaces = [];
-  List<TravelPlace> get travelPlaces => _travelPlaces;
-  set travelPlaces(List<TravelPlace> travelPlaces) {
-    _travelPlaces = travelPlaces;
+  List<Trip> _trips = [];
+  List<Trip> get trips => _trips;
+  set trips(List<Trip> trips) {
+    _trips = trips;
     notifyListeners();
   }
 
-  void addTravelPlace(TravelPlace travelPlace) {
-    final original = _travelPlaces.firstWhereOrNull(
-      (p) => p.id == travelPlace.id,
+  void addTrip(Trip trip) {
+    final original = _trips.firstWhereOrNull(
+      (p) => p.id == trip.id,
     );
     if (original != null) {
-      _travelPlaces.remove(original);
+      _trips.remove(original);
     }
-    _travelPlaces.add(travelPlace);
+    _trips.add(trip);
     notifyListeners();
   }
 
@@ -42,37 +42,37 @@ class MapViewModel extends ChangeNotifier {
     mapController.move(position, zoom);
   }
 
-  Future _prepareAddNewPlaceModel(WidgetRef ref, bool edit) async {
+  Future _prepareAddNewTripModel(WidgetRef ref, bool edit) async {
     final authVM = ref.read(authenticationProvider);
-    final addNewPlaceVM = ref.read(addNewPlaceProvider);
+    final addNewTripVM = ref.read(addNewTripProvider);
     final geolocationVM = ref.read(geolocationProvider);
     if (!edit) {
-      addNewPlaceVM.place = TravelPlace.newPlace;
+      addNewTripVM.trip = Trip.newTrip;
       if (authVM.currentUser?.home != null) {
-        addNewPlaceVM.place =
-            addNewPlaceVM.place.copyWith(origin: authVM.currentUser!.home);
-        addNewPlaceVM.originPlacemark = await geolocationVM
+        addNewTripVM.trip =
+            addNewTripVM.trip.copyWith(origin: authVM.currentUser!.home);
+        addNewTripVM.originPlacemark = await geolocationVM
             .getPlacemarkFromCoordinates(authVM.currentUser!.home!);
       }
-      addNewPlaceVM.destinationPlacemark = null;
+      addNewTripVM.destinationPlacemark = null;
       return;
     }
-    if (addNewPlaceVM.place.origin != null) {
-      addNewPlaceVM.originPlacemark = await geolocationVM
-          .getPlacemarkFromCoordinates(addNewPlaceVM.place.origin!);
+    if (addNewTripVM.trip.origin != null) {
+      addNewTripVM.originPlacemark = await geolocationVM
+          .getPlacemarkFromCoordinates(addNewTripVM.trip.origin!);
     }
-    if (addNewPlaceVM.place.destination != null) {
-      addNewPlaceVM.destinationPlacemark = await geolocationVM
-          .getPlacemarkFromCoordinates(addNewPlaceVM.place.destination!);
+    if (addNewTripVM.trip.destination != null) {
+      addNewTripVM.destinationPlacemark = await geolocationVM
+          .getPlacemarkFromCoordinates(addNewTripVM.trip.destination!);
     }
   }
 
-  void displayAddNewPlaceBottomSheet(
+  void displayAddNewTripBottomSheet(
     BuildContext context,
     WidgetRef ref, {
     bool edit = false,
   }) async {
-    _prepareAddNewPlaceModel(ref, edit);
+    _prepareAddNewTripModel(ref, edit);
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -81,34 +81,34 @@ class MapViewModel extends ChangeNotifier {
           topRight: Radius.circular(25.0),
         ),
       ),
-      builder: (_) => AddNewPlace(edit: edit),
+      builder: (_) => AddNewTrip(edit: edit),
       isScrollControlled: true,
     );
   }
 
-  void displayPlaceDetailsBottomSheet(
+  void displayTripDetailsBottomSheet(
     BuildContext context, {
     required WidgetRef ref,
-    required TravelPlace place,
+    required Trip trip,
   }) async {
-    final placeDetailsVM = ref.read(placeDetailsProvider);
+    final tripDetailsVM = ref.read(tripDetailsProvider);
     final mapVM = ref.read(mapProvider);
     final geolocationVM = ref.read(geolocationProvider);
-    placeDetailsVM.placeIndex = mapVM.travelPlaces.indexOf(place);
-    placeDetailsVM.originPlacemark =
-        await geolocationVM.getPlacemarkFromCoordinates(place.origin!);
-    placeDetailsVM.destinationPlacemark =
-        await geolocationVM.getPlacemarkFromCoordinates(place.destination!);
+    tripDetailsVM.tripIndex = mapVM.trips.indexOf(trip);
+    tripDetailsVM.originPlacemark =
+        await geolocationVM.getPlacemarkFromCoordinates(trip.origin!);
+    tripDetailsVM.destinationPlacemark =
+        await geolocationVM.getPlacemarkFromCoordinates(trip.destination!);
     showModalBottomSheet(
       context: context,
-      builder: (_) => const PlaceDetails(),
+      builder: (_) => const TripDetails(),
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
     );
   }
 
-  void removePlaceLocally(String placeId) {
-    _travelPlaces.removeWhere((p) => p.id == placeId);
+  void removeTripLocally(String tripId) {
+    _trips.removeWhere((p) => p.id == tripId);
     notifyListeners();
   }
 }

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:rioko/common/debug_utils.dart';
 import 'package:rioko/common/utilities.dart';
-import 'package:rioko/model/travel_place.dart';
+import 'package:rioko/model/trip.dart';
 import 'package:rioko/model/user.dart';
 
 class FirestoreDatabaseService {
@@ -14,6 +14,7 @@ class FirestoreDatabaseService {
       'email': user.email,
       'home': GeoPoint(user.home?.latitude ?? 0, user.home?.longitude ?? 0),
       'name': user.name,
+      'kilometers': 0.0,
     });
   }
 
@@ -22,37 +23,36 @@ class FirestoreDatabaseService {
     return user;
   }
 
-  static Future<void> addNewPlace(TravelPlace place, String userId) async {
-    debugPrint('got: $place, $userId');
-    await users.doc(userId).collection('places').doc(place.id).set({
-      'id': place.id,
-      'origin': Utilities.latLngToGeoPoint(place.origin!),
-      'destination': Utilities.latLngToGeoPoint(place.destination!),
-      'images': place.imagesURLs,
-      'title': place.title,
-      'description': place.description,
-      'date': place.date.microsecondsSinceEpoch,
-      'kilometers': place.kilometers,
-      'comrades': place.comrades,
-      'likes': place.likes,
-      'country': place.countryIso3Code,
+  static Future<void> addNewTrip(Trip trip, String userId) async {
+    debugPrint('got: $trip, $userId');
+    await users.doc(userId).collection('trips').doc(trip.id).set({
+      'id': trip.id,
+      'origin': Utilities.latLngToGeoPoint(trip.origin!),
+      'destination': Utilities.latLngToGeoPoint(trip.destination!),
+      'images': trip.imagesURLs,
+      'title': trip.title,
+      'description': trip.description,
+      'date': trip.date.microsecondsSinceEpoch,
+      'kilometers': trip.kilometers,
+      'comrades': trip.comrades,
+      'likes': trip.likes,
+      'country': trip.countryIso3Code,
     });
   }
 
-  static Future<void> removePlace(String placeId, String currentUserId) async {
+  static Future<void> removeTrip(String tripId, String currentUserId) async {
     try {
-      await users.doc(currentUserId).collection('places').doc(placeId).delete();
+      await users.doc(currentUserId).collection('trips').doc(tripId).delete();
     } catch (e) {
       DebugUtils.printError(e.toString());
       rethrow;
     }
   }
 
-  static Future<List<TravelPlace>> fetchCurrentUserPlaces(
-      String currentUserId) async {
-    List<QueryDocumentSnapshot> placeSnapshots = await users
+  static Future<List<Trip>> fetchCurrentUserTrips(String currentUserId) async {
+    List<QueryDocumentSnapshot> tripSnapshots = await users
         .doc(currentUserId)
-        .collection('places')
+        .collection('trips')
         .get()
         .then((QuerySnapshot querySnapshot) {
       if (querySnapshot.size > 0) {
@@ -60,8 +60,8 @@ class FirestoreDatabaseService {
       }
       return [];
     });
-    return placeSnapshots
-        .map((snapshot) => TravelPlace.fromDocumentSnapshot(snapshot))
+    return tripSnapshots
+        .map((snapshot) => Trip.fromDocumentSnapshot(snapshot))
         .toList();
   }
 
@@ -78,7 +78,8 @@ class FirestoreDatabaseService {
       return [];
     });
     return friendSnapshots
-        .map((snapshot) => User.fromDocumentSnapshot(snapshot))
+        .map((snapshot) =>
+            User.fromDocumentSnapshot(snapshot, getKilometers: false))
         .toList();
   }
 
@@ -146,5 +147,23 @@ class FirestoreDatabaseService {
         .collection('friends')
         .doc(targetUser.id)
         .set(User.toMap(targetUser));
+  }
+
+  static Future updateCurrentUserKilometers(
+    String currentUserId,
+    double kilometers,
+  ) async {
+    await users.doc(currentUserId).update({
+      'kilometers': kilometers,
+    });
+  }
+
+  static Future<List<User>> fetchFriendsStats(List<String> friendIds) async {
+    final List<User> result = [];
+    for (String friendId in friendIds) {
+      final friendSnapshot = await users.doc(friendId).get();
+      result.add(User.fromDocumentSnapshot(friendSnapshot));
+    }
+    return result;
   }
 }

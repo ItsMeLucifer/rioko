@@ -1,16 +1,23 @@
 # rioko
 
-A new Flutter project.
+Rioko is a social app in which users share their travel memories by 'sticking' pins on a virtual world map. In the app, users will be able to check their friends' virtual boards, compete with them in the top traveller leaderboard and respond to their trips.
 
-## Getting Started
+The project used: *Provider*, *Freezed*, *Firebase*, *Leaflet*, *MVVM*
 
-This project is a starting point for a Flutter application.
+## Alpha stage
 
-A few resources to get you started if this is your first Flutter project:
+The app is currently under development, screenshots of the current status will be presented below. Please note that this is an early stage of app development and the UI/UX will be re-created soon.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+|                  Login screen                   |                  Map screen                   |
+| :---------------------------------------------: | :-------------------------------------------: |
+| ![Login screen](github/images/login_screen.png) | ![Login screen](github/images/map_screen.png) |
+<br>
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+|                    Add new trip screen                     |        Trip details screen (new features soon)        |
+| :--------------------------------------------------------: | :---------------------------------------------------: |
+| ![Add new trip screen ](github/images/new_trip_screen.png) | ![Trip details screen](github/images/trip_screen.png) |
+<br>
+
+|                        Ranking screen                         |                      Friends Page                      |
+| :-----------------------------------------------------------: | :----------------------------------------------------: |
+| ![Add new trip screen ](github/images/leaderboard_screen.png) | ![Trip details screen](github/images/friends_page.png) |

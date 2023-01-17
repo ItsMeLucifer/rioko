@@ -7,6 +7,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:rioko/main.dart';
 import 'package:rioko/view/Map/widgets/user_banner.dart';
 import 'package:rioko/view/map/widgets/map_marker.dart';
+import 'package:rioko/view/map/widgets/open_leaderboard_button.dart';
 
 class MapDisplay extends ConsumerWidget {
   const MapDisplay({Key? key}) : super(key: key);
@@ -18,10 +19,10 @@ class MapDisplay extends ConsumerWidget {
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        heroTag: 'addNewPlace',
+        heroTag: 'addNewTrip',
         elevation: 5,
         backgroundColor: Theme.of(context).colorScheme.tertiary,
-        onPressed: () => mapVM.displayAddNewPlaceBottomSheet(context, ref),
+        onPressed: () => mapVM.displayAddNewTripBottomSheet(context, ref),
         child: const FaIcon(
           FontAwesomeIcons.plus,
         ),
@@ -45,7 +46,7 @@ class MapDisplay extends ConsumerWidget {
                 MarkerClusterPlugin(),
               ],
               onLongPress: (tapPosition, point) => {
-                //Add new travel place
+                //Add new trip
               },
             ),
             children: [
@@ -61,19 +62,19 @@ class MapDisplay extends ConsumerWidget {
                   maxClusterRadius: 80,
                   size: const Size(40, 40),
                   markers: [
-                    ...mapVM.travelPlaces
+                    ...mapVM.trips
                         .map(
-                          (travelPlace) => MapUtils.getMarker(
-                            point: travelPlace.destination!,
+                          (trip) => MapUtils.getMarker(
+                            point: trip.destination!,
                             onPressed: () {
                               mapVM.mapMoveTo(
-                                position: travelPlace.destination!,
+                                position: trip.destination!,
                                 zoom: 7,
                               );
-                              mapVM.displayPlaceDetailsBottomSheet(
+                              mapVM.displayTripDetailsBottomSheet(
                                 context,
                                 ref: ref,
-                                place: travelPlace,
+                                trip: trip,
                               );
                             },
                           ),
@@ -115,6 +116,7 @@ class MapDisplay extends ConsumerWidget {
             ),
           ),
           const UserBanner(),
+          const OpenLeaderboardButton(),
         ],
       ),
     );

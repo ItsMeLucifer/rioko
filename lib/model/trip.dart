@@ -3,10 +3,10 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:rioko/common/utilities.dart';
 import 'package:uuid/uuid.dart';
-part 'travel_place.freezed.dart';
+part 'trip.freezed.dart';
 
 ///```dart
-///class TravelPlace {
+///class Trip {
 ///   final String id;
 ///   final LatLng originCoordinates;
 ///   final LatLng destinationCoordinates;
@@ -21,8 +21,8 @@ part 'travel_place.freezed.dart';
 /// }
 ///```
 @freezed
-class TravelPlace with _$TravelPlace {
-  const factory TravelPlace({
+class Trip with _$Trip {
+  const factory Trip({
     required String id,
     @Default(<String>[]) List<String> comrades,
     required String countryIso3Code,
@@ -34,10 +34,9 @@ class TravelPlace with _$TravelPlace {
     @Default(<String>[]) List<String> likes,
     required LatLng? origin,
     @Default('') String title,
-  }) = _TravelPlace;
+  }) = _Trip;
 
-  static TravelPlace fromDocumentSnapshot(DocumentSnapshot snapshot) =>
-      TravelPlace(
+  static Trip fromDocumentSnapshot(DocumentSnapshot snapshot) => Trip(
         id: snapshot.get('id') as String,
         countryIso3Code: snapshot.get('country') as String,
         date: DateTime.fromMicrosecondsSinceEpoch(snapshot.get('date') as int),
@@ -59,7 +58,7 @@ class TravelPlace with _$TravelPlace {
       );
 
   ///```dart
-  ///TravelPlace(
+  ///Trip(
   ///   id: const Uuid().v1(),
   ///   countryIso3Code: '',
   ///   date: DateTime.now(),
@@ -73,7 +72,7 @@ class TravelPlace with _$TravelPlace {
   ///   description: '',
   ///);
   ///```
-  static TravelPlace get newPlace => TravelPlace(
+  static Trip get newTrip => Trip(
         id: const Uuid().v1(),
         countryIso3Code: '',
         date: DateTime.now(),

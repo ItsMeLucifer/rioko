@@ -5,13 +5,14 @@ import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
 import 'package:rioko/common/route_names.dart';
 import 'package:rioko/main.dart';
-import 'package:rioko/model/travel_place.dart';
+import 'package:rioko/model/trip.dart';
+import 'package:rioko/service/firestore_database_service.dart';
 
-class AddNewPlaceViewModel extends ChangeNotifier {
-  TravelPlace _place = TravelPlace.newPlace;
-  TravelPlace get place => _place;
-  set place(TravelPlace place) {
-    _place = place;
+class AddNewTripViewModel extends ChangeNotifier {
+  Trip _trip = Trip.newTrip;
+  Trip get trip => _trip;
+  set trip(Trip trip) {
+    _trip = trip;
     notifyListeners();
   }
 
@@ -43,7 +44,7 @@ class AddNewPlaceViewModel extends ChangeNotifier {
             originPlacemark = placemark;
           }
         });
-        place = place.copyWith(origin: latLng);
+        trip = trip.copyWith(origin: latLng);
       });
     } catch (e) {
       MotionToast.error(
@@ -77,7 +78,7 @@ class AddNewPlaceViewModel extends ChangeNotifier {
         mapVM.mapMoveTo(
           position: latLng,
         );
-        place = place.copyWith(destination: latLng);
+        trip = trip.copyWith(destination: latLng);
       });
     } catch (e) {
       MotionToast.error(
@@ -93,7 +94,7 @@ class AddNewPlaceViewModel extends ChangeNotifier {
     }
   }
 
-  void saveNewPlace(
+  void saveNewTrip(
     BuildContext context,
     WidgetRef ref, {
     required String titleText,
@@ -105,10 +106,10 @@ class AddNewPlaceViewModel extends ChangeNotifier {
     final authVM = ref.read(authenticationProvider);
     final mapVM = ref.read(mapProvider);
     final baseVM = ref.read(baseProvider);
-    if (place.origin == null) {
+    if (trip.origin == null) {
       await onSubmittedOrigin(context, value: originText, ref: ref);
     }
-    if (place.destination == null) {
+    if (trip.destination == null) {
       await onSubmittedDestination(context, value: destinationText, ref: ref);
     }
 
@@ -116,42 +117,50 @@ class AddNewPlaceViewModel extends ChangeNotifier {
       Navigator.of(context).pushReplacementNamed(RouteNames.authentication);
       return;
     }
-    if (place.origin == null || place.destination == null || kilometers == 0) {
+    if (trip.origin == null || trip.destination == null || kilometers == 0) {
       return;
     }
-    place = place.copyWith(
+    trip = trip.copyWith(
       title: titleText,
       description: descriptionText,
       kilometers: kilometers!,
     );
-    baseVM.addNewTravelPlaceToFirebase(context);
-    mapVM.addTravelPlace(place);
+    // Update kilometers in current user's profile
+    final currentUserKilometers = authVM.currentUser!.kilometers;
+    FirestoreDatabaseService.updateCurrentUserKilometers(
+      authVM.currentUser!.id,
+      currentUserKilometers + kilometers,
+    );
+    authVM.currentUser = authVM.currentUser!.copyWith(
+      kilometers: currentUserKilometers + trip.kilometers,
+    );
+    baseVM.addNewTripToFirebase(context);
+    mapVM.addTrip(trip);
   }
 
-  void setPlaceToEdit(TravelPlace place, WidgetRef ref) async {
+  void setTripToEdit(Trip trip, WidgetRef ref) async {
     final geolocationVM = ref.read(geolocationProvider);
-    this.place = place;
-    if (place.origin != null) {
+    this.trip = trip;
+    if (trip.origin != null) {
       originPlacemark =
-          await geolocationVM.getPlacemarkFromCoordinates(place.origin!);
+          await geolocationVM.getPlacemarkFromCoordinates(trip.origin!);
     }
-    if (place.destination != null) {
+    if (trip.destination != null) {
       destinationPlacemark =
-          await geolocationVM.getPlacemarkFromCoordinates(place.destination!);
+          await geolocationVM.getPlacemarkFromCoordinates(trip.destination!);
     }
   }
 
-  Future onPressedRemovePlace(BuildContext context, WidgetRef ref) async {
+  Future onPressedRemoveTrip(BuildContext context, WidgetRef ref) async {
     final firestoreVM = ref.read(firestoreDatabaseProvider);
     final authVM = ref.read(authenticationProvider);
     //Remove from the database
     String? response;
-    if (authVM.currentUser != null) {
-      response = await firestoreVM.removePlace(
-        place.id,
-        authVM.currentUser!.id,
-      );
-    }
+    if (authVM.currentUser == null) return;
+    response = await firestoreVM.removeTrip(
+      trip.id,
+      authVM.currentUser!.id,
+    );
     if (response != null) {
       MotionToast.error(
         title: const Text("Error"),
@@ -165,9 +174,18 @@ class AddNewPlaceViewModel extends ChangeNotifier {
       );
       return;
     }
+    // Update kilometers in current user's profile
+    final currentUserKilometers = authVM.currentUser!.kilometers;
+    FirestoreDatabaseService.updateCurrentUserKilometers(
+      authVM.currentUser!.id,
+      currentUserKilometers - trip.kilometers,
+    );
+    authVM.currentUser = authVM.currentUser!.copyWith(
+      kilometers: currentUserKilometers - trip.kilometers,
+    );
     //Remove locally
     final mapVM = ref.read(mapProvider);
-    mapVM.removePlaceLocally(place.id);
+    mapVM.removeTripLocally(trip.id);
     Navigator.of(context).popUntil(ModalRoute.withName(RouteNames.map));
   }
 }

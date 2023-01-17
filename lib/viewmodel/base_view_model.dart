@@ -9,20 +9,20 @@ import 'package:rioko/viewmodel/firebase/authentication_view_model.dart';
 import 'package:rioko/viewmodel/firebase/firestore_database_view_model.dart';
 import 'package:rioko/viewmodel/friends/friends_view_model.dart';
 import 'package:rioko/viewmodel/geolocation/geolocation_view_model.dart';
-import 'package:rioko/viewmodel/map/add_new_place_view_model.dart';
+import 'package:rioko/viewmodel/map/add_new_trip_view_model.dart';
 import 'package:rioko/viewmodel/map/map_view_model.dart';
 
 class BaseViewModel extends ChangeNotifier {
   final FirestoreDatabaseViewModel firestoreDBVM;
   final MapViewModel mapVM;
-  final AddNewPlaceViewModel addNewPlaceVM;
+  final AddNewTripViewModel addNewTripVM;
   final GeolocationViewModel geolocationVM;
   final AuthenticationViewModel authVM;
   final FriendsViewModel friendsVM;
   BaseViewModel({
     required this.firestoreDBVM,
     required this.mapVM,
-    required this.addNewPlaceVM,
+    required this.addNewTripVM,
     required this.geolocationVM,
     required this.authVM,
     required this.friendsVM,
@@ -48,9 +48,9 @@ class BaseViewModel extends ChangeNotifier {
             home: home,
             homeAddress: geolocationVM.getAddressFromPlacemark(placemark),
           );
-          final places =
-              await firestoreDBVM.fetchUserPlaces(authVM.currentUser!.id);
-          mapVM.travelPlaces = places;
+          final trips =
+              await firestoreDBVM.fetchUserTrips(authVM.currentUser!.id);
+          mapVM.trips = trips;
           Navigator.of(context).pushReplacementNamed(RouteNames.map);
         } else {
           MotionToast.error(
@@ -92,9 +92,9 @@ class BaseViewModel extends ChangeNotifier {
     });
   }
 
-  void addNewTravelPlaceToFirebase(BuildContext context) async {
-    final response = await firestoreDBVM.addNewPlace(
-        addNewPlaceVM.place, authVM.currentUser!.id);
+  void addNewTripToFirebase(BuildContext context) async {
+    final response = await firestoreDBVM.addNewTrip(
+        addNewTripVM.trip, authVM.currentUser!.id);
     if (response) Navigator.of(context).pop();
   }
 }

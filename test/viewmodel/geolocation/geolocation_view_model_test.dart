@@ -67,7 +67,7 @@ void main() {
       final value = GeolocationViewModel().getDistanceInKilometers(null, null);
       expect(value, 0.0);
     });
-    test('should return 0 for the same place provided two times', () {
+    test('should return 0 for the same trip provided two times', () {
       final position = LatLng(20.34, 36.54);
       final value =
           GeolocationViewModel().getDistanceInKilometers(position, position);

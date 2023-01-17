@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rioko/common/debug_utils.dart';
+import 'package:rioko/common/utilities.dart';
 import 'package:rioko/main.dart';
-import 'package:rioko/model/travel_place.dart';
+import 'package:rioko/model/trip.dart';
 import 'package:rioko/viewmodel/geolocation/geolocation_view_model.dart';
 
-class PlaceDetails extends ConsumerWidget {
-  const PlaceDetails({Key? key}) : super(key: key);
+class TripDetails extends ConsumerWidget {
+  const TripDetails({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final placeDetailsVM = ref.watch(placeDetailsProvider);
+    final tripDetailsVM = ref.watch(tripDetailsProvider);
     final geolocationVM = ref.watch(geolocationProvider);
     final mapVM = ref.watch(mapProvider);
-    final TravelPlace? place =
-        placeDetailsVM.placeIndex < mapVM.travelPlaces.length &&
-                placeDetailsVM.placeIndex > -1
-            ? mapVM.travelPlaces.elementAt(placeDetailsVM.placeIndex)
-            : null;
+    final Trip? trip = tripDetailsVM.tripIndex < mapVM.trips.length &&
+            tripDetailsVM.tripIndex > -1
+        ? mapVM.trips.elementAt(tripDetailsVM.tripIndex)
+        : null;
     return FractionallySizedBox(
       heightFactor: 0.97,
       child: Stack(
@@ -41,7 +41,7 @@ class PlaceDetails extends ConsumerWidget {
               children: [
                 Center(
                   child: Text(
-                    place?.title ?? '',
+                    trip?.title ?? '',
                     style: Theme.of(context)
                         .textTheme
                         .headline3
@@ -60,7 +60,7 @@ class PlaceDetails extends ConsumerWidget {
                       ),
                       TextSpan(
                         text: geolocationVM.getAddressFromPlacemark(
-                          placeDetailsVM.originPlacemark,
+                          tripDetailsVM.originPlacemark,
                           administrativeAreaDisplayOption:
                               DisplayOption.showConditionally,
                         ),
@@ -79,7 +79,7 @@ class PlaceDetails extends ConsumerWidget {
                       ),
                       TextSpan(
                         text: geolocationVM.getAddressFromPlacemark(
-                          placeDetailsVM.destinationPlacemark,
+                          tripDetailsVM.destinationPlacemark,
                           administrativeAreaDisplayOption:
                               DisplayOption.showConditionally,
                         ),
@@ -97,10 +97,16 @@ class PlaceDetails extends ConsumerWidget {
                         text: 'Distance: ',
                       ),
                       TextSpan(
-                        text: '${place?.kilometers}',
+                        text: '${trip?.kilometers}',
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
-                      const TextSpan(text: ' km'),
+                      const TextSpan(text: ' km  |  '),
+                      TextSpan(
+                        text:
+                            '${Utilities.convertKilometersIntoSteps(trip?.kilometers ?? 0).toInt()}',
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      const TextSpan(text: ' 👣')
                     ],
                   ),
                 ),
@@ -113,7 +119,7 @@ class PlaceDetails extends ConsumerWidget {
                         text: 'Description: ',
                       ),
                       TextSpan(
-                        text: place?.description,
+                        text: trip?.description,
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ],
@@ -129,7 +135,7 @@ class PlaceDetails extends ConsumerWidget {
                         text: 'Likes: ',
                       ),
                       TextSpan(
-                        text: '${place?.likes.length}',
+                        text: '${trip?.likes.length}',
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ],
@@ -144,7 +150,7 @@ class PlaceDetails extends ConsumerWidget {
                         text: 'Travelled with ',
                       ),
                       TextSpan(
-                        text: '${place?.comrades.length}',
+                        text: '${trip?.comrades.length}',
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       const TextSpan(text: ' comrades'),
@@ -171,15 +177,15 @@ class PlaceDetails extends ConsumerWidget {
             top: 10.0,
             child: IconButton(
               onPressed: () {
-                if (place == null) return;
-                ref.read(addNewPlaceProvider).setPlaceToEdit(
-                      place,
+                if (trip == null) return;
+                ref.read(addNewTripProvider).setTripToEdit(
+                      trip,
                       ref,
                     );
-                DebugUtils.printInfo(place.toString());
+                DebugUtils.printInfo(trip.toString());
                 ref
                     .read(mapProvider)
-                    .displayAddNewPlaceBottomSheet(context, ref, edit: true);
+                    .displayAddNewTripBottomSheet(context, ref, edit: true);
               },
               icon: const Icon(
                 Icons.menu,
