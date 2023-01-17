@@ -72,19 +72,11 @@ class DataCompletionPage extends ConsumerWidget {
               RiokoButton(
                 text: 'Continue',
                 onPressed: () {
-                  if (authVM.currentUser != null) {
-                    firestoreDBVM.setCurrentUserBasicInfo(
-                      authVM.currentUser!,
-                    );
-                    if (dataCompletionVM.tempPosition != null) {
-                      final mapVM = ref.read(mapProvider);
-                      mapVM.setStartCenter(dataCompletionVM.tempPosition!);
-                    }
-                    Navigator.of(context).pushReplacementNamed(RouteNames.map);
-                  } else {
-                    Navigator.of(context)
-                        .pushReplacementNamed(RouteNames.authentication);
-                  }
+                  dataCompletionVM.onPressedContinue(
+                    context,
+                    ref: ref,
+                    userName: nameController.text,
+                  );
                 },
                 icon: Icons.login,
               ),

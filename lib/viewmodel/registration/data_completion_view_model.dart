@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:motion_toast/motion_toast.dart';
+import 'package:motion_toast/resources/arrays.dart';
 import 'package:rioko/common/debug_utils.dart';
+import 'package:rioko/common/route_names.dart';
 import 'package:rioko/main.dart';
 
 class DataCompletionViewModel extends ChangeNotifier {
@@ -56,6 +59,41 @@ class DataCompletionViewModel extends ChangeNotifier {
         });
         tempPosition = latLng;
       });
+    }
+  }
+
+  void onPressedContinue(
+    BuildContext context, {
+    required WidgetRef ref,
+    required String userName,
+  }) async {
+    final authVM = ref.read(authenticationProvider);
+    final firestoreDBVM = ref.read(firestoreDatabaseProvider);
+    if (authVM.currentUser != null) {
+      if (userName == "") {
+        MotionToast.warning(
+          title: const Text("Warning"),
+          description: const Text(
+            "Please provide user display name.",
+          ),
+          position: MotionToastPosition.top,
+          animationType: AnimationType.fromTop,
+        ).show(
+          context,
+        );
+        return;
+      }
+      authVM.updateDisplayName(userName);
+      firestoreDBVM.setCurrentUserBasicInfo(
+        authVM.currentUser!,
+      );
+      if (tempPosition != null) {
+        final mapVM = ref.read(mapProvider);
+        mapVM.setStartCenter(tempPosition!);
+      }
+      Navigator.of(context).pushReplacementNamed(RouteNames.map);
+    } else {
+      Navigator.of(context).pushReplacementNamed(RouteNames.authentication);
     }
   }
 }
