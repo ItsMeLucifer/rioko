@@ -95,7 +95,8 @@ class FirestoreDatabaseService {
       return [];
     });
     return userSnapshots
-        .map((snapshot) => User.fromDocumentSnapshot(snapshot))
+        .map((snapshot) =>
+            User.fromDocumentSnapshot(snapshot, getKilometers: false))
         .toList();
   }
 
@@ -111,7 +112,8 @@ class FirestoreDatabaseService {
       return [];
     });
     return friendSnapshots
-        .map((snapshot) => User.fromDocumentSnapshot(snapshot))
+        .map((snapshot) =>
+            User.fromDocumentSnapshot(snapshot, getKilometers: false))
         .toList();
   }
 
