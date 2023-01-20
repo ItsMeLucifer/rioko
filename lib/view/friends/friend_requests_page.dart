@@ -56,7 +56,7 @@ class FriendRequestsPage extends ConsumerWidget {
               top: 5.0,
               child: RiokoBackButton(context),
             ),
-            if (friendsVM.friendRequestsFetchStatus != FetchStatus.fetched)
+            if (friendsVM.friendRequestsFetchStatus == FetchStatus.fetching)
               _buildCircularProgressIndicator(context),
           ],
         ),
