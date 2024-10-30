@@ -1,3 +1,4 @@
+This project has been rewritten [here](https://github.com/ItsMeLucifer/rioko_ni) 
 # rioko
 
 Rioko is a social app in which users share their travel memories by 'sticking' pins on a virtual world map. In the app, users will be able to check their friends' virtual boards, compete with them in the top traveller leaderboard and respond to their trips.
